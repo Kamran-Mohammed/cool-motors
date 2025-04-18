@@ -148,7 +148,9 @@ function ListVehicle() {
         }}
       >
         <div className="form-group">
-          <label htmlFor="make">Brand*</label>
+          <label htmlFor="make">
+            Brand <span style={{ color: "red" }}>*</span>
+          </label>
           <input
             type="text"
             name="make"
@@ -166,7 +168,9 @@ function ListVehicle() {
         </div>
 
         <div className="form-group">
-          <label htmlFor="model">Model*</label>
+          <label htmlFor="model">
+            Model <span style={{ color: "red" }}>*</span>
+          </label>
           <input
             type="text"
             name="model"
@@ -190,7 +194,9 @@ function ListVehicle() {
         </div>
 
         <div className="form-group">
-          <label htmlFor="year">Year*</label>
+          <label htmlFor="year">
+            Year <span style={{ color: "red" }}>*</span>
+          </label>
           <input
             type="text"
             name="year"
@@ -208,7 +214,9 @@ function ListVehicle() {
         </div>
 
         <div className="form-group">
-          <label htmlFor="price">Price*</label>
+          <label htmlFor="price">
+            Price <span style={{ color: "red" }}>*</span>
+          </label>
           <input
             type="number"
             name="price"
@@ -220,7 +228,9 @@ function ListVehicle() {
         </div>
 
         <div className="form-group">
-          <label htmlFor="fuelType">Fuel Type*</label>
+          <label htmlFor="fuelType">
+            Fuel Type <span style={{ color: "red" }}>*</span>
+          </label>
           <select
             name="fuelType"
             value={formData.fuelType}
@@ -237,7 +247,9 @@ function ListVehicle() {
         </div>
 
         <div className="form-group">
-          <label htmlFor="transmission">Transmission*</label>
+          <label htmlFor="transmission">
+            Transmission <span style={{ color: "red" }}>*</span>
+          </label>
           <select
             name="transmission"
             value={formData.transmission}
@@ -284,7 +296,9 @@ function ListVehicle() {
         </div>
 
         <div className="form-group">
-          <label htmlFor="odometer">Odometer*</label>
+          <label htmlFor="odometer">
+            Odometer <span style={{ color: "red" }}>*</span>
+          </label>
           <input
             type="number"
             name="odometer"
@@ -296,7 +310,9 @@ function ListVehicle() {
         </div>
 
         <div className="form-group">
-          <label htmlFor="ownership">Ownership*</label>
+          <label htmlFor="ownership">
+            Ownership <span style={{ color: "red" }}>*</span>
+          </label>
           <input
             type="text"
             name="ownership"
@@ -314,7 +330,9 @@ function ListVehicle() {
         </div>
 
         <div className="form-group">
-          <label htmlFor="description">Description*</label>
+          <label htmlFor="description">
+            Description <span style={{ color: "red" }}>*</span>
+          </label>
           <textarea
             name="description"
             value={formData.description}
@@ -330,7 +348,9 @@ function ListVehicle() {
           />
         </div>
         <div className="form-group">
-          <label htmlFor="state">State*</label>
+          <label htmlFor="state">
+            State <span style={{ color: "red" }}>*</span>
+          </label>
           <select
             type="text"
             name="state"
@@ -349,7 +369,9 @@ function ListVehicle() {
         </div>
 
         <div className="form-group">
-          <label htmlFor="location">Location*</label>
+          <label htmlFor="location">
+            Location <span style={{ color: "red" }}>*</span>
+          </label>
           <input
             type="text"
             name="location"
@@ -366,7 +388,9 @@ function ListVehicle() {
         </div>
         {/* IMAGES ------------------------------------------------- */}
         <div className="form-group">
-          <label htmlFor="file">Upload Images (up to 20)*</label>
+          <label htmlFor="file">
+            Upload Images (up to 20) <span style={{ color: "red" }}>*</span>
+          </label>
           <input
             type="file"
             multiple // Enable multiple file selection
