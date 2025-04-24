@@ -12,7 +12,7 @@ const Footer = () => {
           <h3>Contact Us</h3>
           {/* <p>Have any feedback or suggestions? We'd love to hear from you!</p> */}
           <p>
-            Email: <strong>kamranmohammed400@gmail.com</strong>
+            Email: <strong>kamran@autofinds.in</strong>
           </p>
           <p>
             Phone: <strong>+91 97035 88400</strong>
