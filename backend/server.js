@@ -20,7 +20,7 @@ const DB = process.env.DATABASE.replace(
 
 mongoose.connect(DB).then(() => {
   console.log("Database connection is successful");
-  // startCronJobs();
+  startCronJobs();
 });
 
 // console.log(process.env);
