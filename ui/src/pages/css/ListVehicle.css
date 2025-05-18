@@ -77,3 +77,9 @@ select:focus {
 .vehicle-list-container {
   position: relative;
 }
+
+.optional-label {
+  color: gray;
+  font-style: italic;
+  font-size: 0.9em;
+}

@@ -182,7 +182,9 @@ function ListVehicle() {
         </div>
 
         <div className="form-group">
-          <label htmlFor="variant">Variant</label>
+          <label htmlFor="variant">
+            Variant <span className="optional-label">(optional)</span>
+          </label>
           <input
             type="text"
             name="variant"
@@ -267,7 +269,8 @@ function ListVehicle() {
 
         <div className="form-group">
           <label htmlFor="engineDisplacement">
-            Engine Displacement (in liters)
+            Engine Displacement (in liters){" "}
+            <span className="optional-label">(optional)</span>
           </label>
           <input
             type="number"
@@ -280,7 +283,9 @@ function ListVehicle() {
         </div>
 
         <div className="form-group">
-          <label htmlFor="engineType">Engine Type</label>
+          <label htmlFor="engineType">
+            Engine Type <span className="optional-label">(optional)</span>
+          </label>
           <select
             name="engineType"
             value={formData.engineType}
