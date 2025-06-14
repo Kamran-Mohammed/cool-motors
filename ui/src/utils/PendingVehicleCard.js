@@ -25,8 +25,8 @@ function PendingVehicleCard({ vehicle, showOptions, onDelete }) {
   return (
     <a
       href={`/admin/pending-vehicle/${vehicle._id}`}
-      target="_blank"
-      rel="noopener noreferrer"
+      // target="_blank"
+      // rel="noopener noreferrer"
       style={{ textDecoration: "none", color: "inherit" }}
     >
       <div

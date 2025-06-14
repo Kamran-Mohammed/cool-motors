@@ -76,8 +76,8 @@ function VehicleCard({ vehicle, showOptions, onEdit, onDelete, onMarkAsSold }) {
   return (
     <a
       href={`/vehicle/${vehicle._id}`}
-      target="_blank"
-      rel="noopener noreferrer"
+      // target="_blank"
+      // rel="noopener noreferrer"
       style={{ textDecoration: "none", color: "inherit" }}
     >
       <div
