@@ -167,7 +167,9 @@ const SearchVehiclesPage = () => {
               onChange={handleInputChange}
             >
               <option value="">
-                {key.charAt(0).toUpperCase() + key.slice(1)}
+                {key === "make"
+                  ? "Brand"
+                  : key.charAt(0).toUpperCase() + key.slice(1)}
               </option>
               {(key === "fuelType"
                 ? fuelTypes
@@ -201,7 +203,12 @@ const SearchVehiclesPage = () => {
               }
               name={key}
               value={value}
-              placeholder={key.charAt(0).toUpperCase() + key.slice(1)}
+              // placeholder={key.charAt(0).toUpperCase() + key.slice(1)}
+              placeholder={
+                key === "make"
+                  ? "Brand"
+                  : key.charAt(0).toUpperCase() + key.slice(1)
+              }
               onChange={handleInputChange}
             />
           )
