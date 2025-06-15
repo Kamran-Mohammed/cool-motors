@@ -50,33 +50,33 @@ const Footer = () => {
           </Link>
         </div>
 
-        {/* <div className="footer-section">
+        <div className="footer-section">
           <h3>Follow Us</h3>
-          <a
+          {/* <a
             href="https://facebook.com"
             target="_blank"
             rel="noopener noreferrer"
             className="footer-link"
           >
             Facebook
-          </a>
-          <a
+          </a> */}
+          {/* <a
             href="https://twitter.com"
             target="_blank"
             rel="noopener noreferrer"
             className="footer-link"
           >
             Twitter
-          </a>
+          </a> */}
           <a
-            href="https://instagram.com"
+            href="https://www.instagram.com/autofinds.in/"
             target="_blank"
             rel="noopener noreferrer"
             className="footer-link"
           >
             Instagram
           </a>
-        </div> */}
+        </div>
       </div>
 
       <div className="footer-bottom">
