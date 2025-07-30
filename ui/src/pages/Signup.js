@@ -52,12 +52,13 @@ function Signup() {
         passwordConfirm: "",
       });
       setError("");
-      setShowAlert(true);
-      // alert(
-      //   "A verification link has been sent to you. Please visit it to verify your email."
-      // );
-      // navigate("/"); // Redirect to home page after login
-      // window.location.reload(); // Refresh the page after login
+
+      //uncomment the next line(after email gicchi is solved)
+      // setShowAlert(true);
+
+      //comment the next two lines (after email gicchi is solved)
+      navigate("/"); // Redirect to home page after login
+      window.location.reload(); // Refresh the page after login
     } catch (err) {
       setError(err.response?.data?.message || "Signup failed");
       setPassword("");

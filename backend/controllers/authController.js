@@ -57,79 +57,84 @@ const createAndSendToken = (user, statusCode, res) => {
   });
 };
 
-// exports.signup = catchAsyncError(async (req, res, next) => {
-//   //we cant use the following line of code to create a new user because anyone an define their role as admin while defining the req.body
-//   // const newUser = await User.create(req.body);
-
-//   //here the user can only define the name, email, password
-//   const newUser = await User.create({
-//     name: req.body.name,
-//     email: req.body.email,
-//     password: req.body.password,
-//     passwordConfirm: req.body.passwordConfirm,
-//     phoneNumber: req.body.phoneNumber,
-//     // passwordChangedAt: req.body.passwordChangedAt,
-//     // role: req.body.role,
-//   });
-
-//   const url = `${process.env.FRONTEND_URL_DEV}/`;
-//   // console.log(url);
-
-//   await new Email(newUser, url).sendWelcome();
-
-//   createAndSendToken(newUser, 201, res);
-// });
-
 exports.signup = catchAsyncError(async (req, res, next) => {
+  //we cant use the following line of code to create a new user because anyone an define their role as admin while defining the req.body
+  // const newUser = await User.create(req.body);
   const existingUser = await User.findOne({ email: req.body.email });
   if (existingUser) {
     return next(new AppError("Email already in use", 400));
   }
 
+  //here the user can only define the name, email, password
   const newUser = await User.create({
     name: req.body.name,
     email: req.body.email,
     password: req.body.password,
     passwordConfirm: req.body.passwordConfirm,
     phoneNumber: `+91${req.body.phoneNumber}`,
-    isVerified: false, // New users are unverified
+    isVerified: true,
+    // passwordChangedAt: req.body.passwordChangedAt,
+    // role: req.body.role,
   });
 
-  // Generate a verification token
-  // const verificationToken = crypto.randomBytes(32).toString("hex");
-  const verificationToken = newUser.createEmailVerificationToken();
-  // newUser.emailVerificationToken = crypto
-  //   .createHash("sha256")
-  //   .update(verificationToken)
-  //   .digest("hex");
-  // newUser.emailVerificationExpires = Date.now() + 24 * 60 * 60 * 1000; // Expires in 24 hours
-  await newUser.save({ validateBeforeSave: false });
+  // const url = `${process.env.FRONTEND_URL_DEV}/`;
+  // console.log(url);
 
-  try {
-    // Verification URL
-    let verificationURL = "";
-    if (process.env.NODE_ENV === "development") {
-      verificationURL = `${process.env.FRONTEND_URL_DEV}/verify-email/${verificationToken}`;
-    } else {
-      verificationURL = `${process.env.FRONTEND_URL_PROD}/verify-email/${verificationToken}`;
-    }
+  // await new Email(newUser, url).sendWelcome();
 
-    // Send verification email
-    await new Email(newUser, verificationURL).sendVerificationEmail();
-  } catch (err) {
-    newUser.emailVerificationToken = undefined;
-    newUser.emailVerificationToken = undefined;
-    await newUser.save({ validateBeforeSave: false });
-
-    return next(new AppError("Error sending email. Please try again", 500));
-  }
-
-  res.status(201).json({
-    status: "success",
-    message:
-      "Verification email sent. Please verify your email before logging in.",
-  });
+  createAndSendToken(newUser, 201, res);
 });
+
+// exports.signup = catchAsyncError(async (req, res, next) => {
+//   const existingUser = await User.findOne({ email: req.body.email });
+//   if (existingUser) {
+//     return next(new AppError("Email already in use", 400));
+//   }
+
+//   const newUser = await User.create({
+//     name: req.body.name,
+//     email: req.body.email,
+//     password: req.body.password,
+//     passwordConfirm: req.body.passwordConfirm,
+//     phoneNumber: `+91${req.body.phoneNumber}`,
+//     isVerified: false, // New users are unverified
+//   });
+
+//   // Generate a verification token
+//   // const verificationToken = crypto.randomBytes(32).toString("hex");
+//   const verificationToken = newUser.createEmailVerificationToken();
+//   // newUser.emailVerificationToken = crypto
+//   //   .createHash("sha256")
+//   //   .update(verificationToken)
+//   //   .digest("hex");
+//   // newUser.emailVerificationExpires = Date.now() + 24 * 60 * 60 * 1000; // Expires in 24 hours
+//   await newUser.save({ validateBeforeSave: false });
+
+//   try {
+//     // Verification URL
+//     let verificationURL = "";
+//     if (process.env.NODE_ENV === "development") {
+//       verificationURL = `${process.env.FRONTEND_URL_DEV}/verify-email/${verificationToken}`;
+//     } else {
+//       verificationURL = `${process.env.FRONTEND_URL_PROD}/verify-email/${verificationToken}`;
+//     }
+
+//     // Send verification email
+//     await new Email(newUser, verificationURL).sendVerificationEmail();
+//   } catch (err) {
+//     newUser.emailVerificationToken = undefined;
+//     newUser.emailVerificationToken = undefined;
+//     await newUser.save({ validateBeforeSave: false });
+
+//     return next(new AppError("Error sending email. Please try again", 500));
+//   }
+
+//   res.status(201).json({
+//     status: "success",
+//     message:
+//       "Verification email sent. Please verify your email before logging in.",
+//   });
+// });
 
 exports.verifyEmail = catchAsyncError(async (req, res, next) => {
   // Hash token to match stored hash
