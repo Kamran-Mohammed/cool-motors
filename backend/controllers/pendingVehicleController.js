@@ -101,29 +101,31 @@ exports.listVehicle = catchAsyncError(async (req, res, next) => {
   await user.save({ validateBeforeSave: false });
 
   //SENDING EMAIL NOTIFICATION TO ADMINS
-  (async () => {
-    try {
-      const admins = await User.find({ role: "admin" });
-      if (admins.length === 0) {
-        console.warn("Admins not found. Skipping admin email notification.");
-        return;
-      }
 
-      let url = "";
-      if (process.env.NODE_ENV === "development") {
-        url = `${process.env.FRONTEND_URL_DEV}/admin/pending-vehicle/${newVehicle._id}`;
-      } else {
-        url = `${process.env.FRONTEND_URL_PROD}/admin/pending-vehicle/${newVehicle._id}`;
-      }
+  //uncomment the following lines (after solving the email gicchi)
+  // (async () => {
+  //   try {
+  //     const admins = await User.find({ role: "admin" });
+  //     if (admins.length === 0) {
+  //       console.warn("Admins not found. Skipping admin email notification.");
+  //       return;
+  //     }
 
-      for (const admin of admins) {
-        await new Email(admin, url).sendAdminNotificationEmail();
-      }
-    } catch (err) {
-      console.error("Failed to send email to admin:", err.message);
-      // No return or throw — just log and move on
-    }
-  })();
+  //     let url = "";
+  //     if (process.env.NODE_ENV === "development") {
+  //       url = `${process.env.FRONTEND_URL_DEV}/admin/pending-vehicle/${newVehicle._id}`;
+  //     } else {
+  //       url = `${process.env.FRONTEND_URL_PROD}/admin/pending-vehicle/${newVehicle._id}`;
+  //     }
+
+  //     for (const admin of admins) {
+  //       await new Email(admin, url).sendAdminNotificationEmail();
+  //     }
+  //   } catch (err) {
+  //     console.error("Failed to send email to admin:", err.message);
+  //     // No return or throw — just log and move on
+  //   }
+  // })();
 
   res.status(201).json({
     status: "success",
