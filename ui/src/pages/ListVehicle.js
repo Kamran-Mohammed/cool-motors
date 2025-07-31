@@ -319,7 +319,7 @@ function ListVehicle() {
             Ownership <span style={{ color: "red" }}>*</span>
           </label>
           <input
-            type="text"
+            type="number"
             name="ownership"
             list="ownerships"
             value={formData.ownership}

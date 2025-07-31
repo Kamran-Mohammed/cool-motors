@@ -8,8 +8,26 @@ const crypto = require("crypto");
 const { deleteS3Images } = require("../utils/tools");
 const sharp = require("sharp");
 
-const generateFileName = (bytes = 32) =>
-  crypto.randomBytes(bytes).toString("hex");
+// const generateFileName = (bytes = 32) =>
+//   crypto.randomBytes(bytes).toString("hex");
+const generateFileName = (make, model, year) => {
+  // Sanitize the inputs to be URL-friendly: lowercase and replace spaces with hyphens.
+  const sanitizedMake = make
+    ? String(make).toLowerCase().replace(/\s+/g, "-")
+    : "unknown-make";
+  const sanitizedModel = model
+    ? String(model).toLowerCase().replace(/\s+/g, "-")
+    : "unknown-model";
+  const sanitizedYear = year ? String(year) : "unknown-year"; // Year is typically numeric, stringify it.
+
+  // Generate a shorter random string (8 bytes, which results in 16 hexadecimal characters).
+  // This ensures uniqueness while keeping the random part concise.
+  const uniqueId = crypto.randomBytes(8).toString("hex"); // 8 bytes -> 16 hex chars
+
+  // Combine the parts to form the new file name.
+  // Example: honda-accord-2003-e1a2b3c4d5e6f7a8
+  return `${sanitizedMake}-${sanitizedModel}-${sanitizedYear}-${uniqueId}`;
+};
 
 const {
   S3Client,
@@ -55,7 +73,12 @@ exports.listVehicle = catchAsyncError(async (req, res, next) => {
 
   // Loop through the files and upload each one to S3
   for (const file of files) {
-    const fileName = generateFileName();
+    // const fileName = generateFileName();
+    const fileName = generateFileName(
+      req.body.make,
+      req.body.model,
+      req.body.year
+    );
 
     // Compress and convert image to JPEG
     const resizedBuffer = await sharp(file.buffer)
