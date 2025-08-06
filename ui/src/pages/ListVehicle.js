@@ -8,6 +8,12 @@ import Restricted from "../utils/Restricted";
 import Alert from "../utils/Alert";
 import LoadingModal from "../utils/LoadingModal";
 
+const MAX_COMBINED_SIZE_MB = process.env.REACT_APP_MAX_COMBINED_IMAGE_SIZE_MB
+  ? parseInt(process.env.REACT_APP_MAX_COMBINED_IMAGE_SIZE_MB, 10)
+  : 35; // Default to 20 if not set or invalid
+const MAX_COMBINED_SIZE_BYTES = MAX_COMBINED_SIZE_MB * 1024 * 1024;
+// const MAX_IMAGES = 20; // Max number of images allowed
+
 function ListVehicle() {
   const [formData, setFormData] = useState({
     make: "",
@@ -30,6 +36,9 @@ function ListVehicle() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const [showAlert, setShowAlert] = useState(false);
+  const [imageSizeError, setImageSizeError] = useState(""); // NEW: For image size validation errors
+  const [totalCombinedSize, setTotalCombinedSize] = useState(0); // NEW: To track combined size
+  // const [draggedItemIndex, setDraggedItemIndex] = useState(null);
 
   const carMakes = [
     "Toyota",
@@ -81,20 +90,171 @@ function ListVehicle() {
 
   const ownerships = Array.from({ length: 10 }, (_, i) => i + 1);
 
+  React.useEffect(() => {
+    return () => {
+      // Cleanup function
+      selectedFiles.forEach((item) => URL.revokeObjectURL(item.previewUrl));
+    };
+  }, [selectedFiles]); // Run cleanup when selectedFiles array changes
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
+  // const handleFileChange = (e) => {
+  //   // Store selected files in state
+  //   setSelectedFiles(Array.from(e.target.files));
+  // };
+
   const handleFileChange = (e) => {
-    // Store selected files in state
-    setSelectedFiles(Array.from(e.target.files));
+    setImageSizeError(""); // Clear any previous image size errors
+    const files = Array.from(e.target.files); // Convert FileList to Array
+
+    let currentTotalSize = 0;
+    for (const file of files) {
+      currentTotalSize += file.size;
+    }
+
+    if (currentTotalSize > MAX_COMBINED_SIZE_BYTES) {
+      setImageSizeError(
+        `Total image size (${(currentTotalSize / (1024 * 1024)).toFixed(
+          2
+        )} MB) exceeds the maximum allowed limit of ${MAX_COMBINED_SIZE_MB} MB.`
+      );
+      setSelectedFiles([]); // Clear selected files if limit exceeded
+      setTotalCombinedSize(0);
+      // Reset the input value to allow re-selection of files
+      e.target.value = null;
+    } else {
+      setSelectedFiles(files);
+      setTotalCombinedSize(currentTotalSize);
+      setImageSizeError(""); // Ensure no error message is displayed if valid
+    }
   };
+
+  // const handleFileChange = (e) => {
+  //   setImageSizeError(""); // Clear any previous image size errors
+
+  //   const newFiles = Array.from(e.target.files);
+  //   if (newFiles.length === 0) return;
+
+  //   // Combine existing files with new ones for total size check
+  //   const allFiles = [...selectedFiles.map((item) => item.file), ...newFiles];
+
+  //   if (allFiles.length > MAX_IMAGES) {
+  //     setImageSizeError(`You can upload a maximum of ${MAX_IMAGES} images.`);
+  //     e.target.value = null; // Reset input
+  //     return;
+  //   }
+
+  //   let currentTotalSize = 0;
+  //   for (const file of allFiles) {
+  //     currentTotalSize += file.size;
+  //   }
+
+  //   if (currentTotalSize > MAX_COMBINED_SIZE_BYTES) {
+  //     setImageSizeError(
+  //       `Total image size (${(currentTotalSize / (1024 * 1024)).toFixed(
+  //         2
+  //       )} MB) exceeds the maximum allowed limit of ${MAX_COMBINED_SIZE_MB} MB.`
+  //     );
+  //     e.target.value = null; // Reset input
+  //   } else {
+  //     const filesWithPreviews = newFiles.map((file) => ({
+  //       file,
+  //       previewUrl: URL.createObjectURL(file),
+  //       id:
+  //         Math.random().toString(36).substring(2, 15) +
+  //         Math.random().toString(36).substring(2, 15), // Unique ID for keying and reordering
+  //     }));
+
+  //     setSelectedFiles((prevFiles) => [...prevFiles, ...filesWithPreviews]);
+  //     setTotalCombinedSize(currentTotalSize);
+  //     setImageSizeError(""); // Ensure no error message is displayed if valid
+  //     e.target.value = null; // Clear the input so same file can be selected again
+  //   }
+  // };
+
+  // // NEW: Function to remove an image
+  // const handleRemoveImage = (idToRemove) => {
+  //   setSelectedFiles((prevFiles) => {
+  //     const updatedFiles = prevFiles.filter((item) => item.id !== idToRemove);
+  //     // Revoke the URL for the removed image to free up memory
+  //     const removedItem = prevFiles.find((item) => item.id === idToRemove);
+  //     if (removedItem) {
+  //       URL.revokeObjectURL(removedItem.previewUrl);
+  //     }
+
+  //     // Recalculate total size
+  //     const newTotalSize = updatedFiles.reduce(
+  //       (acc, item) => acc + item.file.size,
+  //       0
+  //     );
+  //     setTotalCombinedSize(newTotalSize);
+
+  //     // Clear size error if removing an image brings it below the limit
+  //     if (newTotalSize <= MAX_COMBINED_SIZE_BYTES && imageSizeError) {
+  //       setImageSizeError("");
+  //     }
+
+  //     return updatedFiles;
+  //   });
+  // };
+
+  // // NEW: Drag and Drop Handlers
+  // const handleDragStart = (e, index) => {
+  //   setDraggedItemIndex(index);
+  //   e.dataTransfer.effectAllowed = "move";
+  //   // Set a dummy data to make drag work in some browsers
+  //   e.dataTransfer.setData("text/plain", index);
+  // };
+
+  // const handleDragOver = (e, index) => {
+  //   e.preventDefault(); // Necessary to allow dropping
+  //   if (draggedItemIndex === null || draggedItemIndex === index) return;
+
+  //   // Optional: Add visual feedback for drag over
+  //   // e.currentTarget.classList.add('drag-over');
+  // };
+
+  // const handleDragLeave = (e) => {
+  //   // Optional: Remove visual feedback
+  //   // e.currentTarget.classList.remove('drag-over');
+  // };
+
+  // const handleDrop = (e, dropIndex) => {
+  //   e.preventDefault();
+  //   // e.currentTarget.classList.remove('drag-over'); // Remove visual feedback
+
+  //   if (draggedItemIndex === null || draggedItemIndex === dropIndex) {
+  //     setDraggedItemIndex(null);
+  //     return;
+  //   }
+
+  //   const newSelectedFiles = [...selectedFiles];
+  //   const [draggedItem] = newSelectedFiles.splice(draggedItemIndex, 1);
+  //   newSelectedFiles.splice(dropIndex, 0, draggedItem);
+
+  //   setSelectedFiles(newSelectedFiles);
+  //   setDraggedItemIndex(null); // Reset dragged item index
+  // };
+
+  // const handleDragEnd = () => {
+  //   setDraggedItemIndex(null); // Ensure reset regardless of drop success
+  // };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setImageSizeError("");
     setLoading(true);
+
+    if (imageSizeError) {
+      // If there's an image size error, prevent submission
+      setLoading(false);
+      return;
+    }
 
     try {
       const formDataWithFiles = new FormData();
@@ -121,12 +281,92 @@ function ListVehicle() {
       // alert("Details submitted successfully. Please wait for update (email).");
       // navigate("/");
       setShowAlert(true);
+      setFormData({
+        make: "",
+        model: "",
+        year: "",
+        price: "",
+        fuelType: "",
+        transmission: "",
+        engineDisplacement: "",
+        engineType: "",
+        odometer: "",
+        ownership: "",
+        location: "",
+        state: "",
+      });
+      setSelectedFiles([]);
+      setTotalCombinedSize(0);
     } catch (err) {
       setError(err.response?.data?.message || "Failed to add vehicle");
     } finally {
       setLoading(false);
     }
   };
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   setError("");
+  //   setImageSizeError("");
+  //   setLoading(true);
+
+  //   if (selectedFiles.length === 0) {
+  //     setError("Please select images to upload.");
+  //     setLoading(false);
+  //     return;
+  //   }
+  //   if (imageSizeError) {
+  //     setLoading(false);
+  //     return;
+  //   }
+
+  //   try {
+  //     const formDataWithFiles = new FormData();
+  //     Object.keys(formData).forEach((key) => {
+  //       formDataWithFiles.append(key, formData[key]);
+  //     });
+
+  //     // Append original File objects in their current order
+  //     selectedFiles.forEach((item) => {
+  //       formDataWithFiles.append("images", item.file);
+  //     });
+
+  //     await axios.post(
+  //       `${process.env.REACT_APP_API_URL}/api/v1/pending-vehicles/list`,
+  //       formDataWithFiles,
+  //       {
+  //         withCredentials: true,
+  //       }
+  //     );
+
+  //     setError("");
+  //     setShowAlert(true);
+  //     // Reset form and files after successful submission
+  //     setFormData({
+  //       make: "",
+  //       model: "",
+  //       year: "",
+  //       price: "",
+  //       fuelType: "",
+  //       transmission: "",
+  //       engineDisplacement: "",
+  //       engineType: "",
+  //       odometer: "",
+  //       ownership: "",
+  //       location: "",
+  //       state: "",
+  //       description: "", // Added description to reset
+  //     });
+  //     // Revoke all preview URLs before clearing selectedFiles
+  //     selectedFiles.forEach((item) => URL.revokeObjectURL(item.previewUrl));
+  //     setSelectedFiles([]);
+  //     setTotalCombinedSize(0);
+  //     document.getElementById("image-upload-input").value = null; // Reset file input
+  //   } catch (err) {
+  //     setError(err.response?.data?.message || "Failed to add vehicle");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   if (!authLoading && !user) {
     return <Restricted />;
@@ -394,7 +634,8 @@ function ListVehicle() {
         {/* IMAGES ------------------------------------------------- */}
         <div className="form-group">
           <label htmlFor="file">
-            Upload Images (up to 20) <span style={{ color: "red" }}>*</span>
+            Upload Images (up to 20, max {MAX_COMBINED_SIZE_MB} MB total){" "}
+            <span style={{ color: "red" }}>*</span>
           </label>
           <input
             type="file"
@@ -406,6 +647,80 @@ function ListVehicle() {
           <small style={{ display: "block", marginTop: "5px", color: "#666" }}>
             The first selected image will be used as the cover photo.
           </small>
+          {/* <small style={{ display: "block", marginTop: "5px", color: "#666" }}>
+            Drag and drop to reorder. Click 'X' to remove. The first image will
+            be the cover photo.
+          </small> */}
+          {selectedFiles.length > 0 && (
+            <div
+              style={{ marginTop: "10px", fontSize: "0.9em", color: "#333" }}
+            >
+              <p>Selected {selectedFiles.length} files:</p>
+              <ul>
+                {selectedFiles.map((file, index) => (
+                  <li key={index}>
+                    {file.name} ({(file.size / (1024 * 1024)).toFixed(2)} MB)
+                  </li>
+                ))}
+              </ul>
+              <p style={{ fontWeight: "bold" }}>
+                Total size: {(totalCombinedSize / (1024 * 1024)).toFixed(2)} MB
+              </p>
+            </div>
+          )}
+          {/* {selectedFiles.length > 0 && (
+            <div className="image-preview-area">
+              <p className="image-preview-summary">
+                Selected {selectedFiles.length} images (Total:{" "}
+                {(totalCombinedSize / (1024 * 1024)).toFixed(2)} MB)
+              </p>
+              <div className="image-thumbnails-container">
+                {selectedFiles.map((item, index) => (
+                  <div
+                    key={item.id} // Use the unique ID as key
+                    className="image-thumbnail-wrapper"
+                    draggable="true"
+                    onDragStart={(e) => handleDragStart(e, index)}
+                    onDragOver={(e) => handleDragOver(e, index)}
+                    onDragLeave={handleDragLeave}
+                    onDrop={(e) => handleDrop(e, index)}
+                    onDragEnd={handleDragEnd}
+                    style={{
+                      opacity: draggedItemIndex === index ? 0.5 : 1, // Visual feedback for dragged item
+                      border:
+                        draggedItemIndex !== null && draggedItemIndex !== index
+                          ? "2px dashed #ccc"
+                          : "none", // Drag over border
+                    }}
+                  >
+                    <img
+                      src={item.previewUrl}
+                      alt={`Vehicle image ${index + 1}`}
+                      className="image-thumbnail"
+                    />
+                    <button
+                      type="button"
+                      className="remove-image-button"
+                      onClick={() => handleRemoveImage(item.id)}
+                    >
+                      &times;
+                    </button>
+                    {index === 0 && (
+                      <span className="cover-photo-label">Cover</span>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )} */}
+          {imageSizeError && (
+            <p
+              className="error-message"
+              style={{ color: "red", marginTop: "10px" }}
+            >
+              {imageSizeError}
+            </p>
+          )}
         </div>
         {/*------------------------------------------------------------ */}
         <button type="submit" className="submit-button" disabled={loading}>
