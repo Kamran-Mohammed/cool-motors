@@ -10,7 +10,7 @@ import LoadingModal from "../utils/LoadingModal";
 
 const MAX_COMBINED_SIZE_MB = process.env.REACT_APP_MAX_COMBINED_IMAGE_SIZE_MB
   ? parseInt(process.env.REACT_APP_MAX_COMBINED_IMAGE_SIZE_MB, 10)
-  : 35; // Default to 20 if not set or invalid
+  : 15; // Default to 20 if not set or invalid
 const MAX_COMBINED_SIZE_BYTES = MAX_COMBINED_SIZE_MB * 1024 * 1024;
 // const MAX_IMAGES = 20; // Max number of images allowed
 

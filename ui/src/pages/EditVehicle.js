@@ -95,8 +95,17 @@ const EditVehicle = () => {
   }, [vehicleId, user]);
 
   const filterFields = (data) => {
-    const { __v, updatedAt, images, _id, numberOfLikes, ...filteredData } =
-      data;
+    const {
+      __v,
+      updatedAt,
+      images,
+      _id,
+      numberOfLikes,
+      // listedBy,
+      createdAt,
+      expiresAt,
+      ...filteredData
+    } = data;
     return filteredData;
   };
 
@@ -180,10 +189,6 @@ const EditVehicle = () => {
                     <option key={make} value={make} />
                   ))}
                 </datalist>
-                {/* <datalist id="carMakes">
-                  <option value="Toyota" />
-                  <option value="Honda" />
-                  </datalist> */}
               </>
             ) : key === "year" ? (
               <>
