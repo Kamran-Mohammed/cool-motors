@@ -37,7 +37,7 @@
     "nodemailer-sendgrid": "^1.0.3",
     "nodemon": "^3.1.4",
     "npm": "^11.0.0",
-    "sharp": "^0.34.0",
+    "sharp": "^0.34.3",
     "twilio": "^5.4.5",
     "util": "^0.12.5",
     "validator": "^13.12.0",
