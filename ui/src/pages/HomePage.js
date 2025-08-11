@@ -11,7 +11,7 @@ const HomePage = () => {
     const fetchRandomVehicles = async () => {
       try {
         const response = await axios.get(
-          `${process.env.REACT_APP_API_URL}/api/v1/vehicles/random?limit=16`,
+          `${process.env.REACT_APP_API_URL}/api/v1/vehicles/random?limit=100`,
           { withCredentials: true }
         );
         setVehicles(response.data.data.vehicles);
