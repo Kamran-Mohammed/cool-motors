@@ -163,3 +163,62 @@
   vertical-align: middle;
   margin-left: 5px;
 }
+
+/* VehicleDetails.css additions */
+
+.image-loading-overlay,
+.modal-image-loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(
+    255,
+    255,
+    255,
+    0.8
+  ); /* Semi-transparent white background */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 5; /* Ensure it's above the image */
+  color: #555;
+  font-size: 1.1em;
+}
+
+.spinner {
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-left-color: #333; /* Color of the spinner */
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin-bottom: 10px;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Optional: Add a class to the image itself to hide it initially */
+.vehicle-image.loading-effect,
+.modal-content.loading-effect {
+  /* You can make it slightly transparent or even hide it completely */
+  opacity: 0.1; /* Example: make it very dim */
+  /* filter: blur(5px); */ /* Example: add a blur effect */
+  transition: opacity 0.3s ease-in-out, filter 0.3s ease-in-out;
+}
+
+/* When images are loaded, remove the loading effect */
+.vehicle-image:not(.loading-effect),
+.modal-content:not(.loading-effect) {
+  opacity: 1;
+  filter: blur(0);
+}

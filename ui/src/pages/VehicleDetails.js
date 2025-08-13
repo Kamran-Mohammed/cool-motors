@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import { useParams, Link, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import "./css/VehicleDetails.css"; // Import the CSS for the modal and blur effect
@@ -24,6 +24,10 @@ function VehicleDetails() {
   const [isMobileScreen, setIsMobileScreen] = useState(window.innerWidth < 768);
   const [touchStartX, setTouchStartX] = useState(0);
   const [touchEndX, setTouchEndX] = useState(0);
+  // NEW: State to track if all images are preloaded
+  const [allImagesPreloaded, setAllImagesPreloaded] = useState(false);
+  // NEW: Ref to store preloaded Image objects (not directly used in JSX, but holds the data)
+  const preloadedImagesRef = useRef([]);
 
   const handleTouchStart = (e) => {
     setTouchStartX(e.touches[0].clientX);
@@ -70,6 +74,35 @@ function VehicleDetails() {
             }
           );
           setSeller(sellerResponse.data.data.user);
+        }
+
+        // NEW: Initiate image preloading after fetching vehicle data
+        if (fetchedVehicle.images && fetchedVehicle.images.length > 0) {
+          let loadedCount = 0;
+          preloadedImagesRef.current = []; // Clear previous preloaded images
+
+          fetchedVehicle.images.forEach((imageUrl, index) => {
+            const img = new Image();
+            img.src = imageUrl;
+            img.onload = () => {
+              loadedCount++;
+              preloadedImagesRef.current[index] = img; // Store the loaded image object
+              if (loadedCount === fetchedVehicle.images.length) {
+                setAllImagesPreloaded(true); // All images are loaded
+              }
+            };
+            img.onerror = () => {
+              // Handle image loading errors, e.g., show a placeholder
+              console.warn(`Failed to load image: ${imageUrl}`);
+              loadedCount++; // Still increment to count it as "attempted"
+              if (loadedCount === fetchedVehicle.images.length) {
+                setAllImagesPreloaded(true);
+              }
+            };
+          });
+        } else {
+          // No images to preload, consider it preloaded
+          setAllImagesPreloaded(true);
         }
       } catch (error) {
         console.error("Error fetching vehicle or seller details:", error);
@@ -180,6 +213,13 @@ function VehicleDetails() {
     return <div>Vehicle not found</div>;
   }
 
+  // Determine the image source. If all images are preloaded, use the current image directly.
+  // Otherwise, use a loading class or a placeholder.
+  const currentImageSrc =
+    vehicle.images && vehicle.images.length > 0
+      ? vehicle.images[currentImageIndex]
+      : "https://placehold.co/1200x800/e0e0e0/555555?text=No+Image"; // Fallback placeholder
+
   return (
     <div>
       <div
@@ -190,7 +230,26 @@ function VehicleDetails() {
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
         >
+          {/* NEW: Conditional rendering for loading state or preloaded image */}
+          {!allImagesPreloaded && (
+            <div className="image-loading-overlay">
+              <div className="spinner"></div> {/* Basic spinner */}
+              <p>Loading images...</p>
+            </div>
+          )}
           <img
+            src={currentImageSrc}
+            alt={`${vehicle.make} ${vehicle.model}`}
+            className={`vehicle-image ${
+              !allImagesPreloaded ? "loading-effect" : ""
+            }`} // Add loading effect class
+            style={{
+              objectFit: "contain",
+              // NEW: Make image invisible until preloaded if not showing overlay
+            }}
+            onClick={openImageModal}
+          />
+          {/* <img
             src={
               vehicle.images && vehicle.images.length > 0
                 ? vehicle.images[currentImageIndex]
@@ -202,7 +261,7 @@ function VehicleDetails() {
               objectFit: "contain",
             }}
             onClick={openImageModal}
-          />
+          /> */}
           <button onClick={handleLikeToggle} className="like-button">
             <img
               src={liked ? fullHeart : heart}
@@ -220,7 +279,7 @@ function VehicleDetails() {
           {vehicle.images?.length > 1 && (
             <img
               src={left}
-              alt="Previuos"
+              alt="Previous"
               onClick={prevImage}
               className="img-nav-button left"
             />
@@ -521,10 +580,25 @@ function VehicleDetails() {
               className="img-nav-button left"
             />
           )}
-          <img
+          {/* <img
             className="modal-content"
             src={vehicle.images[currentImageIndex]}
             alt={`${vehicle.make} ${vehicle.model}`}
+          /> */}
+          {/* NEW: Conditional rendering for modal image loading */}
+          {!allImagesPreloaded && (
+            <div className="modal-image-loading-overlay">
+              <div className="spinner"></div>
+              <p>Loading image...</p>
+            </div>
+          )}
+          <img
+            className={`modal-content ${
+              !allImagesPreloaded ? "loading-effect" : ""
+            }`} // Add loading effect class
+            src={currentImageSrc} // Use currentImageSrc for consistent loading logic
+            alt={`${vehicle.make} ${vehicle.model}`}
+            // style={{ opacity: allImagesPreloaded ? 1 : 0, transition: 'opacity 0.3s ease-in-out' }} // Optional fade-in
           />
           {/* Next Button */}
           {vehicle.images?.length > 1 && (
