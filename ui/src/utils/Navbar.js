@@ -13,6 +13,8 @@ const Navbar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
+  // NEW: State for the universal search input
+  // const [searchQuery, setSearchQuery] = useState("");
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -44,6 +46,24 @@ const Navbar = () => {
     }
   };
 
+  // // NEW: Handle universal search submission
+  // const handleSearchSubmit = (e) => {
+  //   e.preventDefault(); // Prevent form default submission if it's a form
+
+  //   if (searchQuery.trim()) {
+  //     // Only navigate if query is not empty
+  //     navigate(`/search?query=${encodeURIComponent(searchQuery.trim())}`);
+  //     setSearchQuery(""); // Clear search bar after submission
+  //   }
+  // };
+
+  // // NEW: Handle Enter key press in search input
+  // const handleKeyDown = (e) => {
+  //   if (e.key === "Enter") {
+  //     handleSearchSubmit(e);
+  //   }
+  // };
+
   return (
     <header className="header">
       {/* <div className="nav-links"> */}
@@ -56,6 +76,20 @@ const Navbar = () => {
           Search
         </Link>
       </div>
+      {/* NEW: Universal Search Bar */}
+      {/* <div className="nav-search-container">
+        <input
+          type="text"
+          placeholder="Search by make, model, fuel type, year..."
+          className="search-input"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          onKeyDown={handleKeyDown} // Listen for Enter key
+        />
+        <button className="search-button" onClick={handleSearchSubmit}>
+          Search
+        </button>
+      </div> */}
 
       {/* <div className="nav-center">
         {user && (
@@ -66,17 +100,7 @@ const Navbar = () => {
         )}
       </div> */}
       <div className="nav-center">
-        <button
-          className="list-vehicle-btn"
-          onClick={handleSellClick}
-          // style={{
-          //   all: "unset",
-          //   cursor: "pointer",
-          //   display: "flex",
-          //   alignItems: "center",
-          //   gap: "4px",
-          // }}
-        >
+        <button className="list-vehicle-btn" onClick={handleSellClick}>
           <img src={plusIcon} alt="List Vehicle" className="plus-icon" />
           <span>Sell</span>
         </button>

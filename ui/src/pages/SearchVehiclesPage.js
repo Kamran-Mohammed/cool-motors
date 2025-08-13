@@ -1,30 +1,26 @@
 import "./css/SearchVehicles.css";
 import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { states } from "../utils/data";
 import axios from "axios";
 import VehicleCard from "../utils/VehicleCard";
 import Alert from "../utils/Alert";
+import {
+  locations,
+  states,
+  carMakes,
+  fuelTypes,
+  transmissions,
+  engineTypes,
+} from "../utils/data";
 
-const fuelTypes = ["petrol", "diesel", "hybrid", "electric", "lpg", "cng"];
-const transmissions = ["automatic", "manual"];
-const engineTypes = [
-  "Inline 3",
-  "Inline 4",
-  "Inline 5",
-  "Inline 6",
-  "V6",
-  "V8",
-  "V10",
-  "V12",
-  "V16",
-  "W12",
-  "w16",
-  "Flat 4", //boxer 4
-  "Flat 6", //boxer 6
-  "rotary",
-];
-const sorts = ["priceAsc", "priceDesc", "mileageAsc", "mileageDesc"];
+const sorts = ["priceAsc", "priceDesc", "odometerAsc", "odometerDesc"];
+// MODIFIED: Use objects for sort options for better display
+// const sortOptions = [
+//   { value: "priceAsc", label: "Price: Low to High" },
+//   { value: "priceDesc", label: "Price: High to Low" },
+//   { value: "odometerAsc", label: "Odometer: Low to High" }
+//   { value: "odometerDesc", label: "Odometer: High to Low" },
+// ];
 
 const SearchVehiclesPage = () => {
   const navigate = useNavigate();
@@ -55,29 +51,41 @@ const SearchVehiclesPage = () => {
     totalPages: 1,
   });
 
-  // const fetchVehicles = async (activeFilters) => {
-  //   if (Object.keys(activeFilters).length === 0) return; // Don't fetch if no filters
-
-  //   setLoading(true);
-  //   try {
-  //     const response = await axios.get(
-  //       `${process.env.REACT_APP_API_URL}/api/v1/vehicles/search`,
-  //       {
-  //         params: activeFilters,
-  //         withCredentials: true,
-  //       }
-  //     );
-  //     setVehicles(response.data.data.vehicles);
-  //   } catch (error) {
-  //     console.error("Error fetching vehicles:", error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
+  // // NEW: Ref to prevent double-fetching on initial load
+  // const initialFetchDone = React.useRef(false);
 
   const fetchVehicles = useCallback(
     async (activeFilters) => {
-      if (Object.keys(activeFilters).length === 0) return;
+      // if (Object.keys(activeFilters).length === 0) return;
+      if (Object.keys(activeFilters).length === 0) {
+        // NEW: If no filters are present on initial load, fetch all vehicles
+        // This ensures the page isn't empty if no search params are in the URL.
+        // You can adjust this behavior if you prefer to show nothing until a search is performed.
+        if (Object.keys(location.search).length === 0) {
+          setLoading(true); // Still show loading
+          try {
+            const response = await axios.get(
+              `${process.env.REACT_APP_API_URL}/api/v1/vehicles/search`,
+              {
+                params: { page: pagination.page }, // Fetch all on page 1
+                withCredentials: true,
+              }
+            );
+            setVehicles(response.data.data.vehicles);
+            setPagination({
+              page: response.data.currentPage,
+              totalPages: response.data.totalPages,
+            });
+          } catch (error) {
+            console.error("Error fetching vehicles on initial load:", error);
+            setVehicles([]);
+          } finally {
+            setLoading(false);
+          }
+          return; // Exit after initial fetch
+        }
+        return; // If filters are empty but it's not initial load, do nothing.
+      }
 
       setLoading(true);
       try {
@@ -96,15 +104,18 @@ const SearchVehiclesPage = () => {
         });
       } catch (error) {
         console.error("Error fetching vehicles:", error);
+        setVehicles([]);
       } finally {
         setLoading(false);
       }
     },
-    [pagination.page]
+    [pagination.page, location.search]
   );
 
   // Parse query parameters from the URL on page load
   useEffect(() => {
+    // if (initialFetchDone.current) return; // Prevent double-fetch on component mount
+
     const params = new URLSearchParams(location.search);
     const newFilters = {};
     for (const [key, value] of params.entries()) {
@@ -112,6 +123,7 @@ const SearchVehiclesPage = () => {
     }
     setFilters((prev) => ({ ...prev, ...newFilters }));
     fetchVehicles(newFilters);
+    // initialFetchDone.current = true; // Mark initial fetch as done
   }, [location.search, fetchVehicles]);
 
   const handleInputChange = (e) => {
@@ -129,12 +141,15 @@ const SearchVehiclesPage = () => {
       {}
     );
 
-    if (Object.keys(activeFilters).length === 0) {
-      // alert("Please select at least one filter before searching.");
-      setShowAlert(true);
-      return;
-    }
+    // If you want to show an alert when no filters are selected, uncomment this:
+    // if (Object.keys(activeFilters).length === 0) {
+    //   // alert("Please select at least one filter before searching.");
+    //   setShowAlert(true);
+    //   return;
+    // }
 
+    // Always reset to page 1 when new filters are applied
+    setPagination((prev) => ({ ...prev, page: 1 }));
     const queryParams = new URLSearchParams(activeFilters);
     navigate(`/search?${queryParams.toString()}`);
 
@@ -145,7 +160,39 @@ const SearchVehiclesPage = () => {
     });
   };
 
+  // NEW: Clear Filters function
+  const handleClearFilters = () => {
+    const defaultFilters = {
+      make: "",
+      model: "",
+      minYear: "",
+      maxYear: "",
+      fuelType: "",
+      transmission: "",
+      minPrice: "",
+      maxPrice: "",
+      minOdometer: "",
+      maxOdometer: "",
+      engineType: "",
+      location: "",
+      state: "",
+      sort: "",
+    };
+    setFilters(defaultFilters);
+    setPagination({ page: 1, totalPages: 1 });
+    navigate("/search"); // Navigate to base search URL
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   const handlePageChange = (newPage) => {
+    // // Ensure current filters are used when changing page
+    // const currentActiveFilters = Object.entries(filters).reduce(
+    //   (acc, [key, value]) => {
+    //     if (value) acc[key] = value;
+    //     return acc;
+    //   },
+    //   {}
+    // );
     setPagination((prev) => ({ ...prev, page: newPage }));
     navigate(
       `/search?${new URLSearchParams({ ...filters, page: newPage }).toString()}`
@@ -156,7 +203,7 @@ const SearchVehiclesPage = () => {
     <div className="container">
       {/* Filters Section */}
       <div className="filters">
-        {Object.entries(filters).map(([key, value]) =>
+        {/* {Object.entries(filters).map(([key, value]) =>
           ["fuelType", "transmission", "engineType", "state", "sort"].includes(
             key
           ) ? (
@@ -212,7 +259,99 @@ const SearchVehiclesPage = () => {
               onChange={handleInputChange}
             />
           )
-        )}
+        )} */}
+        {Object.entries(filters).map(([key, value]) => {
+          // Determine if it's a select or input, and handle datalists
+          if (
+            [
+              "fuelType",
+              "transmission",
+              "engineType",
+              "state",
+              "sort",
+            ].includes(key)
+          ) {
+            // Select inputs
+            let optionsArray = [];
+            let placeholderText = "";
+
+            if (key === "fuelType") {
+              optionsArray = fuelTypes;
+              placeholderText = "Fuel Type";
+            } else if (key === "transmission") {
+              optionsArray = transmissions;
+              placeholderText = "Transmission";
+            } else if (key === "state") {
+              optionsArray = states;
+              placeholderText = "State";
+            } else if (key === "sort") {
+              optionsArray = sorts; // Using your 'sorts' array directly
+              placeholderText = "Sort By";
+            } else if (key === "engineType") {
+              optionsArray = engineTypes;
+              placeholderText = "Engine Type";
+            }
+
+            return (
+              <select
+                key={key}
+                name={key}
+                value={value}
+                onChange={handleInputChange}
+                className="filter-select"
+              >
+                <option value="">{placeholderText}</option>
+                {optionsArray.map((option) => (
+                  <option key={option} value={option}>
+                    {option.charAt(0).toUpperCase() + option.slice(1)}
+                  </option>
+                ))}
+              </select>
+            );
+          } else {
+            // Text/Number inputs with potential datalists
+            let inputType = "text";
+            let placeholderText = key.charAt(0).toUpperCase() + key.slice(1);
+            let datalistId = "";
+            if (key === "make") {
+              placeholderText = "Brand";
+              datalistId = "carMakes"; // Link to carMakes datalist
+            } else if (key === "location") {
+              placeholderText = "Location";
+              datalistId = "locations"; // Link to locations datalist
+            }
+
+            return (
+              <React.Fragment key={key}>
+                <input
+                  type={inputType}
+                  name={key}
+                  value={value}
+                  placeholder={placeholderText}
+                  onChange={handleInputChange}
+                  list={datalistId} // Apply datalist if ID is set
+                  className="filter-input"
+                />
+                {/* Datalist for carMakes */}
+                {datalistId === "carMakes" && (
+                  <datalist id="carMakes">
+                    {carMakes.map((make) => (
+                      <option key={make} value={make} />
+                    ))}
+                  </datalist>
+                )}
+                {/* Datalist for locations */}
+                {datalistId === "locations" && (
+                  <datalist id="locations">
+                    {locations.map((loc) => (
+                      <option key={loc} value={loc} />
+                    ))}
+                  </datalist>
+                )}
+              </React.Fragment>
+            );
+          }
+        })}
         <button
           className="apply-filter-btn"
           onClick={handleApplyFilters}
@@ -220,11 +359,25 @@ const SearchVehiclesPage = () => {
         >
           {loading ? "Loading..." : "Apply Filters"}
         </button>
+        <button
+          className="clear-filter-btn" // NEW: Clear Filters Button
+          onClick={handleClearFilters}
+          disabled={loading}
+        >
+          Clear Filters
+        </button>
       </div>
 
       {/* Results Section */}
       <div className="results">
         <h2>Search Results</h2>
+        {loading && <p>Loading vehicles...</p>}
+        {!loading && vehicles.length === 0 && (
+          <p className="no-results-message">
+            No vehicles found matching your criteria. Try adjusting your
+            filters!
+          </p>
+        )}
         {vehicles.length !== 0 && (
           <div className="vehicle-grid">
             {vehicles.map((vehicle) => (

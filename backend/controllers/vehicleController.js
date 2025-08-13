@@ -280,8 +280,8 @@ exports.searchVehicles = catchAsyncError(async (req, res) => {
   let sortBy = {};
   if (filters.sort === "priceAsc") sortBy.price = 1;
   if (filters.sort === "priceDesc") sortBy.price = -1;
-  if (filters.sort === "mileageAsc") sortBy.odometer = 1;
-  if (filters.sort === "mileageDesc") sortBy.odometer = -1;
+  if (filters.sort === "odometerAsc") sortBy.odometer = 1;
+  if (filters.sort === "odometerDesc") sortBy.odometer = -1;
 
   // const vehicles = await Vehicle.find(searchCriteria).sort(sortBy).explian();
   // const vehicles = await Vehicle.find(searchCriteria).sort(sortBy);

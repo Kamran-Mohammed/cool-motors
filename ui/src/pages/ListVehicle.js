@@ -3,7 +3,16 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"; // Use this for redirection
 import { useAuth } from "../AuthContext";
 import axios from "axios";
-import { locations, states } from "../utils/data";
+import {
+  locations,
+  states,
+  engineTypes,
+  carMakes,
+  fuelTypes,
+  transmissions,
+  years,
+  ownerships,
+} from "../utils/data";
 import Restricted from "../utils/Restricted";
 import Alert from "../utils/Alert";
 import LoadingModal from "../utils/LoadingModal";
@@ -39,116 +48,6 @@ function ListVehicle() {
   const [imageSizeError, setImageSizeError] = useState(""); // NEW: For image size validation errors
   const [totalCombinedSize, setTotalCombinedSize] = useState(0); // NEW: To track combined size
   // const [draggedItemIndex, setDraggedItemIndex] = useState(null);
-
-  const carMakes = [
-    "Abarth",
-    "Acura",
-    "Alfa Romeo",
-    "Aston Martin",
-    "Audi",
-    "Bentley",
-    "BMW",
-    "Bugatti",
-    "Buick",
-    "Cadillac",
-    "Changan",
-    "Chery",
-    "Chevrolet",
-    "Chrysler",
-    "Citroën",
-    "Dacia",
-    "Daewoo",
-    "Daihatsu",
-    "Datsun",
-    "Dodge",
-    "DS Automobiles",
-    "Ferrari",
-    "Fiat",
-    "Ford",
-    "Geely",
-    "Genesis",
-    "GMC",
-    "Honda",
-    "Hyundai",
-    "Infiniti",
-    "Isuzu",
-    "Jaguar",
-    "Jeep",
-    "Kia",
-    "Koenigsegg",
-    "Lada",
-    "Lamborghini",
-    "Lancia",
-    "Land Rover",
-    "Lexus",
-    "Lincoln",
-    "Lotus",
-    "Mahindra",
-    "Maruti Suzuki",
-    "Maserati",
-    "Maxus",
-    "Mazda",
-    "McLaren",
-    "Mercedes-Benz",
-    "MG",
-    "Mini",
-    "Mitsubishi",
-    "Morgan",
-    "Nio",
-    "Nissan",
-    "Opel",
-    "Pagani",
-    "Peugeot",
-    "Polestar",
-    "Porsche",
-    "Proton",
-    "Ram",
-    "Renault",
-    "Rivian",
-    "Rolls-Royce",
-    "Saab",
-    "Seat",
-    "Skoda",
-    "Smart",
-    "SsangYong",
-    "Subaru",
-    "Suzuki",
-    "Tata",
-    "Tesla",
-    "Toyota",
-    "Vauxhall",
-    "Volkswagen",
-    "Volvo",
-    "Wuling",
-    "Xpeng",
-    "Zeekr",
-  ];
-
-  const years = Array.from(
-    { length: new Date().getFullYear() - 1900 + 1 },
-    (_, i) => 1900 + i
-  );
-
-  const fuelTypes = ["petrol", "diesel", "electric", "hybrid", "CNG", "LPG"];
-  const transmissions = ["manual", "automatic"];
-  const engineTypes = [
-    "Inline 3",
-    "Inline 4",
-    "Inline 5",
-    "Inline 6",
-    "V6",
-    "V8",
-    "V10",
-    "V12",
-    "V16",
-    "W12",
-    "w16",
-    "Flat 4", //boxer 4
-    "Flat 6", //boxer 6
-    "rotary",
-  ];
-
-  const ownerships = Array.from({ length: 10 }, (_, i) => i + 1);
 
   React.useEffect(() => {
     return () => {
