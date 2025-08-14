@@ -16,6 +16,7 @@ import {
 import Restricted from "../utils/Restricted";
 import Alert from "../utils/Alert";
 import LoadingModal from "../utils/LoadingModal";
+import heic2any from "heic2any";
 
 const MAX_COMBINED_SIZE_MB = process.env.REACT_APP_MAX_COMBINED_IMAGE_SIZE_MB
   ? parseInt(process.env.REACT_APP_MAX_COMBINED_IMAGE_SIZE_MB, 10)
@@ -43,6 +44,7 @@ function ListVehicle() {
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [heicLoading, setHeicLoading] = useState(false);
   const navigate = useNavigate();
   const [showAlert, setShowAlert] = useState(false);
   const [imageSizeError, setImageSizeError] = useState(""); // NEW: For image size validation errors
@@ -66,31 +68,142 @@ function ListVehicle() {
   //   setSelectedFiles(Array.from(e.target.files));
   // };
 
-  const handleFileChange = (e) => {
-    setImageSizeError(""); // Clear any previous image size errors
-    const files = Array.from(e.target.files); // Convert FileList to Array
+  const isHeic = (file) => {
+    const t = (file.type || "").toLowerCase();
+    const n = (file.name || "").toLowerCase();
+    return (
+      t.includes("heic") ||
+      t.includes("heif") ||
+      n.endsWith(".heic") ||
+      n.endsWith(".heif")
+    );
+  };
 
-    let currentTotalSize = 0;
-    for (const file of files) {
-      currentTotalSize += file.size;
-    }
+  const deriveJpegName = (orig, idx, total) => {
+    const base = orig.replace(/\.(heic|heif)$/i, "");
+    return total > 1 ? `${base}_${idx + 1}.jpg` : `${base}.jpg`;
+  };
 
-    if (currentTotalSize > MAX_COMBINED_SIZE_BYTES) {
+  //heic:
+  const handleFileChange = async (e) => {
+    setImageSizeError("");
+    setHeicLoading(true);
+    const input = e.target;
+    const incoming = Array.from(input.files || []);
+    try {
+      const processed = [];
+
+      for (const file of incoming) {
+        if (isHeic(file)) {
+          const out = await heic2any({
+            blob: file,
+            toType: "image/jpeg",
+            quality: 0.9,
+          });
+          const blobs = Array.isArray(out) ? out : [out];
+          blobs.forEach((blob, idx) => {
+            const jpegFile = new File(
+              [blob],
+              deriveJpegName(file.name, idx, blobs.length),
+              {
+                type: "image/jpeg",
+                lastModified: file.lastModified,
+              }
+            );
+            processed.push(jpegFile);
+          });
+        } else {
+          processed.push(file);
+        }
+      }
+
+      const totalSize = processed.reduce((sum, f) => sum + f.size, 0);
+      if (totalSize > MAX_COMBINED_SIZE_BYTES) {
+        setImageSizeError(
+          `Total image size (${(totalSize / (1024 * 1024)).toFixed(
+            2
+          )} MB) exceeds the maximum allowed limit of ${MAX_COMBINED_SIZE_MB} MB.`
+        );
+        setSelectedFiles([]);
+        setTotalCombinedSize(0);
+        input.value = null;
+        return;
+      }
+
+      // optional: create preview URLs if you clean them up elsewhere
+      const withPreviews = processed.map((f) => {
+        f.previewUrl = URL.createObjectURL(f);
+        return f;
+      });
+
+      setSelectedFiles(withPreviews);
+      setTotalCombinedSize(totalSize);
+    } catch (err) {
+      console.error("HEIC conversion failed:", err);
       setImageSizeError(
-        `Total image size (${(currentTotalSize / (1024 * 1024)).toFixed(
-          2
-        )} MB) exceeds the maximum allowed limit of ${MAX_COMBINED_SIZE_MB} MB.`
+        "Failed to convert HEIC image(s). Please try again or upload JPG/PNG."
       );
-      setSelectedFiles([]); // Clear selected files if limit exceeded
+      setSelectedFiles([]);
       setTotalCombinedSize(0);
-      // Reset the input value to allow re-selection of files
       e.target.value = null;
-    } else {
-      setSelectedFiles(files);
-      setTotalCombinedSize(currentTotalSize);
-      setImageSizeError(""); // Ensure no error message is displayed if valid
+    } finally {
+      setHeicLoading(false);
     }
   };
+
+  //NORMAL:-------------------------------
+  // const handleFileChange = async (e) => {
+  //   setImageSizeError(""); // Clear any previous image size errors
+  //   const files = Array.from(e.target.files); // Convert FileList to Array
+
+  //   // Convert HEIC/HEIF files to JPEG before processing
+  //   const convertedFiles = await Promise.all(
+  //     files.map(async (file) => {
+  //       if (
+  //         file.type === "image/heic" ||
+  //         file.type === "image/heif" ||
+  //         file.name.toLowerCase().endsWith(".heic") ||
+  //         file.name.toLowerCase().endsWith(".heif")
+  //       ) {
+
+  //         const blob = await heic2any({ blob: file, toType: "image/jpeg" });
+  //         return new File(
+  //           [blob],
+  //           file.name.replace(/\.(heic|heif)$/i, ".jpg"),
+  //           { type: "image/jpeg" }
+  //         );
+  //       }
+  //       return file;
+  //     })
+  //   );
+
+  //   // let currentTotalSize = 0;
+  //   // for (const file of files) {
+  //   //   currentTotalSize += file.size;
+  //   // }
+  //   let currentTotalSize = convertedFiles.reduce(
+  //     (acc, file) => acc + file.size,
+  //     0
+  //   );
+
+  //   if (currentTotalSize > MAX_COMBINED_SIZE_BYTES) {
+  //     setImageSizeError(
+  //       `Total image size (${(currentTotalSize / (1024 * 1024)).toFixed(
+  //         2
+  //       )} MB) exceeds the maximum allowed limit of ${MAX_COMBINED_SIZE_MB} MB.`
+  //     );
+  //     setSelectedFiles([]); // Clear selected files if limit exceeded
+  //     setTotalCombinedSize(0);
+  //     // Reset the input value to allow re-selection of files
+  //     e.target.value = null;
+  //   } else {
+  //     setSelectedFiles(files);
+  //     setTotalCombinedSize(currentTotalSize);
+  //     setImageSizeError(""); // Ensure no error message is displayed if valid
+  //   }
+  // };
+
+  //----------------------------------
 
   // const handleFileChange = (e) => {
   //   setImageSizeError(""); // Clear any previous image size errors
@@ -682,8 +795,12 @@ function ListVehicle() {
           )}
         </div>
         {/*------------------------------------------------------------ */}
-        <button type="submit" className="submit-button" disabled={loading}>
-          {loading ? "Adding..." : "Add Vehicle"}
+        <button
+          type="submit"
+          className="submit-button"
+          disabled={loading || heicLoading}
+        >
+          {loading ? "Adding..." : heicLoading ? "Loading..." : "Add Vehicle"}
         </button>
       </form>
       {error && <p className="error-message">{error}</p>}
