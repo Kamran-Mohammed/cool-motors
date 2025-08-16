@@ -81,17 +81,18 @@ function VehicleCard({ vehicle, showOptions, onEdit, onDelete, onMarkAsSold }) {
       style={{ textDecoration: "none", color: "inherit" }}
     >
       <div
+        className="vehicle-card"
         key={vehicle._id}
-        style={{
-          border: "1px solid #ccc",
-          cursor: "pointer",
-          // textAlign: "center",
-          borderRadius: "10px",
-          overflow: "hidden",
-          transition: "background-color 0.3s ease",
-          // backgroundColor: isHovered ? "rgba(0, 0, 0, 0.1)" : "white",
-          // marginBottom: "20px",
-        }}
+        // style={{
+        //   border: "1px solid #ccc",
+        //   cursor: "pointer",
+        //   // textAlign: "center",
+        //   borderRadius: "10px",
+        //   overflow: "hidden",
+        //   transition: "background-color 0.3s ease",
+        //   // backgroundColor: isHovered ? "rgba(0, 0, 0, 0.1)" : "white",
+        //   // marginBottom: "20px",
+        // }}
         // onMouseEnter={() => setIsHovered(true)}
         // onMouseLeave={() => setIsHovered(false)}
       >

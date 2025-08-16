@@ -131,6 +131,20 @@ const Navbar = () => {
           <Link to="/login" className="nav-link">
             Login
           </Link>
+
+          // <div className="guest-menu" onClick={toggleDropdown} ref={dropdownRef}>
+          //   <div className="hamburger">
+          //     <span></span>
+          //     <span></span>
+          //     <span></span>
+          //   </div>
+          //   {isDropdownOpen && (
+          //     <div className="dropdown-menu">
+          //       <Link to="/login" className="dropdown-link">Login</Link>
+          //       <Link to="/search" className="dropdown-link">Search</Link>
+          //     </div>
+          //   )}
+          // </div>
         )}
       </div>
     </header>
