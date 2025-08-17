@@ -91,14 +91,6 @@ const Navbar = () => {
         </button>
       </div> */}
 
-      {/* <div className="nav-center">
-        {user && (
-          <Link to="/list" className="list-vehicle-btn">
-            <img src={plusIcon} alt="List Vehicle" className="plus-icon" />
-            <span>Sell</span>
-          </Link>
-        )}
-      </div> */}
       <div className="nav-center">
         <button className="list-vehicle-btn" onClick={handleSellClick}>
           <img src={plusIcon} alt="List Vehicle" className="plus-icon" />
@@ -131,20 +123,6 @@ const Navbar = () => {
           <Link to="/login" className="nav-link">
             Login
           </Link>
-
-          // <div className="guest-menu" onClick={toggleDropdown} ref={dropdownRef}>
-          //   <div className="hamburger">
-          //     <span></span>
-          //     <span></span>
-          //     <span></span>
-          //   </div>
-          //   {isDropdownOpen && (
-          //     <div className="dropdown-menu">
-          //       <Link to="/login" className="dropdown-link">Login</Link>
-          //       <Link to="/search" className="dropdown-link">Search</Link>
-          //     </div>
-          //   )}
-          // </div>
         )}
       </div>
     </header>

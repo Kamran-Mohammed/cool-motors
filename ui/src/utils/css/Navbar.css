@@ -6,7 +6,7 @@
   padding: 20px 20px;
   color: white;
   margin-bottom: 10px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
   backdrop-filter: blur(8px);
 }
 
@@ -76,17 +76,18 @@
   text-decoration: none;
   font-size: 15px;
   font-weight: 600;
-  transition: background .3s, transform .2s, box-shadow .2s;
+  transition: background 0.3s, transform 0.2s, box-shadow 0.2s;
 }
 
 .nav-link:hover {
   background: #ffffff;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+  /* transform: translateY(-2px); */
+  /* box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); */
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);
 }
 
 nav-link::after {
-  content: '';
+  content: "";
   position: absolute;
   left: 0;
   bottom: 3px;
@@ -95,7 +96,7 @@ nav-link::after {
   background: #fff;
   transform: scaleX(0);
   transform-origin: right;
-  transition: transform .3s ease;
+  transition: transform 0.3s ease;
 }
 
 .nav-link:hover::after {
@@ -120,13 +121,13 @@ nav-link::after {
   font-weight: 600;
   font-size: large;
   cursor: pointer;
-  transition: background .3s, transform .25s, box-shadow .25s;
+  transition: background 0.3s, transform 0.25s, box-shadow 0.25s;
 }
 
 .list-vehicle-btn:hover {
-  background: rgba(255,255,255,0.2);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(0,0,0,0.35);
+  background: rgba(255, 255, 255, 0.2);
+  /* transform: translateY(-2px); */
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);
 }
 
 .plus-icon {
@@ -134,7 +135,6 @@ nav-link::after {
   height: 14px;
   filter: invert(1); /* makes icon white */
 }
-
 
 /* @media (max-width: 600px) {
   .list-vehicle-btn span {
@@ -191,16 +191,22 @@ nav-link::after {
   right: 0;
   background: #fff;
   border-radius: 10px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
   overflow: hidden;
   z-index: 99;
   min-width: 150px;
-  animation: dropIn .3s ease forwards;
+  animation: dropIn 0.3s ease forwards;
 }
 
 @keyframes dropIn {
-  from { opacity:0; transform: translateY(-8px) }
-  to { opacity:1; transform: translateY(0) }
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .dropdown-link {

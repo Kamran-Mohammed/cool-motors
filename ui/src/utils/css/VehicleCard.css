@@ -16,21 +16,37 @@
 }
 
 .vehicle-card {
-  border: 1px solid #eee;
-  border-radius: 12px;
-  overflow: hidden;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease-in-out;
+  text-align: center;
   cursor: pointer;
-  background: #fff;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
   transform-style: preserve-3d;
   opacity: 0;
   animation: cardIn 0.4s forwards ease;
 }
 
+.vehicle-card h2 {
+  font-size: 1.2rem;
+  /* margin: 10px 0; */
+  color: #333;
+}
+
+.vehicle-card h1 {
+  font-size: 1.5rem;
+  color: #e74c3c;
+}
+
+.vehicle-card h1:before {
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
 .vehicle-card:hover {
-  transform: translateY(-8px) scale(1.03);
-  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.18);
+  /* transform: scale(1.005); */
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
 }
 
 @keyframes cardIn {
@@ -44,17 +60,17 @@
   }
 }
 
-.badge {
-  position:absolute;
-  top:8px;
-  left:8px;
-  background:#ff3b30;
-  color:#fff;
-  padding:3px 8px;
-  font-size:10px;
-  border-radius:4px;
-  z-index:2;
-}
+/* .badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: #ff3b30;
+  color: #fff;
+  padding: 3px 8px;
+  font-size: 10px;
+  border-radius: 4px;
+  z-index: 2;
+} */
 
 @media (max-width: 1024px) {
   .vehicle-card-image {

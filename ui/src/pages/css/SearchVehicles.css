@@ -16,9 +16,9 @@
 
 .filters-wrapper,
 .results-wrapper {
-  max-width: 1200px;   /* or same width as filters box */
+  max-width: 1200px; /* or same width as filters box */
   margin: 0 auto;
-  padding: 0 24px;     /* for side spacing */
+  padding: 0 24px; /* for side spacing */
 }
 
 .results {
@@ -30,7 +30,6 @@
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 20px;
 }
-
 
 /* Filters Section (Now acts as a header) */
 .filters {
@@ -120,22 +119,7 @@
   color: #777;
 }
 
-/* Vehicle Card Grid */
-.vehicle-card {
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  padding: 15px;
-  transition: transform 0.2s ease-in-out;
-  text-align: center;
-  cursor: pointer;
-}
-
-.vehicle-card:hover {
-  transform: scale(1.05);
-}
-
-.vehicle-card img {
+/* .vehicle-card img {
   max-width: 100%;
   border-radius: 5px;
   margin-bottom: 10px;
@@ -155,7 +139,7 @@
 .vehicle-card h1:before {
   font-weight: bold;
   font-size: 1.2rem;
-}
+} */
 
 @media (max-width: 1200px) {
   .grid {
