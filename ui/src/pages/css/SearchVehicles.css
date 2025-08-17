@@ -11,14 +11,18 @@
 }
 
 .search-vehicles-container {
-  padding: 30px 0;
+  padding: 20px;
 }
 
-.filters-wrapper,
-.results-wrapper {
-  max-width: 1200px; /* or same width as filters box */
+.filters-wrapper {
+  max-height: 800px;
   margin: 0 auto;
-  padding: 0 24px; /* for side spacing */
+}
+
+.results-wrapper {
+  max-width: 1800px; /* or same width as filters box */
+  margin: 0 auto;
+  /* padding: 0 24px; for side spacing */
 }
 
 .results {
@@ -37,12 +41,12 @@
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  background-color: #f9f9f9;
-  padding: 15px;
+  /* background-color: #f9f9f9; */
+  /* padding: 15px; */
   gap: 15px;
   width: 100%;
   border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  /* box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); */
   /* position: sticky; */
   top: 0;
   /* z-index: 100; */
@@ -70,6 +74,7 @@
   background: #ffffff;
   color: #333;
   border: 1px solid #ddd;
+  border: none;
   padding: 6px 18px;
   border-radius: 20px;
   font-size: 14px;
@@ -83,7 +88,7 @@
 
 .filters-toggle button:hover {
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
-  transform: translateY(-1px);
+  /* transform: translateY(-1px); */
 }
 
 .filters label {
@@ -118,28 +123,6 @@
   font-size: 1.2rem;
   color: #777;
 }
-
-/* .vehicle-card img {
-  max-width: 100%;
-  border-radius: 5px;
-  margin-bottom: 10px;
-}
-
-.vehicle-card h2 {
-  font-size: 1.2rem;
-  margin: 10px 0;
-  color: #333;
-}
-
-.vehicle-card h1 {
-  font-size: 1.5rem;
-  color: #e74c3c;
-}
-
-.vehicle-card h1:before {
-  font-weight: bold;
-  font-size: 1.2rem;
-} */
 
 @media (max-width: 1200px) {
   .grid {

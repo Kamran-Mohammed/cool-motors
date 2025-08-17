@@ -319,7 +319,8 @@ const SearchVehiclesPage = () => {
               } else {
                 // Text/Number inputs with potential datalists
                 let inputType = "text";
-                let placeholderText = key.charAt(0).toUpperCase() + key.slice(1);
+                let placeholderText =
+                  key.charAt(0).toUpperCase() + key.slice(1);
                 let datalistId = "";
                 if (key === "make") {
                   placeholderText = "Brand";

@@ -6,7 +6,15 @@ import Restricted from "../utils/Restricted";
 import Confirmation from "../utils/Confirmation";
 import Alert from "../utils/Alert";
 import "./css/Settings.css";
-import { FiArrowLeft, FiLock, FiUser, FiMail, FiTruck, FiLogOut, FiTrash2 } from "react-icons/fi";
+import {
+  FiArrowLeft,
+  FiLock,
+  FiUser,
+  FiMail,
+  FiTruck,
+  FiLogOut,
+  FiTrash2,
+} from "react-icons/fi";
 
 const Settings = () => {
   const [isAdmin, setIsAdmin] = useState(false);
@@ -96,25 +104,40 @@ const Settings = () => {
         <div className="settings-box">
           <h2 className="settings-title">Settings</h2>
 
-          <div className="settings-option" onClick={() => navigate("/update-password")}>
+          <div
+            className="settings-option"
+            onClick={() => navigate("/update-password")}
+          >
             <FiLock className="opt-icon" />
             Change Password
           </div>
-          <div className="settings-option" onClick={() => navigate("/update-me")}>
+          <div
+            className="settings-option"
+            onClick={() => navigate("/update-me")}
+          >
             <FiUser className="opt-icon" />
             Update Profile
           </div>
-          <div className="settings-option" onClick={() => navigate("/update-my-email")}>
+          <div
+            className="settings-option"
+            onClick={() => navigate("/update-my-email")}
+          >
             <FiMail className="opt-icon" />
             Update Email
           </div>
           {isAdmin && (
-            <div className="settings-option" onClick={() => navigate("/admin/pending-vehicles-list")}>
+            <div
+              className="settings-option"
+              onClick={() => navigate("/admin/pending-vehicles-list")}
+            >
               <FiTruck className="opt-icon" />
               Review Vehicles (Admin)
             </div>
           )}
-          <div className="settings-option logout" onClick={() => setShowConfirm(true)}>
+          <div
+            className="settings-option logout"
+            onClick={() => setShowConfirm(true)}
+          >
             <FiLogOut className="opt-icon" />
             Logout
           </div>
@@ -124,8 +147,25 @@ const Settings = () => {
           </div>
         </div>
       </div>
-    </div>
+      {showConfirm && (
+        <Confirmation
+          message="Are you sure you want to logout?"
+          confirmText="Logout"
+          onCancel={() => setShowConfirm(false)}
+          onConfirm={handleLogout}
+        />
+      )}
 
+      {showAlert && (
+        <Alert
+          message="Your account has been deleted successfully."
+          onClose={() => {
+            navigate("/");
+            window.location.reload();
+          }}
+        />
+      )}
+    </div>
   );
 };
 
