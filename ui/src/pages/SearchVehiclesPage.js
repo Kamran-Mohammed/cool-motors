@@ -50,6 +50,7 @@ const SearchVehiclesPage = () => {
     page: 1,
     totalPages: 1,
   });
+  const [showFilters, setShowFilters] = useState(true);
 
   // // NEW: Ref to prevent double-fetching on initial load
   // const initialFetchDone = React.useRef(false);
@@ -200,10 +201,17 @@ const SearchVehiclesPage = () => {
   };
 
   return (
-    <div className="container">
-      {/* Filters Section */}
-      <div className="filters">
-        {/* {Object.entries(filters).map(([key, value]) =>
+    <div className="search-vehicles-container">
+      <div className="filters-toggle">
+        <button onClick={() => setShowFilters((prev) => !prev)}>
+          {showFilters ? "Hide Filters ▲" : "Show Filters ▼"}
+        </button>
+      </div>
+      {showFilters && (
+        <div className="filters-wrapper">
+          {/* Filters Section */}
+          <div className="filters">
+            {/* {Object.entries(filters).map(([key, value]) =>
           ["fuelType", "transmission", "engineType", "state", "sort"].includes(
             key
           ) ? (
@@ -259,157 +267,162 @@ const SearchVehiclesPage = () => {
               onChange={handleInputChange}
             />
           )
-        )} */}
-        {Object.entries(filters).map(([key, value]) => {
-          // Determine if it's a select or input, and handle datalists
-          if (
-            [
-              "fuelType",
-              "transmission",
-              "engineType",
-              "state",
-              "sort",
-            ].includes(key)
-          ) {
-            // Select inputs
-            let optionsArray = [];
-            let placeholderText = "";
+          )} */}
+            {Object.entries(filters).map(([key, value]) => {
+              // Determine if it's a select or input, and handle datalists
+              if (
+                [
+                  "fuelType",
+                  "transmission",
+                  "engineType",
+                  "state",
+                  "sort",
+                ].includes(key)
+              ) {
+                // Select inputs
+                let optionsArray = [];
+                let placeholderText = "";
 
-            if (key === "fuelType") {
-              optionsArray = fuelTypes;
-              placeholderText = "Fuel Type";
-            } else if (key === "transmission") {
-              optionsArray = transmissions;
-              placeholderText = "Transmission";
-            } else if (key === "state") {
-              optionsArray = states;
-              placeholderText = "State";
-            } else if (key === "sort") {
-              optionsArray = sorts; // Using your 'sorts' array directly
-              placeholderText = "Sort By";
-            } else if (key === "engineType") {
-              optionsArray = engineTypes;
-              placeholderText = "Engine Type";
-            }
+                if (key === "fuelType") {
+                  optionsArray = fuelTypes;
+                  placeholderText = "Fuel Type";
+                } else if (key === "transmission") {
+                  optionsArray = transmissions;
+                  placeholderText = "Transmission";
+                } else if (key === "state") {
+                  optionsArray = states;
+                  placeholderText = "State";
+                } else if (key === "sort") {
+                  optionsArray = sorts; // Using your 'sorts' array directly
+                  placeholderText = "Sort By";
+                } else if (key === "engineType") {
+                  optionsArray = engineTypes;
+                  placeholderText = "Engine Type";
+                }
 
-            return (
-              <select
-                key={key}
-                name={key}
-                value={value}
-                onChange={handleInputChange}
-                className="filter-select"
-              >
-                <option value="">{placeholderText}</option>
-                {optionsArray.map((option) => (
-                  <option key={option} value={option}>
-                    {option.charAt(0).toUpperCase() + option.slice(1)}
-                  </option>
-                ))}
-              </select>
-            );
-          } else {
-            // Text/Number inputs with potential datalists
-            let inputType = "text";
-            let placeholderText = key.charAt(0).toUpperCase() + key.slice(1);
-            let datalistId = "";
-            if (key === "make") {
-              placeholderText = "Brand";
-              datalistId = "carMakes"; // Link to carMakes datalist
-            } else if (key === "location") {
-              placeholderText = "Location";
-              datalistId = "locations"; // Link to locations datalist
-            }
-
-            return (
-              <React.Fragment key={key}>
-                <input
-                  type={inputType}
-                  name={key}
-                  value={value}
-                  placeholder={placeholderText}
-                  onChange={handleInputChange}
-                  list={datalistId} // Apply datalist if ID is set
-                  className="filter-input"
-                />
-                {/* Datalist for carMakes */}
-                {datalistId === "carMakes" && (
-                  <datalist id="carMakes">
-                    {carMakes.map((make) => (
-                      <option key={make} value={make} />
+                return (
+                  <select
+                    key={key}
+                    name={key}
+                    value={value}
+                    onChange={handleInputChange}
+                    className="filter-select"
+                  >
+                    <option value="">{placeholderText}</option>
+                    {optionsArray.map((option) => (
+                      <option key={option} value={option}>
+                        {option.charAt(0).toUpperCase() + option.slice(1)}
+                      </option>
                     ))}
-                  </datalist>
-                )}
-                {/* Datalist for locations */}
-                {datalistId === "locations" && (
-                  <datalist id="locations">
-                    {locations.map((loc) => (
-                      <option key={loc} value={loc} />
-                    ))}
-                  </datalist>
-                )}
-              </React.Fragment>
-            );
-          }
-        })}
-        <button
-          className="apply-filter-btn"
-          onClick={handleApplyFilters}
-          disabled={loading}
-        >
-          {loading ? "Loading..." : "Apply Filters"}
-        </button>
-        <button
-          className="clear-filter-btn" // NEW: Clear Filters Button
-          onClick={handleClearFilters}
-          disabled={loading}
-        >
-          Clear Filters
-        </button>
-      </div>
+                  </select>
+                );
+              } else {
+                // Text/Number inputs with potential datalists
+                let inputType = "text";
+                let placeholderText =
+                  key.charAt(0).toUpperCase() + key.slice(1);
+                let datalistId = "";
+                if (key === "make") {
+                  placeholderText = "Brand";
+                  datalistId = "carMakes"; // Link to carMakes datalist
+                } else if (key === "location") {
+                  placeholderText = "Location";
+                  datalistId = "locations"; // Link to locations datalist
+                }
+
+                return (
+                  <React.Fragment key={key}>
+                    <input
+                      type={inputType}
+                      name={key}
+                      value={value}
+                      placeholder={placeholderText}
+                      onChange={handleInputChange}
+                      list={datalistId} // Apply datalist if ID is set
+                      className="filter-input"
+                    />
+                    {/* Datalist for carMakes */}
+                    {datalistId === "carMakes" && (
+                      <datalist id="carMakes">
+                        {carMakes.map((make) => (
+                          <option key={make} value={make} />
+                        ))}
+                      </datalist>
+                    )}
+                    {/* Datalist for locations */}
+                    {datalistId === "locations" && (
+                      <datalist id="locations">
+                        {locations.map((loc) => (
+                          <option key={loc} value={loc} />
+                        ))}
+                      </datalist>
+                    )}
+                  </React.Fragment>
+                );
+              }
+            })}
+            <button
+              className="apply-filter-btn"
+              onClick={handleApplyFilters}
+              disabled={loading}
+            >
+              {loading ? "Loading..." : "Apply Filters"}
+            </button>
+            <button
+              className="clear-filter-btn" // NEW: Clear Filters Button
+              onClick={handleClearFilters}
+              disabled={loading}
+            >
+              Clear Filters
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Results Section */}
-      <div className="results">
-        <h2>Search Results</h2>
-        {loading && <p>Loading vehicles...</p>}
-        {!loading && vehicles.length === 0 && (
-          <p className="no-results-message">
-            No vehicles found matching your criteria. Try adjusting your
-            filters!
-          </p>
+      <div className="results-wrapper">
+        <div className="results">
+          <h2>Search Results</h2>
+          {loading && <p>Loading vehicles...</p>}
+          {!loading && vehicles.length === 0 && (
+            <p className="no-results-message">
+              No vehicles found matching your criteria. Try adjusting your
+              filters!
+            </p>
+          )}
+          {vehicles.length !== 0 && (
+            <div className="vehicle-grid">
+              {vehicles.map((vehicle) => (
+                <VehicleCard key={vehicle._id} vehicle={vehicle} />
+              ))}
+            </div>
+          )}
+        </div>
+        {showAlert && (
+          <Alert
+            message="Please select at least one filter before searching."
+            onClose={() => setShowAlert(false)}
+          />
         )}
-        {vehicles.length !== 0 && (
-          <div className="vehicle-grid">
-            {vehicles.map((vehicle) => (
-              <VehicleCard key={vehicle._id} vehicle={vehicle} />
-            ))}
-          </div>
-        )}
-      </div>
-      {showAlert && (
-        <Alert
-          message="Please select at least one filter before searching."
-          onClose={() => setShowAlert(false)}
-        />
-      )}
-      <div className="pagination">
-        <button
-          disabled={pagination.page <= 1}
-          onClick={() => handlePageChange(pagination.page - 1)}
-          className="pagination-btn"
-        >
-          Previous
-        </button>
-        <span className="pagination-info">
-          Page {pagination.page} of {pagination.totalPages}
-        </span>
-        <button
-          disabled={pagination.page >= pagination.totalPages}
-          onClick={() => handlePageChange(pagination.page + 1)}
-          className="pagination-btn"
-        >
-          Next
-        </button>
+        <div className="pagination">
+          <button
+            disabled={pagination.page <= 1}
+            onClick={() => handlePageChange(pagination.page - 1)}
+            className="pagination-btn"
+          >
+            Previous
+          </button>
+          <span className="pagination-info">
+            Page {pagination.page} of {pagination.totalPages}
+          </span>
+          <button
+            disabled={pagination.page >= pagination.totalPages}
+            onClick={() => handlePageChange(pagination.page + 1)}
+            className="pagination-btn"
+          >
+            Next
+          </button>
+        </div>
       </div>
     </div>
   );

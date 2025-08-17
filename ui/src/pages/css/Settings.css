@@ -1,67 +1,85 @@
-/* Centered Settings Box */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
 .settings-container {
+  font-family: 'Inter', sans-serif;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  /* background-color: #f4f4f4; */
+  min-height: calc(100vh - 80px);
+  background-color: #f8f6ef;
+}
+
+.inner-wrapper {
+  position: relative;
+  width: fit-content;
+}
+
+.back-button {
+  position: absolute;
+  left: -250px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  background: #fff;
+  height: 34px;
+  width: 34px;
+  border-radius: 50%;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.13);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.2s;
+}
+
+.back-button:hover {
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  transform: translateY(-50%) scale(1.06);
 }
 
 .settings-box {
-  background: white;
-  padding: 25px;
-  width: 350px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  text-align: center;
+  background:#fff;
+  padding:30px 40px;
+  border-radius:14px;
+  box-shadow:0 6px 14px rgba(0,0,0,0.15);
+  width:340px;
 }
 
-h2 {
-  margin-bottom: 20px;
-  color: #333;
+.settings-title {
+  font-weight:600;
+  font-size:22px;
+  margin-bottom:18px;
+  color:#333;
+  text-align:center;
 }
 
-/* Settings Options */
 .settings-option {
-  font-size: 16px;
-  padding: 12px 0;
-  cursor: pointer;
-  transition: color 0.3s ease;
-  border-bottom: 1px solid #ddd;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  border-bottom:1px solid #eee;
+  padding:12px 0;
+  cursor:pointer;
+  font-size:15.5px;
+  transition:.2s;
 }
 
-/* Last option shouldn't have a border */
-.settings-option:last-child {
-  border-bottom: none;
-}
+.settings-option:last-child { border-bottom:none; }
 
-/* Hover effect */
 .settings-option:hover {
-  color: #007bff;
+  background:#fafafa;
 }
 
-/* Logout & Delete Styling */
-.logout-text {
-  color: #ff726f;
-  font-weight: bold;
+.opt-icon {
+  font-size:17px;
 }
 
-.logout-text:hover {
-  color: #e6605d;
+.logout {
+  color:#d67c00;
+  font-weight:500;
 }
 
-.delete-text {
-  color: #dc3545;
-  font-weight: bold;
-}
-
-.delete-text:hover {
-  color: #b02a37;
-}
-
-/* Error Message */
-.error-message {
-  color: red;
-  text-align: center;
-  margin-top: 20px;
+.delete {
+  color:#c1121f;
+  font-weight:600;
 }

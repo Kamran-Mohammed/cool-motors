@@ -6,6 +6,15 @@ import Restricted from "../utils/Restricted";
 import Confirmation from "../utils/Confirmation";
 import Alert from "../utils/Alert";
 import "./css/Settings.css";
+import {
+  FiArrowLeft,
+  FiLock,
+  FiUser,
+  FiMail,
+  FiTruck,
+  FiLogOut,
+  FiTrash2,
+} from "react-icons/fi";
 
 const Settings = () => {
   const [isAdmin, setIsAdmin] = useState(false);
@@ -87,45 +96,57 @@ const Settings = () => {
 
   return (
     <div className="settings-container">
-      <div className="settings-box">
-        <h2>Settings</h2>
-        <div
-          className="settings-option"
-          onClick={() => navigate("/update-password")}
-        >
-          Change Password
-        </div>
-        <div className="settings-option" onClick={() => navigate("/update-me")}>
-          Update Profile
-        </div>
-        <div
-          className="settings-option"
-          onClick={() => navigate("/update-my-email")}
-        >
-          Update Email
-        </div>
-        {isAdmin && (
+      <div className="inner-wrapper">
+        <button className="back-button" onClick={() => navigate(-1)}>
+          <FiArrowLeft size={18} />
+        </button>
+
+        <div className="settings-box">
+          <h2 className="settings-title">Settings</h2>
+
           <div
             className="settings-option"
-            onClick={() => navigate("/admin/pending-vehicles-list")}
+            onClick={() => navigate("/update-password")}
           >
-            Review Vehicles (Admin)
+            <FiLock className="opt-icon" />
+            Change Password
           </div>
-        )}
-        <div
-          className="settings-option logout-text"
-          onClick={() => setShowConfirm(true)}
-        >
-          Logout
-        </div>
-        <div
-          className="settings-option delete-text"
-          onClick={handleDeleteAccount}
-        >
-          Delete My Account
+          <div
+            className="settings-option"
+            onClick={() => navigate("/update-me")}
+          >
+            <FiUser className="opt-icon" />
+            Update Profile
+          </div>
+          <div
+            className="settings-option"
+            onClick={() => navigate("/update-my-email")}
+          >
+            <FiMail className="opt-icon" />
+            Update Email
+          </div>
+          {isAdmin && (
+            <div
+              className="settings-option"
+              onClick={() => navigate("/admin/pending-vehicles-list")}
+            >
+              <FiTruck className="opt-icon" />
+              Review Vehicles (Admin)
+            </div>
+          )}
+          <div
+            className="settings-option logout"
+            onClick={() => setShowConfirm(true)}
+          >
+            <FiLogOut className="opt-icon" />
+            Logout
+          </div>
+          <div className="settings-option delete" onClick={handleDeleteAccount}>
+            <FiTrash2 className="opt-icon" />
+            Delete My Account
+          </div>
         </div>
       </div>
-
       {showConfirm && (
         <Confirmation
           message="Are you sure you want to logout?"
