@@ -32,6 +32,7 @@ const allowedOrigins = [
   "https://aceblue.ae",
   "https://autofinds.in",
   // "https://autofinds.in",
+  "https://dev-autofinds.onrender.com",
 ];
 app.use(
   cors({
