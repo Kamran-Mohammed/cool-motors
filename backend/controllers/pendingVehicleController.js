@@ -57,7 +57,8 @@ exports.listVehicle = catchAsyncError(async (req, res, next) => {
   ) {
     return next(
       new AppError(
-        `You can't list more than ${process.env.MAX_VEHICLES_NUM} vehicle at a time.`
+        `You can't list more than ${process.env.MAX_VEHICLES_NUM} vehicle at a time.`,
+        403
       )
     );
   }
@@ -70,92 +71,135 @@ exports.listVehicle = catchAsyncError(async (req, res, next) => {
   }
 
   const imageUrls = [];
+  const uploadedS3Keys = [];
 
-  // Loop through the files and upload each one to S3
-  for (const file of files) {
-    // const fileName = generateFileName();
-    const fileName = generateFileName(
-      req.body.make,
-      req.body.model,
-      req.body.year
-    );
+  try {
+    // Loop through the files and upload each one to S3
+    for (const file of files) {
+      try {
+        // const fileName = generateFileName();
+        const fileName = generateFileName(
+          req.body.make,
+          req.body.model,
+          req.body.year
+        );
 
-    // Compress and convert image to JPEG
-    const resizedBuffer = await sharp(file.buffer)
-      .rotate()
-      .resize({ width: 1200 }) // resize to 1200px width (optional)
-      .jpeg({ quality: 80 }) // compress to 80% quality
-      .toBuffer();
+        // Compress and convert image to JPEG
+        const resizedBuffer = await sharp(file.buffer)
+          .rotate()
+          .resize({ width: 1200 }) // resize to 1200px width (optional)
+          .jpeg({ quality: 80 }) // compress to 80% quality
+          .toBuffer();
 
-    const uploadParams = {
-      Bucket: bucketName,
-      Body: resizedBuffer,
-      Key: fileName,
-      ContentType: "image/jpeg", // Always JPEG after compression
-    };
+        const uploadParams = {
+          Bucket: bucketName,
+          Body: resizedBuffer,
+          Key: fileName,
+          ContentType: "image/jpeg", // Always JPEG after compression
+        };
 
-    await s3Client.send(new PutObjectCommand(uploadParams));
+        await s3Client.send(new PutObjectCommand(uploadParams));
 
-    const imageUrl = `https://images-cool-motors.s3.eu-north-1.amazonaws.com/${fileName}`;
-    imageUrls.push(imageUrl);
+        const imageUrl = `https://images-cool-motors.s3.eu-north-1.amazonaws.com/${fileName}`;
+        imageUrls.push(imageUrl);
+        uploadedS3Keys.push(fileName);
+      } catch (fileUploadError) {
+        console.error(
+          `Error processing or uploading file ${file.originalname}:`,
+          fileUploadError
+        );
+        if (
+          fileUploadError.message.includes("heif: Error while loading plugin")
+        ) {
+          throw new AppError(
+            `Failed to process image ${file.originalname}. This image format (HEIF/HEIC) is not supported. Please convert it to JPEG or PNG and try again.`,
+            400
+          );
+        } else {
+          throw new AppError(
+            `Failed to process and upload image ${file.originalname}. Please try again.`,
+            500
+          );
+        }
+      }
+    }
+
+    // Create the vehicle with the uploaded image URLs
+    const newVehicle = await PendingVehicle.create({
+      make: req.body.make,
+      model: req.body.model,
+      variant: req.body.variant,
+      year: req.body.year,
+      price: req.body.price,
+      fuelType: req.body.fuelType,
+      transmission: req.body.transmission,
+      engineDisplacement: req.body.engineDisplacement || undefined,
+      engineType: req.body.engineType || undefined,
+      odometer: req.body.odometer,
+      ownership: req.body.ownership,
+      description: req.body.description,
+      state: req.body.state,
+      location: req.body.location,
+      listedBy: req.user._id,
+      images: imageUrls, // Storing the array of image URLs
+    });
+
+    user.totalVehicles += 1;
+    await user.save({ validateBeforeSave: false });
+
+    //SENDING EMAIL NOTIFICATION TO ADMINS
+
+    //uncomment the following lines (after solving the email gicchi)
+    // (async () => {
+    //   try {
+    //     const admins = await User.find({ role: "admin" });
+    //     if (admins.length === 0) {
+    //       console.warn("Admins not found. Skipping admin email notification.");
+    //       return;
+    //     }
+
+    //     let url = "";
+    //     if (process.env.NODE_ENV === "development") {
+    //       url = `${process.env.FRONTEND_URL_DEV}/admin/pending-vehicle/${newVehicle._id}`;
+    //     } else {
+    //       url = `${process.env.FRONTEND_URL_PROD}/admin/pending-vehicle/${newVehicle._id}`;
+    //     }
+
+    //     for (const admin of admins) {
+    //       await new Email(admin, url).sendAdminNotificationEmail();
+    //     }
+    //   } catch (err) {
+    //     console.error("Failed to send email to admin:", err.message);
+    //     // No return or throw — just log and move on
+    //   }
+    // })();
+
+    res.status(201).json({
+      status: "success",
+      data: {
+        newVehicle,
+      },
+    });
+  } catch (mainError) {
+    // NEW: If any error occurs AFTER S3 upload (e.g., database error, validation error),
+    // clean up the images that were already uploaded to S3 for this transaction.
+    if (uploadedS3Keys.length > 0) {
+      for (const key of uploadedS3Keys) {
+        try {
+          await s3Client.send(
+            new DeleteObjectCommand({ Bucket: bucketName, Key: key })
+          );
+        } catch (s3DeleteError) {
+          console.error(
+            `Failed to delete orphaned S3 object ${key}:`,
+            s3DeleteError
+          );
+        }
+      }
+    }
+    // Re-throw the original error to be caught by your global error handler
+    return next(mainError);
   }
-
-  // Create the vehicle with the uploaded image URLs
-  const newVehicle = await PendingVehicle.create({
-    make: req.body.make,
-    model: req.body.model,
-    variant: req.body.variant,
-    year: req.body.year,
-    price: req.body.price,
-    fuelType: req.body.fuelType,
-    transmission: req.body.transmission,
-    engineDisplacement: req.body.engineDisplacement || undefined,
-    engineType: req.body.engineType || undefined,
-    odometer: req.body.odometer,
-    ownership: req.body.ownership,
-    description: req.body.description,
-    state: req.body.state,
-    location: req.body.location,
-    listedBy: req.user._id,
-    images: imageUrls, // Storing the array of image URLs
-  });
-
-  user.totalVehicles += 1;
-  await user.save({ validateBeforeSave: false });
-
-  //SENDING EMAIL NOTIFICATION TO ADMINS
-
-  //uncomment the following lines (after solving the email gicchi)
-  // (async () => {
-  //   try {
-  //     const admins = await User.find({ role: "admin" });
-  //     if (admins.length === 0) {
-  //       console.warn("Admins not found. Skipping admin email notification.");
-  //       return;
-  //     }
-
-  //     let url = "";
-  //     if (process.env.NODE_ENV === "development") {
-  //       url = `${process.env.FRONTEND_URL_DEV}/admin/pending-vehicle/${newVehicle._id}`;
-  //     } else {
-  //       url = `${process.env.FRONTEND_URL_PROD}/admin/pending-vehicle/${newVehicle._id}`;
-  //     }
-
-  //     for (const admin of admins) {
-  //       await new Email(admin, url).sendAdminNotificationEmail();
-  //     }
-  //   } catch (err) {
-  //     console.error("Failed to send email to admin:", err.message);
-  //     // No return or throw — just log and move on
-  //   }
-  // })();
-
-  res.status(201).json({
-    status: "success",
-    data: {
-      newVehicle,
-    },
-  });
 });
 
 exports.approveVehicle = catchAsyncError(async (req, res, next) => {
