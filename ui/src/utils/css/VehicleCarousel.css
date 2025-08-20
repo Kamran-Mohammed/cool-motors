@@ -1,0 +1,193 @@
+/* VehicleCarousel.css */
+
+.vehicle-carousel-container {
+  width: 100%;
+  margin: 0 auto;
+  position: relative;
+  overflow: hidden; /* Ensure content doesn't spill out */
+}
+
+/* Basic styling for react-slick arrows and dots */
+.slick-prev:before,
+.slick-next:before {
+  color: #333; /* Darker arrows for visibility */
+  font-size: 30px;
+}
+
+.slick-dots li button:before {
+  color: #ccc; /* Inactive dots */
+  font-size: 10px;
+}
+
+.slick-dots li.slick-active button:before {
+  color: #007bff; /* Active dot */
+}
+
+/* Carousel Slide Styling */
+.carousel-slide {
+  position: relative;
+  height: 500px; /* Adjust height as needed for your design */
+  display: flex !important; /* Important for react-slick to work correctly with flex */
+  align-items: center;
+  justify-content: center;
+  background-color: #f0f0f0; /* Fallback background */
+  overflow: hidden; /* Ensure image doesn't overflow */
+}
+
+.carousel-link {
+  display: block;
+  width: 100%;
+  height: 100%;
+  text-decoration: none;
+  color: inherit;
+  position: relative;
+}
+
+.carousel-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Cover the entire slide area */
+  filter: brightness(0.7); /* Slightly dim the image for text readability */
+  transition: filter 0.3s ease;
+}
+
+.carousel-link:hover .carousel-image {
+  filter: brightness(0.6); /* Slightly more dim on hover */
+}
+
+/* Details Overlay Styling */
+.carousel-details-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20px;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.8),
+    rgba(0, 0, 0, 0)
+  ); /* Gradient overlay */
+  color: white;
+  text-align: left;
+  transform: translateY(0); /* Start visible */
+  transition: transform 0.3s ease-in-out;
+}
+
+/* Optional: Hide overlay on hover and reveal on hover */
+/* .carousel-link:hover .carousel-details-overlay {
+  transform: translateY(0);
+} */
+
+.carousel-title {
+  margin: 0;
+  font-size: 2.2em;
+  font-weight: bold;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.carousel-price {
+  margin: 5px 0;
+  font-size: 2.8em;
+  font-weight: bold;
+  color: #fff;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.carousel-odometer,
+.carousel-location {
+  margin: 2px 0;
+  font-size: 1.1em;
+  color: #eee;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+.carousel-view-details-btn {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 1.1em;
+  cursor: pointer;
+  margin-top: 15px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.carousel-view-details-btn:hover {
+  background-color: #0056b3;
+  transform: translateY(-2px);
+}
+
+/* Loading and Error States */
+.carousel-loading,
+.carousel-error,
+.carousel-no-data {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 500px; /* Match carousel height */
+  font-size: 1.2em;
+  color: #666;
+  background-color: #f0f0f0;
+}
+
+.spinner {
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-left-color: #333;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin-bottom: 10px;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .carousel-slide {
+    height: 350px; /* Shorter height on mobile */
+  }
+
+  .carousel-details-overlay {
+    padding: 15px;
+  }
+
+  .carousel-title {
+    font-size: 1.5em;
+  }
+
+  .carousel-price {
+    font-size: 2em;
+  }
+
+  .carousel-odometer,
+  .carousel-location {
+    font-size: 0.9em;
+  }
+
+  .carousel-view-details-btn {
+    padding: 8px 15px;
+    font-size: 0.9em;
+  }
+}
+
+@media (max-width: 480px) {
+  .carousel-slide {
+    height: 280px; /* Even shorter height on very small screens */
+  }
+  .carousel-title {
+    font-size: 1.2em;
+  }
+  .carousel-price {
+    font-size: 1.8em;
+  }
+}

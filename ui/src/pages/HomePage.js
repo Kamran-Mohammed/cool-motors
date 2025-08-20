@@ -3,6 +3,7 @@ import axios from "axios";
 import VehicleCard from "../utils/VehicleCard";
 import "./css/HomePage.css";
 import HeroSection from "../utils/HeroSection";
+import VehicleCarousel from "../utils/VehicleCarousel";
 
 const HomePage = () => {
   const [vehicles, setVehicles] = useState([]);
@@ -25,7 +26,8 @@ const HomePage = () => {
 
   return (
     <>
-      <HeroSection />
+      {/* <HeroSection /> */}
+      <VehicleCarousel />
       <div className="home-container">
         {/* <h1 className="home-title">Home Page</h1> */}
         {vehicles.length === 0 ? (
