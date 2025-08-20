@@ -25,6 +25,8 @@ function VehicleDetails() {
   const [isMobileScreen, setIsMobileScreen] = useState(window.innerWidth < 768);
   const [touchStartX, setTouchStartX] = useState(0);
   const [touchEndX, setTouchEndX] = useState(0);
+  // NEW: State to track the number of active touches at the start of a touch event
+  const [touchCountStart, setTouchCountStart] = useState(0);
   // NEW: State to track if all images are preloaded
   const [allImagesPreloaded, setAllImagesPreloaded] = useState(false);
   // NEW: Ref to store preloaded Image objects (not directly used in JSX, but holds the data)
@@ -32,9 +34,16 @@ function VehicleDetails() {
 
   const handleTouchStart = (e) => {
     setTouchStartX(e.touches[0].clientX);
+    setTouchCountStart(e.touches.length); // Record number of touches
   };
 
   const handleTouchEnd = (e) => {
+    // Only proceed if it was a single-finger touch gesture
+    if (touchCountStart !== 1 || e.changedTouches.length !== 1) {
+      setTouchCountStart(0); // Reset touch count
+      return; // Ignore multi-touch or non-single-finger release
+    }
+
     setTouchEndX(e.changedTouches[0].clientX);
     const deltaX = e.changedTouches[0].clientX - touchStartX;
     const threshold = 50; // Minimum swipe distance
@@ -43,6 +52,7 @@ function VehicleDetails() {
     } else if (deltaX < -threshold) {
       nextImage(); // Swipe left → show next image
     }
+    setTouchCountStart(0);
   };
 
   useEffect(() => {
