@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback, useRef } from "react";
 import { useParams, Link, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
+// import slugify from "slugify";
 import "./css/VehicleDetails.css"; // Import the CSS for the modal and blur effect
 import { useAuth } from "../AuthContext";
 import left from "../utils/images/left.png";
@@ -11,7 +12,7 @@ import fullHeart from "../utils/images/full-heart.png";
 import { isMobile } from "../utils/tools";
 
 function VehicleDetails() {
-  const { id } = useParams(); // Vehicle ID from URL
+  const { id, slug } = useParams(); // Vehicle ID from URL
   const [vehicle, setVehicle] = useState(null);
   const [seller, setSeller] = useState(null);
   const [liked, setLiked] = useState(false); // State for like status
@@ -65,6 +66,20 @@ function VehicleDetails() {
         );
         const fetchedVehicle = vehicleResponse.data.data.vehicle;
         setVehicle(fetchedVehicle);
+
+        // const correctSlug = slugify(
+        //   `${vehicle.year} ${vehicle.make} ${vehicle.model}`,
+        //   {
+        //     lower: true, // convert to lowercase
+        //     strict: true, // strip special chars except hyphens
+        //   }
+        // );
+
+        // if (slug !== correctSlug) {
+        //   navigate(`/vehicle/${id}/${correctSlug}`, { replace: true });
+        //   return; // stop here to avoid double state updates
+        // }
+
         // Fetch seller details if available
         if (fetchedVehicle.listedBy) {
           const sellerResponse = await axios.get(
@@ -111,7 +126,7 @@ function VehicleDetails() {
       }
     };
     fetchVehicleDetails();
-  }, [id]);
+  }, [id, slug, navigate]);
 
   useEffect(() => {
     const checkIfVehicleLiked = async () => {
@@ -414,8 +429,8 @@ function VehicleDetails() {
                       <a
                         href={
                           isMobile()
-                            ? `whatsapp://send?phone=${seller.phoneNumber}&text=I'm%20interested%20in%20your%20car%20for%20sale%20(${vehicle.make}%20${vehicle.model})%0A${window.location.origin}/vehicle/${vehicle._id}`
-                            : `https://wa.me/${seller.phoneNumber}?text=I'm%20interested%20in%20your%20car%20for%20sale%20(${vehicle.make}%20${vehicle.model})%0A${window.location.origin}/vehicle/${vehicle._id}`
+                            ? `whatsapp://send?phone=${seller.phoneNumber}&text=I'm%20interested%20in%20your%20car%20for%20sale%20(${vehicle.make}%20${vehicle.model})%0A${window.location.origin}/vehicle/${vehicle._id}/${slug}`
+                            : `https://wa.me/${seller.phoneNumber}?text=I'm%20interested%20in%20your%20car%20for%20sale%20(${vehicle.make}%20${vehicle.model})%0A${window.location.origin}/vehicle/${vehicle._id}/${slug}`
                         }
                         target="_blank"
                         rel="noopener noreferrer"
@@ -521,8 +536,8 @@ function VehicleDetails() {
                       <a
                         href={
                           isMobile()
-                            ? `whatsapp://send?phone=${seller.phoneNumber}&text=I'm%20interested%20in%20your%20car%20for%20sale%20(${vehicle.make}%20${vehicle.model})%0A${window.location.origin}/vehicle/${vehicle._id}`
-                            : `https://wa.me/${seller.phoneNumber}?text=I'm%20interested%20in%20your%20car%20for%20sale%20(${vehicle.make}%20${vehicle.model})%0A${window.location.origin}/vehicle/${vehicle._id}`
+                            ? `whatsapp://send?phone=${seller.phoneNumber}&text=I'm%20interested%20in%20your%20car%20for%20sale%20(${vehicle.make}%20${vehicle.model})%0A${window.location.origin}/vehicle/${vehicle._id}/${slug}`
+                            : `https://wa.me/${seller.phoneNumber}?text=I'm%20interested%20in%20your%20car%20for%20sale%20(${vehicle.make}%20${vehicle.model})%0A${window.location.origin}/vehicle/${vehicle._id}/${slug}`
                         }
                         target="_blank"
                         rel="noopener noreferrer"

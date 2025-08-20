@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../AuthContext";
 import axios from "axios";
+import slugify from "slugify";
 import heart from "./images/heart.png";
 import fullHeart from "./images/full-heart.png";
 import moreIcon from "./images/more.png";
@@ -73,9 +74,15 @@ function VehicleCard({ vehicle, showOptions, onEdit, onDelete, onMarkAsSold }) {
     }
   };
 
+  const slug = slugify(`${vehicle.year} ${vehicle.make} ${vehicle.model}`, {
+    lower: true, // convert to lowercase
+    strict: true, // strip special chars except hyphens
+  });
+
   return (
     <a
-      href={`/vehicle/${vehicle._id}`}
+      // href={`/vehicle/${vehicle._id}`}
+      href={`/vehicle/${vehicle._id}/${slug}`}
       // target="_blank"
       // rel="noopener noreferrer"
       style={{ textDecoration: "none", color: "inherit" }}
