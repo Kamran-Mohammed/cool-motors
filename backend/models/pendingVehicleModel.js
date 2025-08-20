@@ -132,7 +132,7 @@ const pendingVehicleSchema = mongoose.Schema(
     description: {
       type: String,
       required: [true, "Please enter a description for your vehicle"],
-      maxlength: [1000, "Description cannot exceed 1000 characters"],
+      maxlength: [2000, "Description cannot exceed 2000 characters"],
     },
     // tag: {
     //   type: [String],
