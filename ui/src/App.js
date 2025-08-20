@@ -41,6 +41,7 @@ function App() {
             <Route path="/liked-vehicles" element={<LikedVehicles />} />
             <Route path="/list" element={<ListVehicle />} />
             <Route path="/vehicle/:id" element={<VehicleDetails />} />
+            <Route path="/vehicle/:id/:slug" element={<VehicleDetails />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/search" element={<SearchVehiclesPage />} />
