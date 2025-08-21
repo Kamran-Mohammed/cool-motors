@@ -13,14 +13,15 @@ import {
   engineTypes,
 } from "../utils/data";
 
-const sorts = ["priceAsc", "priceDesc", "odometerAsc", "odometerDesc"];
-// MODIFIED: Use objects for sort options for better display
-// const sortOptions = [
-//   { value: "priceAsc", label: "Price: Low to High" },
-//   { value: "priceDesc", label: "Price: High to Low" },
-//   { value: "odometerAsc", label: "Odometer: Low to High" }
-//   { value: "odometerDesc", label: "Odometer: High to Low" },
-// ];
+// MODIFIED: Use objects for sort options with labels
+const sortOptions = [
+  { value: "priceAsc", label: "Price: Low to High" },
+  { value: "priceDesc", label: "Price: High to Low" },
+  { value: "odometerAsc", label: "Odometer: Low to High" },
+  { value: "odometerDesc", label: "Odometer: High to Low" },
+  { value: "DateNto", label: "Date Listed: Newest First" },
+  { value: "dateOtn", label: "Date Listed: Oldest First" },
+];
 
 const SearchVehiclesPage = () => {
   const navigate = useNavigate();
@@ -52,40 +53,31 @@ const SearchVehiclesPage = () => {
   });
   const [showFilters, setShowFilters] = useState(true);
 
-  // // NEW: Ref to prevent double-fetching on initial load
-  // const initialFetchDone = React.useRef(false);
-
   const fetchVehicles = useCallback(
     async (activeFilters) => {
-      // if (Object.keys(activeFilters).length === 0) return;
-      if (Object.keys(activeFilters).length === 0) {
-        // NEW: If no filters are present on initial load, fetch all vehicles
-        // This ensures the page isn't empty if no search params are in the URL.
-        // You can adjust this behavior if you prefer to show nothing until a search is performed.
-        if (Object.keys(location.search).length === 0) {
-          setLoading(true); // Still show loading
-          try {
-            const response = await axios.get(
-              `${process.env.REACT_APP_API_URL}/api/v1/vehicles/search`,
-              {
-                params: { page: pagination.page }, // Fetch all on page 1
-                withCredentials: true,
-              }
-            );
-            setVehicles(response.data.data.vehicles);
-            setPagination({
-              page: response.data.currentPage,
-              totalPages: response.data.totalPages,
-            });
-          } catch (error) {
-            console.error("Error fetching vehicles on initial load:", error);
-            setVehicles([]);
-          } finally {
-            setLoading(false);
-          }
-          return; // Exit after initial fetch
+      // If no filters are present on initial load, fetch all vehicles.
+      if (Object.keys(activeFilters).length === 0 && !location.search) {
+        setLoading(true);
+        try {
+          const response = await axios.get(
+            `${process.env.REACT_APP_API_URL}/api/v1/vehicles/search`,
+            {
+              params: { page: pagination.page },
+              withCredentials: true,
+            }
+          );
+          setVehicles(response.data.data.vehicles);
+          setPagination({
+            page: response.data.currentPage,
+            totalPages: response.data.totalPages,
+          });
+        } catch (error) {
+          console.error("Error fetching vehicles on initial load:", error);
+          setVehicles([]);
+        } finally {
+          setLoading(false);
         }
-        return; // If filters are empty but it's not initial load, do nothing.
+        return;
       }
 
       setLoading(true);
@@ -115,8 +107,6 @@ const SearchVehiclesPage = () => {
 
   // Parse query parameters from the URL on page load
   useEffect(() => {
-    // if (initialFetchDone.current) return; // Prevent double-fetch on component mount
-
     const params = new URLSearchParams(location.search);
     const newFilters = {};
     for (const [key, value] of params.entries()) {
@@ -124,7 +114,6 @@ const SearchVehiclesPage = () => {
     }
     setFilters((prev) => ({ ...prev, ...newFilters }));
     fetchVehicles(newFilters);
-    // initialFetchDone.current = true; // Mark initial fetch as done
   }, [location.search, fetchVehicles]);
 
   const handleInputChange = (e) => {
@@ -133,7 +122,6 @@ const SearchVehiclesPage = () => {
   };
 
   const handleApplyFilters = () => {
-    // Only include filters that have values
     const activeFilters = Object.entries(filters).reduce(
       (acc, [key, value]) => {
         if (value) acc[key] = value;
@@ -142,26 +130,16 @@ const SearchVehiclesPage = () => {
       {}
     );
 
-    // If you want to show an alert when no filters are selected, uncomment this:
-    // if (Object.keys(activeFilters).length === 0) {
-    //   // alert("Please select at least one filter before searching.");
-    //   setShowAlert(true);
-    //   return;
-    // }
-
-    // Always reset to page 1 when new filters are applied
     setPagination((prev) => ({ ...prev, page: 1 }));
     const queryParams = new URLSearchParams(activeFilters);
     navigate(`/search?${queryParams.toString()}`);
 
-    // Scroll to the top of the page
     window.scrollTo({
       top: 0,
-      behavior: "smooth", // Adds smooth scrolling
+      behavior: "smooth",
     });
   };
 
-  // NEW: Clear Filters function
   const handleClearFilters = () => {
     const defaultFilters = {
       make: "",
@@ -186,14 +164,6 @@ const SearchVehiclesPage = () => {
   };
 
   const handlePageChange = (newPage) => {
-    // // Ensure current filters are used when changing page
-    // const currentActiveFilters = Object.entries(filters).reduce(
-    //   (acc, [key, value]) => {
-    //     if (value) acc[key] = value;
-    //     return acc;
-    //   },
-    //   {}
-    // );
     setPagination((prev) => ({ ...prev, page: newPage }));
     navigate(
       `/search?${new URLSearchParams({ ...filters, page: newPage }).toString()}`
@@ -211,75 +181,10 @@ const SearchVehiclesPage = () => {
         <div className="filters-wrapper">
           {/* Filters Section */}
           <div className="filters">
-            {/* {Object.entries(filters).map(([key, value]) =>
-          ["fuelType", "transmission", "engineType", "state", "sort"].includes(
-            key
-          ) ? (
-            <select
-              key={key}
-              name={key}
-              value={value}
-              onChange={handleInputChange}
-            >
-              <option value="">
-                {key === "make"
-                  ? "Brand"
-                  : key.charAt(0).toUpperCase() + key.slice(1)}
-              </option>
-              {(key === "fuelType"
-                ? fuelTypes
-                : key === "transmission"
-                ? transmissions
-                : key === "state"
-                ? states
-                : key === "sort"
-                ? sorts
-                : engineTypes
-              ).map((option) => (
-                <option key={option} value={option}>
-                  {option.charAt(0).toUpperCase() + option.slice(1)}
-                </option>
-              ))}
-            </select>
-          ) : (
-            <input
-              key={key}
-              type={
-                [
-                  "minYear",
-                  "maxYear",
-                  "minPrice",
-                  "maxPrice",
-                  "minOdometer",
-                  "maxOdometer",
-                ].includes(key)
-                  ? "number"
-                  : "text"
-              }
-              name={key}
-              value={value}
-              // placeholder={key.charAt(0).toUpperCase() + key.slice(1)}
-              placeholder={
-                key === "make"
-                  ? "Brand"
-                  : key.charAt(0).toUpperCase() + key.slice(1)
-              }
-              onChange={handleInputChange}
-            />
-          )
-          )} */}
             {Object.entries(filters).map(([key, value]) => {
-              // Determine if it's a select or input, and handle datalists
               if (
-                [
-                  "fuelType",
-                  "transmission",
-                  "engineType",
-                  "state",
-                  "sort",
-                ].includes(key)
+                ["fuelType", "transmission", "engineType", "state", "sort"].includes(key)
               ) {
-                // Select inputs
                 let optionsArray = [];
                 let placeholderText = "";
 
@@ -293,7 +198,8 @@ const SearchVehiclesPage = () => {
                   optionsArray = states;
                   placeholderText = "State";
                 } else if (key === "sort") {
-                  optionsArray = sorts; // Using your 'sorts' array directly
+                  // MODIFIED: Use sortOptions with labels
+                  optionsArray = sortOptions;
                   placeholderText = "Sort By";
                 } else if (key === "engineType") {
                   optionsArray = engineTypes;
@@ -310,24 +216,25 @@ const SearchVehiclesPage = () => {
                   >
                     <option value="">{placeholderText}</option>
                     {optionsArray.map((option) => (
-                      <option key={option} value={option}>
-                        {option.charAt(0).toUpperCase() + option.slice(1)}
+                      <option key={option.value || option} value={option.value || option}>
+                        {option.label || option.charAt(0).toUpperCase() + option.slice(1)}
                       </option>
                     ))}
                   </select>
                 );
               } else {
-                // Text/Number inputs with potential datalists
                 let inputType = "text";
-                let placeholderText =
-                  key.charAt(0).toUpperCase() + key.slice(1);
+                let placeholderText = key.charAt(0).toUpperCase() + key.slice(1);
                 let datalistId = "";
+
                 if (key === "make") {
                   placeholderText = "Brand";
-                  datalistId = "carMakes"; // Link to carMakes datalist
+                  datalistId = "carMakes";
                 } else if (key === "location") {
                   placeholderText = "Location";
-                  datalistId = "locations"; // Link to locations datalist
+                  datalistId = "locations";
+                } else if (["minYear", "maxYear", "minPrice", "maxPrice", "minOdometer", "maxOdometer"].includes(key)) {
+                    inputType = "number";
                 }
 
                 return (
@@ -338,10 +245,9 @@ const SearchVehiclesPage = () => {
                       value={value}
                       placeholder={placeholderText}
                       onChange={handleInputChange}
-                      list={datalistId} // Apply datalist if ID is set
+                      list={datalistId}
                       className="filter-input"
                     />
-                    {/* Datalist for carMakes */}
                     {datalistId === "carMakes" && (
                       <datalist id="carMakes">
                         {carMakes.map((make) => (
@@ -349,7 +255,6 @@ const SearchVehiclesPage = () => {
                         ))}
                       </datalist>
                     )}
-                    {/* Datalist for locations */}
                     {datalistId === "locations" && (
                       <datalist id="locations">
                         {locations.map((loc) => (
@@ -369,7 +274,7 @@ const SearchVehiclesPage = () => {
               {loading ? "Loading..." : "Apply Filters"}
             </button>
             <button
-              className="clear-filter-btn" // NEW: Clear Filters Button
+              className="clear-filter-btn"
               onClick={handleClearFilters}
               disabled={loading}
             >
