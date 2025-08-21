@@ -312,6 +312,10 @@ function VehicleDetails() {
             }}
             onClick={openImageModal}
           /> */}
+          <button onClick={handleShare} className="share-button">
+            <FaShareAlt style={{ width: "30px", height: "30px" }} />{" "}
+            {/* Icon size matching heart */}
+          </button>
           <button onClick={handleLikeToggle} className="like-button">
             <img
               src={liked ? fullHeart : heart}
@@ -319,10 +323,6 @@ function VehicleDetails() {
               // className="heart-icon"
               style={{ width: "30px", height: "30px" }}
             />
-          </button>
-          {/* NEW: Share Button */}
-          <button onClick={handleShare} className="share-button">
-            <FaShareAlt className="share-icon" />
           </button>
           {
             <div className="image-counter">
