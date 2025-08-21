@@ -10,6 +10,7 @@ import whatsApp from "../utils/images/WhatsAppButton.png";
 import heart from "../utils/images/heart.png";
 import fullHeart from "../utils/images/full-heart.png";
 import { isMobile } from "../utils/tools";
+import { FaShareAlt } from "react-icons/fa";
 
 function VehicleDetails() {
   const { id, slug } = useParams(); // Vehicle ID from URL
@@ -31,6 +32,8 @@ function VehicleDetails() {
   const [allImagesPreloaded, setAllImagesPreloaded] = useState(false);
   // NEW: Ref to store preloaded Image objects (not directly used in JSX, but holds the data)
   const preloadedImagesRef = useRef([]);
+  // NEW: State to control arrow visibility on hover (desktop only)
+  const [showNavButtons, setShowNavButtons] = useState(false);
 
   const handleTouchStart = (e) => {
     setTouchStartX(e.touches[0].clientX);
@@ -207,6 +210,25 @@ function VehicleDetails() {
     setIsModalOpen(false);
   };
 
+  const handleShare = async () => {
+    const shareUrl = window.location.href;
+    const shareTitle = `${vehicle.year} ${vehicle.make} ${vehicle.model} for sale on Autofinds.in`;
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: shareTitle,
+          url: shareUrl,
+        });
+        console.log("Content shared successfully");
+      } catch (error) {
+        console.error("Error sharing:", error);
+      }
+    } else {
+      alert(`You can share this link: ${shareUrl}`);
+    }
+  };
+
   // Close modal when the 'Esc' key is pressed
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -254,6 +276,9 @@ function VehicleDetails() {
           className="image-container"
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
+          // NEW: Mouse events for desktop hover effect
+          onMouseEnter={() => !isMobileScreen && setShowNavButtons(true)}
+          onMouseLeave={() => !isMobileScreen && setShowNavButtons(false)}
         >
           {/* NEW: Conditional rendering for loading state or preloaded image */}
           {!allImagesPreloaded && (
@@ -287,6 +312,10 @@ function VehicleDetails() {
             }}
             onClick={openImageModal}
           /> */}
+          <button onClick={handleShare} className="share-button">
+            <FaShareAlt style={{ width: "30px", height: "30px" }} />{" "}
+            {/* Icon size matching heart */}
+          </button>
           <button onClick={handleLikeToggle} className="like-button">
             <img
               src={liked ? fullHeart : heart}
@@ -300,24 +329,43 @@ function VehicleDetails() {
               {currentImageIndex + 1}/{vehicle.images.length}
             </div>
           }
-          {/* Previous Button */}
+          {/* Previous Button - MODIFIED: Conditional class for visibility */}
           {vehicle.images?.length > 1 && (
             <img
               src={left}
               alt="Previous"
               onClick={prevImage}
-              className="img-nav-button left"
+              className={`img-nav-button left ${
+                showNavButtons || isMobileScreen ? "visible" : ""
+              }`}
             />
           )}
 
-          {/* Next Button */}
+          {/* Next Button - MODIFIED: Conditional class for visibility */}
           {vehicle.images?.length > 1 && (
             <img
               src={right}
               alt="Next"
               onClick={nextImage}
-              className="img-nav-button right"
+              className={`img-nav-button right ${
+                showNavButtons || isMobileScreen ? "visible" : ""
+              }`}
             />
+          )}
+
+          {/* NEW: Image Navigation Dots */}
+          {vehicle.images?.length > 1 && (
+            <div className="image-dots-container">
+              {vehicle.images.map((_, index) => (
+                <span
+                  key={index}
+                  className={`image-dot ${
+                    index === currentImageIndex ? "active" : ""
+                  }`}
+                  onClick={() => setCurrentImageIndex(index)}
+                ></span>
+              ))}
+            </div>
           )}
         </div>
         <h2
@@ -602,7 +650,7 @@ function VehicleDetails() {
               src={left}
               alt="Previuos"
               onClick={prevImage}
-              className="img-nav-button left"
+              className="img-nav-button left modal-img-nav-button"
             />
           )}
           {/* <img
@@ -631,8 +679,22 @@ function VehicleDetails() {
               src={right}
               alt="Next"
               onClick={nextImage}
-              className="img-nav-button right"
+              className="img-nav-button right modal-img-nav-button"
             />
+          )}
+          {/* NEW: Image Navigation Dots in Modal */}
+          {vehicle.images?.length > 1 && (
+            <div className="image-dots-container modal-dots-container">
+              {vehicle.images.map((_, index) => (
+                <span
+                  key={index}
+                  className={`image-dot ${
+                    index === currentImageIndex ? "active" : ""
+                  }`}
+                  onClick={() => setCurrentImageIndex(index)}
+                ></span>
+              ))}
+            </div>
           )}
         </div>
       )}
