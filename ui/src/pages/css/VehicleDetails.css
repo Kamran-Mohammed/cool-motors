@@ -75,6 +75,7 @@
   background: #e7ebe3;
   border: none;
   border-radius: 5px;
+  opacity: 0.7;
 }
 
 .heart-icon {
@@ -159,6 +160,27 @@
   right: 10px;
 }
 
+/* Show arrows on hover for desktop */
+.image-container:hover .img-nav-button {
+  opacity: 0.7;
+}
+
+@media (min-width: 768px) {
+  .img-nav-button {
+    opacity: 0;
+  }
+}
+
+.modal-img-nav-button {
+  opacity: 0.7;
+}
+
+/* @media (max-width: 768px) {
+  .modal-img-nav-button {
+    opacity: 0;
+  }
+} */
+
 .whatsapp-icon {
   height: 35px;
   width: auto;
@@ -224,4 +246,64 @@
 .modal-content:not(.loading-effect) {
   opacity: 1;
   filter: blur(0);
+}
+
+.share-button {
+  padding: 7px 10px;
+  position: absolute;
+  bottom: 65px;
+  right: 10px;
+  background: #e7ebe3;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.7;
+}
+
+.share-button:hover {
+  background: #f4f7f4;
+}
+
+.share-icon {
+  width: 30px;
+  height: 30px;
+  color: #333;
+}
+
+/* NEW: Image Navigation Dots Container */
+.image-dots-container {
+  position: absolute;
+  bottom: 10px; /* Position at the bottom */
+  left: 50%;
+  transform: translateX(-50%); /* Center horizontally */
+  display: flex;
+  gap: 5px; /* Space between dots */
+  z-index: 1; /* Ensure dots are above the image */
+}
+
+.image-dot {
+  width: 6px;
+  height: 6px;
+  background-color: rgba(255, 255, 255, 0.5); /* Inactive dot color */
+  border-radius: 50%; /* Make them circular */
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.image-dot.active {
+  background-color: white; /* Active dot color */
+  transform: scale(1.2); /* Slightly larger for active dot */
+}
+
+.image-dot:hover {
+  background-color: rgba(255, 255, 255, 0.8); /* Hover effect */
+}
+
+/* NEW: Modal Dots Container - separate positioning if needed */
+.modal-dots-container {
+  bottom: 20px; /* Adjust if you want them higher in the modal */
 }
