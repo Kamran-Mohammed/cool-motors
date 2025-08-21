@@ -9,6 +9,7 @@ import right from "../utils/images/right.png";
 import whatsApp from "../utils/images/WhatsAppButton.png";
 import heart from "../utils/images/heart.png";
 import fullHeart from "../utils/images/full-heart.png";
+import share from "../utils/images/share.png";
 import { isMobile } from "../utils/tools";
 
 function VehicleDetails() {
@@ -29,8 +30,25 @@ function VehicleDetails() {
   const [touchCountStart, setTouchCountStart] = useState(0);
   // NEW: State to track if all images are preloaded
   const [allImagesPreloaded, setAllImagesPreloaded] = useState(false);
+  const [showShareMessage, setShowShareMessage] = useState(false);
   // NEW: Ref to store preloaded Image objects (not directly used in JSX, but holds the data)
   const preloadedImagesRef = useRef([]);
+
+
+  const handleShare = async () => {
+    try {
+      const url = window.location.href;
+      await navigator.clipboard.writeText(url);
+      setShowShareMessage(true);
+      setTimeout(() => {
+        setShowShareMessage(false);
+      }, 2000); // Hide the message after 2 seconds
+    } catch (err) {
+      console.error("Failed to copy URL: ", err);
+      // Fallback for older browsers or if clipboard access is denied
+      alert("Please copy the following link: " + window.location.href);
+    }
+  };
 
   const handleTouchStart = (e) => {
     setTouchStartX(e.touches[0].clientX);
@@ -287,14 +305,18 @@ function VehicleDetails() {
             }}
             onClick={openImageModal}
           /> */}
-          <button onClick={handleLikeToggle} className="like-button">
-            <img
-              src={liked ? fullHeart : heart}
-              alt="Like"
-              // className="heart-icon"
-              style={{ width: "30px", height: "30px" }}
-            />
-          </button>
+          <div className="action-buttons-container">
+              <button onClick={handleShare} className="share-button">
+                <img src={share} alt="Share" style={{ width: "24px", height: "24px" }} />
+              </button>
+              <button onClick={handleLikeToggle} className="like-button">
+                <img
+                  src={liked ? fullHeart : heart}
+                  alt="Like"
+                  style={{ width: "24px", height: "24px" }}
+                />
+              </button>
+          </div>
           {
             <div className="image-counter">
               {currentImageIndex + 1}/{vehicle.images.length}
@@ -320,6 +342,12 @@ function VehicleDetails() {
             />
           )}
         </div>
+        {showShareMessage && (
+          <div className="share-confirmation-message">
+            Link copied to clipboard!
+          </div>
+        )}
+
         <h2
           style={{ fontSize: "28px", marginTop: "20px", marginBottom: "10px" }}
         >

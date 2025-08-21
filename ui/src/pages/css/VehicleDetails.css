@@ -64,26 +64,51 @@
   transform: scale(1.02);
 }
 
+.action-buttons-container {
+    position: absolute;
+    bottom: 10px; /* Adjust vertical position */
+    right: 10px; /* Adjust horizontal position */
+    display: flex;
+    flex-direction: column; /* Stack the buttons vertically */
+    gap: 8px; /* Space between buttons */
+    z-index: 5;
+    align-items: flex-end; /* Align buttons to the right */
+}
+
+.share-button,
 .like-button {
-  padding: 7px 10px;
-  position: absolute;
-  bottom: 10px;
-  right: 10px;
-  background: none;
-  border: none;
-  cursor: pointer;
+  position: static; /* Remove absolute positioning */
   background: #e7ebe3;
   border: none;
+  border-radius: 5px; /* Match the style of the like button */
+  padding: 7px 10px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.share-button:hover,
+.like-button:hover {
+    background: #f4f7f4;
+    transform: scale(1.05); /* Add a subtle hover effect */
+}
+
+.share-confirmation-message {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
+  color: #fff;
+  padding: 10px 20px;
   border-radius: 5px;
+  font-size: 1rem;
+  z-index: 10;
+  animation: fadeinout 2s forwards;
 }
 
 .heart-icon {
   width: 30px;
   height: 30px;
-}
-
-.like-button:hover {
-  background: #f4f7f4;
 }
 
 .image-counter {
