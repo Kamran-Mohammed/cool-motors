@@ -165,7 +165,7 @@
   opacity: 0.7;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 600px) {
   .img-nav-button {
     opacity: 0;
   }
@@ -175,7 +175,7 @@
   opacity: 0.7;
 }
 
-/* @media (max-width: 768px) {
+/* @media (max-width: 600px) {
   .modal-img-nav-button {
     opacity: 0;
   }
