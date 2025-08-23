@@ -34,6 +34,8 @@ function VehicleDetails() {
   const preloadedImagesRef = useRef([]);
   // NEW: State to control arrow visibility on hover (desktop only)
   const [showNavButtons, setShowNavButtons] = useState(false);
+  const mainImageRef = useRef(null);
+  const [mainImageHeight, setMainImageHeight] = useState(0);
 
   const handleTouchStart = (e) => {
     setTouchStartX(e.touches[0].clientX);
@@ -61,11 +63,21 @@ function VehicleDetails() {
   useEffect(() => {
     const handleResize = () => {
       setIsMobileScreen(window.innerWidth < 768);
+      if (mainImageRef.current) {
+        setMainImageHeight(mainImageRef.current.offsetHeight);
+      }
     };
 
     window.addEventListener("resize", handleResize);
+    handleResize(); // Initial call
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  useEffect(() => {
+    if (mainImageRef.current) {
+      setMainImageHeight(mainImageRef.current.offsetHeight);
+    }
+  }, [currentImageIndex, allImagesPreloaded]); // Recalculate if image changes or loads
 
   useEffect(() => {
     const fetchVehicleDetails = async () => {
@@ -272,101 +284,156 @@ function VehicleDetails() {
       <div
         className={`vehicle-details ${isModalOpen ? "blur-background" : ""}`}
       >
-        <div
-          className="image-container"
-          onTouchStart={handleTouchStart}
-          onTouchEnd={handleTouchEnd}
-          // NEW: Mouse events for desktop hover effect
-          onMouseEnter={() => !isMobileScreen && setShowNavButtons(true)}
-          onMouseLeave={() => !isMobileScreen && setShowNavButtons(false)}
-        >
-          {/* NEW: Conditional rendering for loading state or preloaded image */}
-          {!allImagesPreloaded && (
-            <div className="image-loading-overlay">
-              <div className="spinner"></div> {/* Basic spinner */}
-              <p>Loading images...</p>
-            </div>
-          )}
-          <img
-            src={currentImageSrc}
-            alt={`${vehicle.make} ${vehicle.model}`}
-            className={`vehicle-image ${
-              !allImagesPreloaded ? "loading-effect" : ""
-            }`} // Add loading effect class
-            style={{
-              objectFit: "contain",
-              // NEW: Make image invisible until preloaded if not showing overlay
-            }}
-            onClick={openImageModal}
-          />
-          {/* <img
-            src={
-              vehicle.images && vehicle.images.length > 0
-                ? vehicle.images[currentImageIndex]
-                : "placeholder.jpg"
+        <div className="main-image-section">
+          <div
+            className="image-container"
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
+            // NEW: Mouse events for desktop hover effect
+            onMouseEnter={() => !isMobileScreen && setShowNavButtons(true)}
+            onMouseLeave={() => !isMobileScreen && setShowNavButtons(false)}
+            ref={mainImageRef} // Assign ref to the main image container
+          >
+            {/* NEW: Conditional rendering for loading state or preloaded image */}
+            {!allImagesPreloaded && (
+              <div className="image-loading-overlay">
+                <div className="spinner"></div> {/* Basic spinner */}
+                <p>Loading images...</p>
+              </div>
+            )}
+            <img
+              src={currentImageSrc}
+              alt={`${vehicle.make} ${vehicle.model}`}
+              className={`vehicle-image ${
+                !allImagesPreloaded ? "loading-effect" : ""
+              }`} // Add loading effect class
+              style={{
+                objectFit: "contain",
+                // NEW: Make image invisible until preloaded if not showing overlay
+              }}
+              onClick={openImageModal}
+            />
+            {/* <img
+              src={
+                vehicle.images && vehicle.images.length > 0
+                  ? vehicle.images[currentImageIndex]
+                  : "placeholder.jpg"
+              }
+              alt={`${vehicle.make} ${vehicle.model}`}
+              className="vehicle-image"
+              style={{
+                objectFit: "contain",
+              }}
+              onClick={openImageModal}
+            /> */}
+            <button onClick={handleShare} className="share-button">
+              <FaShareAlt style={{ width: "30px", height: "30px" }} />{" "}
+              {/* Icon size matching heart */}
+            </button>
+            <button onClick={handleLikeToggle} className="like-button">
+              <img
+                src={liked ? fullHeart : heart}
+                alt="Like"
+                // className="heart-icon"
+                style={{ width: "30px", height: "30px" }}
+              />
+            </button>
+            {
+              <div className="image-counter">
+                {currentImageIndex + 1}/{vehicle.images.length}
+              </div>
             }
-            alt={`${vehicle.make} ${vehicle.model}`}
-            className="vehicle-image"
-            style={{
-              objectFit: "contain",
-            }}
-            onClick={openImageModal}
-          /> */}
-          <button onClick={handleShare} className="share-button">
-            <FaShareAlt style={{ width: "30px", height: "30px" }} />{" "}
-            {/* Icon size matching heart */}
-          </button>
-          <button onClick={handleLikeToggle} className="like-button">
-            <img
-              src={liked ? fullHeart : heart}
-              alt="Like"
-              // className="heart-icon"
-              style={{ width: "30px", height: "30px" }}
-            />
-          </button>
-          {
-            <div className="image-counter">
-              {currentImageIndex + 1}/{vehicle.images.length}
-            </div>
-          }
-          {/* Previous Button - MODIFIED: Conditional class for visibility */}
-          {vehicle.images?.length > 1 && (
-            <img
-              src={left}
-              alt="Previous"
-              onClick={prevImage}
-              className={`img-nav-button left ${
-                showNavButtons || isMobileScreen ? "visible" : ""
-              }`}
-            />
-          )}
+            {/* Previous Button - MODIFIED: Conditional class for visibility */}
+            {vehicle.images?.length > 1 && (
+              <img
+                src={left}
+                alt="Previous"
+                onClick={prevImage}
+                className={`img-nav-button left ${
+                  showNavButtons || isMobileScreen ? "visible" : ""
+                }`}
+              />
+            )}
 
-          {/* Next Button - MODIFIED: Conditional class for visibility */}
-          {vehicle.images?.length > 1 && (
-            <img
-              src={right}
-              alt="Next"
-              onClick={nextImage}
-              className={`img-nav-button right ${
-                showNavButtons || isMobileScreen ? "visible" : ""
-              }`}
-            />
-          )}
+            {/* Next Button - MODIFIED: Conditional class for visibility */}
+            {vehicle.images?.length > 1 && (
+              <img
+                src={right}
+                alt="Next"
+                onClick={nextImage}
+                className={`img-nav-button right ${
+                  showNavButtons || isMobileScreen ? "visible" : ""
+                }`}
+              />
+            )}
 
-          {/* NEW: Image Navigation Dots */}
-          {vehicle.images?.length > 1 && (
-            <div className="image-dots-container">
-              {vehicle.images.map((_, index) => (
-                <span
-                  key={index}
-                  className={`image-dot ${
-                    index === currentImageIndex ? "active" : ""
-                  }`}
-                  onClick={() => setCurrentImageIndex(index)}
-                ></span>
-              ))}
-            </div>
-          )}
+            {/* NEW: Image Navigation Dots */}
+            {vehicle.images?.length > 1 && (
+              <div className="image-dots-container">
+                {vehicle.images.map((_, index) => (
+                  <span
+                    key={index}
+                    className={`image-dot ${
+                      index === currentImageIndex ? "active" : ""
+                    }`}
+                    onClick={() => setCurrentImageIndex(index)}
+                  ></span>
+                ))}
+              </div>
+            )}
+          </div>
+          <div
+            className="thumbnail-images-container"
+            style={{ height: mainImageHeight > 0 ? `${mainImageHeight}px` : 'auto' }}
+          >
+            {vehicle.images.length > 0 ? (
+              // Slice images to show current, next, and next-next, wrapping around
+              Array.from({ length: Math.min(vehicle.images.length, 3) }).map(
+                (_, i) => {
+                  const imageIndex = (currentImageIndex + i) % vehicle.images.length;
+                  const image = vehicle.images[imageIndex];
+                  const isLastThumbnail = i === 2 && vehicle.images.length > 3;
+
+                  return (
+                    <div
+                      key={imageIndex}
+                      className={`thumbnail-wrapper ${
+                        imageIndex === currentImageIndex ? "active" : ""
+                      }`}
+                      onClick={() => setCurrentImageIndex(imageIndex)}
+                    >
+                      <img
+                        src={image}
+                        alt={`Thumbnail ${imageIndex + 1}`}
+                        className="thumbnail-image"
+                      />
+                      {isLastThumbnail && (
+                        <div
+                          className="more-photos-overlay"
+                          onClick={(e) => {
+                            e.stopPropagation(); // Prevent setCurrentImageIndex from firing
+                            openImageModal();
+                          }}
+                        >
+                          <span className="more-photos-text">
+                            +{vehicle.images.length - (i + 1)} More Photos
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  );
+                }
+              )
+            ) : (
+              <div className="thumbnail-wrapper no-image">
+                <img
+                  src="https://placehold.co/150x100/e0e0e0/555555?text=No+Image"
+                  alt="No Image"
+                  className="thumbnail-image"
+                />
+              </div>
+            )}
+          </div>
         </div>
         <h2
           style={{ fontSize: "28px", marginTop: "20px", marginBottom: "10px" }}
