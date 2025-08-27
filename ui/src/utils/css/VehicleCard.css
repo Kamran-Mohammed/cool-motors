@@ -4,7 +4,7 @@
   flex-grow: 1; /* Makes the image container take available space */
   overflow: hidden;
   position: relative;
-  aspect-ratio: 16 / 9;
+  aspect-ratio: 4 / 3;
 }
 
 .vehicle-card-image img {
