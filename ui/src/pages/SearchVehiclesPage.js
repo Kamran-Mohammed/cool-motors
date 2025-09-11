@@ -41,7 +41,7 @@ const SearchVehiclesPage = () => {
     engineType: "",
     location: "",
     state: "",
-    sort: "",
+    sort: "DateNto",
   });
 
   const [vehicles, setVehicles] = useState([]);
@@ -62,10 +62,11 @@ const SearchVehiclesPage = () => {
           const response = await axios.get(
             `${process.env.REACT_APP_API_URL}/api/v1/vehicles/search`,
             {
-              params: { page: pagination.page },
+              params: { page: pagination.page, sort: "DateNto" }, // 👈 added sort
               withCredentials: true,
             }
           );
+
           setVehicles(response.data.data.vehicles);
           setPagination({
             page: response.data.currentPage,
@@ -183,7 +184,13 @@ const SearchVehiclesPage = () => {
           <div className="filters">
             {Object.entries(filters).map(([key, value]) => {
               if (
-                ["fuelType", "transmission", "engineType", "state", "sort"].includes(key)
+                [
+                  "fuelType",
+                  "transmission",
+                  "engineType",
+                  "state",
+                  "sort",
+                ].includes(key)
               ) {
                 let optionsArray = [];
                 let placeholderText = "";
@@ -216,15 +223,20 @@ const SearchVehiclesPage = () => {
                   >
                     <option value="">{placeholderText}</option>
                     {optionsArray.map((option) => (
-                      <option key={option.value || option} value={option.value || option}>
-                        {option.label || option.charAt(0).toUpperCase() + option.slice(1)}
+                      <option
+                        key={option.value || option}
+                        value={option.value || option}
+                      >
+                        {option.label ||
+                          option.charAt(0).toUpperCase() + option.slice(1)}
                       </option>
                     ))}
                   </select>
                 );
               } else {
                 let inputType = "text";
-                let placeholderText = key.charAt(0).toUpperCase() + key.slice(1);
+                let placeholderText =
+                  key.charAt(0).toUpperCase() + key.slice(1);
                 let datalistId = "";
 
                 if (key === "make") {
@@ -233,8 +245,17 @@ const SearchVehiclesPage = () => {
                 } else if (key === "location") {
                   placeholderText = "Location";
                   datalistId = "locations";
-                } else if (["minYear", "maxYear", "minPrice", "maxPrice", "minOdometer", "maxOdometer"].includes(key)) {
-                    inputType = "number";
+                } else if (
+                  [
+                    "minYear",
+                    "maxYear",
+                    "minPrice",
+                    "maxPrice",
+                    "minOdometer",
+                    "maxOdometer",
+                  ].includes(key)
+                ) {
+                  inputType = "number";
                 }
 
                 return (
