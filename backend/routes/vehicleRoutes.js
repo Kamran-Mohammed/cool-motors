@@ -41,9 +41,25 @@ router.get("/search", vehicleController.searchVehicles);
 
 router.get("/random", vehicleController.getRandomVehicles);
 
+router.get("/featured", vehicleController.getFeaturedVehicles);
+
 router
   .route("/:vehicleId")
   .get(vehicleController.getVehicle)
   .delete(authController.protect, vehicleController.deleteVehicle);
+
+router.patch(
+  "/:vehicleId/feature",
+  authController.protect,
+  authController.restrictTo("admin"),
+  vehicleController.markAsFeatured
+);
+
+router.patch(
+  "/:vehicleId/unfeature",
+  authController.protect,
+  authController.restrictTo("admin"),
+  vehicleController.unmarkAsFeatured
+);
 
 module.exports = router;

@@ -283,7 +283,7 @@ exports.searchVehicles = catchAsyncError(async (req, res) => {
   if (filters.sort === "odometerAsc") sortBy.odometer = 1;
   if (filters.sort === "odometerDesc") sortBy.odometer = -1;
   if (filters.sort === "DateNto") sortBy.createdAt = -1;
-  if (filters.sort === "dateOtn") sortBy.createdAt = 1; 
+  if (filters.sort === "dateOtn") sortBy.createdAt = 1;
 
   // const vehicles = await Vehicle.find(searchCriteria).sort(sortBy).explian();
   // const vehicles = await Vehicle.find(searchCriteria).sort(sortBy);
@@ -461,6 +461,61 @@ exports.markVehicleAsSold = catchAsyncError(async (req, res, next) => {
     status: "success",
     data: {
       soldVehicle,
+    },
+  });
+});
+
+exports.markAsFeatured = catchAsyncError(async (req, res, next) => {
+  const vehicle = await Vehicle.findById(req.params.vehicleId);
+
+  if (!vehicle) {
+    return next(new AppError("No vehicle found with that ID", 404));
+  }
+
+  vehicle.isFeatured = true;
+  await vehicle.save();
+
+  res.status(200).json({
+    status: "success",
+    message: "Vehicle marked as featured",
+    data: {
+      vehicle,
+    },
+  });
+});
+
+exports.unmarkAsFeatured = catchAsyncError(async (req, res, next) => {
+  const vehicle = await Vehicle.findById(req.params.vehicleId);
+
+  if (!vehicle) {
+    return next(new AppError("No vehicle found with that ID", 404));
+  }
+
+  vehicle.isFeatured = false;
+  await vehicle.save();
+
+  res.status(200).json({
+    status: "success",
+    message: "Vehicle unmarked as featured",
+    data: {
+      vehicle,
+    },
+  });
+});
+
+exports.getFeaturedVehicles = catchAsyncError(async (req, res, next) => {
+  const limit = parseInt(req.query.limit, 10) || 10;
+
+  const vehicles = await Vehicle.aggregate([
+    { $match: { isFeatured: true } }, // only featured vehicles
+    { $sample: { size: limit } }, // random order, limited size
+  ]);
+
+  res.status(200).json({
+    status: "success",
+    results: vehicles.length,
+    data: {
+      vehicles,
     },
   });
 });

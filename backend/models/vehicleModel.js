@@ -132,6 +132,11 @@ const vehicleSchema = mongoose.Schema(
       type: Number,
       default: 0,
     },
+    isFeatured: {
+      type: Boolean,
+      default: false,
+      index: true,
+    },
     expiresAt: {
       type: Date,
       default: () => Date.now() + 60 * 24 * 60 * 60 * 1000, // Correct way to set dynamic default
