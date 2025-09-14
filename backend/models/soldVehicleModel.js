@@ -32,7 +32,7 @@ const soldVehicleSchema = mongoose.Schema(
     fuelType: {
       type: String,
       enum: {
-        values: ["petrol", "diesel", "electric", "hybrid", "CNG", "LPG"],
+        values: ["Petrol", "Diesel", "Electric", "Hybrid", "CNG", "LPG"],
         message: "{VALUE} is not a valid fuel type",
       },
       required: [true, "Please specify the fuel type of your vehicle"],
@@ -40,7 +40,7 @@ const soldVehicleSchema = mongoose.Schema(
     transmission: {
       type: String,
       enum: {
-        values: ["manual", "automatic"],
+        values: ["Manual", "Automatic"],
         message:
           "{VALUE} is not a valid transmission type. Choose from manual, automatic",
       },
@@ -72,7 +72,7 @@ const soldVehicleSchema = mongoose.Schema(
           "V12",
           "V16",
           "W12",
-          "w16",
+          "W16",
           "Flat 4", //boxer 4
           "Flat 6", //boxer 6
           "rotary",

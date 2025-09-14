@@ -22,18 +22,29 @@ const s3Client = new S3Client({
   },
 });
 
+// Utility function for trimming + capitalizing first letter
+function formatString(val) {
+  if (typeof val !== "string") return val;
+  val = val.trim();
+  if (val.length === 0) return val;
+  return val.charAt(0).toUpperCase() + val.slice(1);
+}
+
 const pendingVehicleSchema = mongoose.Schema(
   {
     make: {
       type: String,
       required: [true, "Please enter the brand of your vehicle"],
+      set: formatString,
     },
     model: {
       type: String,
       required: [true, "Please enter the model of your vehicle"],
+      set: formatString,
     },
     variant: {
       type: String,
+      set: formatString,
     },
     year: {
       type: Number,
@@ -52,19 +63,21 @@ const pendingVehicleSchema = mongoose.Schema(
     fuelType: {
       type: String,
       enum: {
-        values: ["petrol", "diesel", "electric", "hybrid", "CNG", "LPG"],
+        values: ["Petrol", "Diesel", "Electric", "Hybrid", "CNG", "LPG"],
         message: "{VALUE} is not a valid fuel type",
       },
       required: [true, "Please specify the fuel type of your vehicle"],
+      set: formatString,
     },
     transmission: {
       type: String,
       enum: {
-        values: ["manual", "automatic"],
+        values: ["Manual", "Automatic"],
         message:
           "{VALUE} is not a valid transmission type. Choose from manual, automatic",
       },
       required: [true, "Please specify the transmission type of your vehicle"],
+      set: formatString,
     },
     engineDisplacement: {
       type: Number,
@@ -92,7 +105,7 @@ const pendingVehicleSchema = mongoose.Schema(
           "V12",
           "V16",
           "W12",
-          "w16",
+          "W16",
           "Flat 4", //boxer 4
           "Flat 6", //boxer 6
           "rotary",
@@ -100,6 +113,7 @@ const pendingVehicleSchema = mongoose.Schema(
         message: "{VALUE} is not a valid engine type",
       },
       // required: [true, "Please specify the engine type of your vehicle"],
+      set: formatString,
     },
     odometer: {
       type: Number,
@@ -115,10 +129,12 @@ const pendingVehicleSchema = mongoose.Schema(
       type: String,
       enum: { values: states, message: "{VALUE} is not a valid state" },
       required: [true, "Please enter the state(location) of your vehicle"],
+      set: formatString,
     },
     location: {
       type: String,
       required: [true, "Please enter the location of your vehicle"],
+      set: formatString,
     },
     listedBy: {
       type: mongoose.Types.ObjectId,
@@ -133,6 +149,7 @@ const pendingVehicleSchema = mongoose.Schema(
       type: String,
       required: [true, "Please enter a description for your vehicle"],
       maxlength: [2000, "Description cannot exceed 2000 characters"],
+      set: formatString,
     },
     // tag: {
     //   type: [String],

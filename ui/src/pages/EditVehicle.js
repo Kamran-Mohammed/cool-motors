@@ -4,57 +4,19 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../AuthContext";
 import "./css/EditVehicle.css";
 import Restricted from "../utils/Restricted";
-import { locations, states } from "../utils/data";
+import {
+  locations,
+  states,
+  engineTypes,
+  carMakes,
+  fuelTypes,
+  transmissions,
+  years,
+  ownerships,
+} from "../utils/data";
 import Alert from "../utils/Alert";
 
 const EditVehicle = () => {
-  const carMakes = [
-    "Toyota",
-    "Honda",
-    "Ford",
-    "Chevrolet",
-    "BMW",
-    "Mercedes-Benz",
-    "Audi",
-    "Volkswagen",
-    "Nissan",
-    "Hyundai",
-    "Kia",
-    "Mazda",
-    "Subaru",
-    "Lexus",
-    "Jaguar",
-    "Land Rover",
-    "Volvo",
-    "Tesla",
-    "Porsche",
-    "Ferrari",
-    "Lamborghini",
-  ];
-  const years = Array.from(
-    { length: new Date().getFullYear() - 1900 + 1 },
-    (_, i) => 1900 + i
-  );
-  const fuelTypes = ["petrol", "diesel", "electric", "hybrid", "CNG", "LPG"];
-  const transmissions = ["manual", "automatic"];
-  const engineTypes = [
-    "Inline 3",
-    "Inline 4",
-    "Inline 5",
-    "Inline 6",
-    "V6",
-    "V8",
-    "V10",
-    "V12",
-    "V16",
-    "W12",
-    "w16",
-    "Flat 4", //boxer 4
-    "Flat 6", //boxer 6
-    "rotary",
-  ];
-  const ownerships = Array.from({ length: 10 }, (_, i) => i + 1);
-
   const { vehicleId } = useParams();
   const [vehicleData, setVehicleData] = useState(null);
   const [customLocation, setCustomLocation] = useState(""); // For custom location
@@ -104,6 +66,7 @@ const EditVehicle = () => {
       // listedBy,
       createdAt,
       expiresAt,
+      isFeatured,
       ...filteredData
     } = data;
     return filteredData;
