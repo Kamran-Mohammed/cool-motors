@@ -1,3 +1,4 @@
+const fs = require("fs");
 const catchAsyncError = require("../utils/catchAsyncError");
 const AppError = require("../utils/appError");
 const PendingVehicle = require("../models/pendingVehicleModel");
@@ -7,6 +8,7 @@ const Email = require("../utils/email");
 const crypto = require("crypto");
 const { deleteS3Images } = require("../utils/tools");
 const sharp = require("sharp");
+const { Upload } = require("@aws-sdk/lib-storage");
 
 // const generateFileName = (bytes = 32) =>
 //   crypto.randomBytes(bytes).toString("hex");
@@ -84,25 +86,46 @@ exports.listVehicle = catchAsyncError(async (req, res, next) => {
           req.body.year
         );
 
-        // Compress and convert image to JPEG
-        const resizedBuffer = await sharp(file.buffer)
+        // // Compress and convert image to JPEG
+        // const resizedBuffer = await sharp(file.path)
+        //   .rotate()
+        //   .resize({ width: 1200 }) // resize to 1200px width (optional)
+        //   .jpeg({ quality: 80 }) // compress to 80% quality
+        //   .toBuffer();
+
+        // const uploadParams = {
+        //   Bucket: bucketName,
+        //   Body: resizedBuffer,
+        //   Key: fileName,
+        //   ContentType: "image/jpeg", // Always JPEG after compression
+        // };
+
+        // await s3Client.send(new PutObjectCommand(uploadParams));
+
+        // const imageUrl = `https://images-cool-motors.s3.eu-north-1.amazonaws.com/${fileName}`;
+        // imageUrls.push(imageUrl);
+        const transformer = sharp(file.path)
           .rotate()
-          .resize({ width: 1200 }) // resize to 1200px width (optional)
-          .jpeg({ quality: 80 }) // compress to 80% quality
-          .toBuffer();
+          .resize({ width: 1200 })
+          .jpeg({ quality: 80 });
 
-        const uploadParams = {
-          Bucket: bucketName,
-          Body: resizedBuffer,
-          Key: fileName,
-          ContentType: "image/jpeg", // Always JPEG after compression
-        };
+        const upload = new Upload({
+          client: s3Client,
+          params: {
+            Bucket: bucketName,
+            Key: fileName,
+            Body: transformer, // stream directly
+            ContentType: "image/jpeg",
+          },
+        });
 
-        await s3Client.send(new PutObjectCommand(uploadParams));
-
-        const imageUrl = `https://images-cool-motors.s3.eu-north-1.amazonaws.com/${fileName}`;
-        imageUrls.push(imageUrl);
+        await upload.done();
         uploadedS3Keys.push(fileName);
+        imageUrls.push(
+          `https://images-cool-motors.s3.eu-north-1.amazonaws.com/${fileName}`
+        );
+
+        fs.unlink(file.path, () => {}); // delete local temp file
       } catch (fileUploadError) {
         console.error(
           `Error processing or uploading file ${file.originalname}:`,
@@ -227,24 +250,24 @@ exports.approveVehicle = catchAsyncError(async (req, res, next) => {
   // Remove the vehicle from the `pendingVehicles` collection
   await PendingVehicle.findByIdAndDelete(id, { skipImageDeletion: true });
 
-  try {
-    // SEND APPROVED EMAIL TO USER
-    const user = await User.findById(pendingVehicle.listedBy);
-    let url = "";
-    if (process.env.NODE_ENV === "development") {
-      url = `${process.env.FRONTEND_URL_DEV}/vehicle/${approvedVehicle._id}`;
-    } else {
-      url = `${process.env.FRONTEND_URL_PROD}/vehicle/${approvedVehicle._id}`;
-    }
-    await new Email(user, url).sendApprovalEmail();
-  } catch (err) {
-    return next(
-      new AppError(
-        "There was an error sending the email. Please try again later",
-        500
-      )
-    );
-  }
+  // try {
+  //   // SEND APPROVED EMAIL TO USER
+  //   const user = await User.findById(pendingVehicle.listedBy);
+  //   let url = "";
+  //   if (process.env.NODE_ENV === "development") {
+  //     url = `${process.env.FRONTEND_URL_DEV}/vehicle/${approvedVehicle._id}`;
+  //   } else {
+  //     url = `${process.env.FRONTEND_URL_PROD}/vehicle/${approvedVehicle._id}`;
+  //   }
+  //   await new Email(user, url).sendApprovalEmail();
+  // } catch (err) {
+  //   return next(
+  //     new AppError(
+  //       "There was an error sending the email. Please try again later",
+  //       500
+  //     )
+  //   );
+  // }
 
   res.status(201).json({
     status: "success",
@@ -273,24 +296,24 @@ exports.disapproveVehicle = catchAsyncError(async (req, res, next) => {
     { new: true }
   );
 
-  try {
-    // SEND DISAPPROVED EMAIL TO USER
-    let url = "";
-    if (process.env.NODE_ENV === "development") {
-      url = `${process.env.FRONTEND_URL_DEV}/list`;
-    } else {
-      url = `${process.env.FRONTEND_URL_PROD}/list`;
-    }
+  // try {
+  //   // SEND DISAPPROVED EMAIL TO USER
+  //   let url = "";
+  //   if (process.env.NODE_ENV === "development") {
+  //     url = `${process.env.FRONTEND_URL_DEV}/list`;
+  //   } else {
+  //     url = `${process.env.FRONTEND_URL_PROD}/list`;
+  //   }
 
-    await new Email(user, url).sendDisapprovalEmail();
-  } catch (err) {
-    return next(
-      new AppError(
-        "There was an error sending the email. Please try again later",
-        500
-      )
-    );
-  }
+  //   await new Email(user, url).sendDisapprovalEmail();
+  // } catch (err) {
+  //   return next(
+  //     new AppError(
+  //       "There was an error sending the email. Please try again later",
+  //       500
+  //     )
+  //   );
+  // }
 
   res.status(200).json({
     status: "success",

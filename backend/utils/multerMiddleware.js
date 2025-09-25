@@ -1,7 +1,15 @@
+const os = require("os");
+const path = require("path");
 const multer = require("multer");
 const AppError = require("./appError"); // Adjust path if needed
 
-const storage = multer.memoryStorage();
+// const storage = multer.memoryStorage();
+const storage = multer.diskStorage({
+  destination: os.tmpdir(), // system temp dir
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + "-" + file.originalname);
+  },
+});
 
 const upload = multer({ storage }).array("images", 20);
 
