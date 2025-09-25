@@ -9,7 +9,7 @@ exports.engineTypes = [
   "V12",
   "V16",
   "W12",
-  "w16",
+  "W16",
   "Flat 4", //boxer 4
   "Flat 6", //boxer 6
   "rotary",
@@ -486,8 +486,7 @@ exports.locations = [
   "Jalna",
   "Kolhapur",
   "Latur",
-  "Mumbai City",
-  "Mumbai suburban",
+  "Mumbai",
   "Nandurbar",
   "Nanded",
   "Nagpur",
