@@ -276,6 +276,25 @@ exports.searchVehicles = catchAsyncError(async (req, res) => {
       $in: filters.location.map((location) => new RegExp(location, "i")),
     };
 
+  // ✅ Handle unmatched search terms
+  if (req.query.unmatched) {
+    const words = req.query.unmatched
+      .split(",")
+      .map((w) => w.trim())
+      .filter(Boolean);
+    if (words.length > 0) {
+      // Build an OR array — each word will search across multiple text fields
+      searchCriteria.$or = words.map((word) => ({
+        $or: [
+          { make: new RegExp(word, "i") },
+          { model: new RegExp(word, "i") },
+          { variant: new RegExp(word, "i") },
+          { description: new RegExp(word, "i") },
+        ],
+      }));
+    }
+  }
+
   // Sorting logic
   let sortBy = {};
   if (filters.sort === "priceAsc") sortBy.price = 1;

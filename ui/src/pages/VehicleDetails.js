@@ -167,8 +167,10 @@ function VehicleDetails() {
       }
       return;
     }
+    const previousLiked = liked;
+    setLiked(!liked);
     try {
-      if (liked) {
+      if (previousLiked) {
         await axios.delete(
           `${process.env.REACT_APP_API_URL}/api/v1/vehicles/${id}/likes`,
           {
@@ -186,6 +188,7 @@ function VehicleDetails() {
       }
       setLiked(!liked);
     } catch (error) {
+      setLiked(previousLiked);
       console.error("Error updating like status:", error);
     }
   };

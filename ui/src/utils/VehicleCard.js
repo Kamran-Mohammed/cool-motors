@@ -55,8 +55,12 @@ function VehicleCard({ vehicle, showOptions, onEdit, onDelete, onMarkAsSold }) {
       }
       return;
     }
+
+    const previousLiked = liked;
+    setLiked(!liked);
+
     try {
-      if (liked) {
+      if (previousLiked) {
         await axios.delete(
           `${process.env.REACT_APP_API_URL}/api/v1/vehicles/${vehicle._id}/likes`,
           { withCredentials: true }
@@ -70,6 +74,7 @@ function VehicleCard({ vehicle, showOptions, onEdit, onDelete, onMarkAsSold }) {
       }
       setLiked(!liked);
     } catch (error) {
+      setLiked(previousLiked);
       console.error("Error updating like status:", error);
     }
   };

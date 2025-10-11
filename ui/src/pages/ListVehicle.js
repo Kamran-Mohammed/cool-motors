@@ -24,6 +24,19 @@ const MAX_COMBINED_SIZE_MB = process.env.REACT_APP_MAX_COMBINED_IMAGE_SIZE_MB
 const MAX_COMBINED_SIZE_BYTES = MAX_COMBINED_SIZE_MB * 1024 * 1024;
 // const MAX_IMAGES = 20; // Max number of images allowed
 
+const formatIndianNumber = (value) => {
+  if (!value) return "";
+  let lastThree = value.slice(-3); // last 3 digits
+  let otherDigits = value.slice(0, -3); // remaining digits
+
+  if (otherDigits !== "") {
+    // add commas every 2 digits from right to left
+    otherDigits = otherDigits.replace(/\B(?=(\d{2})+(?!\d))/g, ",");
+    return otherDigits + "," + lastThree;
+  }
+  return lastThree;
+};
+
 function ListVehicle() {
   const [formData, setFormData] = useState({
     make: "",
@@ -58,9 +71,20 @@ function ListVehicle() {
     };
   }, [selectedFiles]); // Run cleanup when selectedFiles array changes
 
+  // const handleChange = (e) => {
+  //   const { name, value } = e.target;
+  //   setFormData({ ...formData, [name]: value });
+  // };
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    let newValue = value;
+
+    if (name === "price" || name === "odometer") {
+      // Remove non-digit characters and format with commas
+      newValue = formatIndianNumber(value.replace(/\D/g, ""));
+    }
+
+    setFormData({ ...formData, [name]: newValue });
   };
 
   // const handleFileChange = (e) => {
@@ -330,8 +354,18 @@ function ListVehicle() {
 
     try {
       const formDataWithFiles = new FormData();
+      // Object.keys(formData).forEach((key) => {
+      //   formDataWithFiles.append(key, formData[key]);
+      // });
       Object.keys(formData).forEach((key) => {
-        formDataWithFiles.append(key, formData[key]);
+        let value = formData[key];
+
+        // Remove commas for numeric fields
+        if (key === "price" || key === "odometer") {
+          value = value.replace(/,/g, "");
+        }
+
+        formDataWithFiles.append(key, value);
       });
 
       if (selectedFiles) {
@@ -532,7 +566,7 @@ function ListVehicle() {
             Price <span style={{ color: "red" }}>*</span>
           </label>
           <input
-            type="number"
+            type="text"
             name="price"
             value={formData.price}
             onChange={handleChange}
@@ -617,7 +651,7 @@ function ListVehicle() {
             Odometer <span style={{ color: "red" }}>*</span>
           </label>
           <input
-            type="number"
+            type="text"
             name="odometer"
             value={formData.odometer}
             onChange={handleChange}
@@ -716,9 +750,9 @@ function ListVehicle() {
             required
             accept="image/*" // Accept only image files
           />
-          <small style={{ display: "block", marginTop: "5px", color: "#666" }}>
+          {/* <small style={{ display: "block", marginTop: "5px", color: "#666" }}>
             The first selected image will be used as the cover photo.
-          </small>
+          </small> */}
           {/* <small style={{ display: "block", marginTop: "5px", color: "#666" }}>
             Drag and drop to reorder. Click 'X' to remove. The first image will
             be the cover photo.

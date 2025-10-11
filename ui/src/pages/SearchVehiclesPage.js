@@ -4,6 +4,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import VehicleCard from "../utils/VehicleCard";
 import Alert from "../utils/Alert";
+// import { parseSearchQuery } from "../utils/searchUtils";
 import {
   locations,
   states,
@@ -23,26 +24,28 @@ const sortOptions = [
   { value: "dateOtn", label: "Date Listed: Oldest First" },
 ];
 
+const DEFAULT_FILTERS = {
+  make: "",
+  model: "",
+  minYear: "",
+  maxYear: "",
+  fuelType: "",
+  transmission: "",
+  minPrice: "",
+  maxPrice: "",
+  minOdometer: "",
+  maxOdometer: "",
+  engineType: "",
+  location: "",
+  state: "",
+  sort: "DateNto", // Keep the default sort value here
+};
+
 const SearchVehiclesPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [filters, setFilters] = useState({
-    make: "",
-    model: "",
-    minYear: "",
-    maxYear: "",
-    fuelType: "",
-    transmission: "",
-    minPrice: "",
-    maxPrice: "",
-    minOdometer: "",
-    maxOdometer: "",
-    engineType: "",
-    location: "",
-    state: "",
-    sort: "DateNto",
-  });
+  const [filters, setFilters] = useState(DEFAULT_FILTERS);
 
   const [vehicles, setVehicles] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -107,14 +110,36 @@ const SearchVehiclesPage = () => {
   );
 
   // Parse query parameters from the URL on page load
+  // useEffect(() => {
+  //   const params = new URLSearchParams(location.search);
+  //   const newFilters = {};
+  //   for (const [key, value] of params.entries()) {
+  //     newFilters[key] = value;
+  //   }
+  //   setFilters((prev) => ({ ...prev, ...newFilters }));
+  //   fetchVehicles(newFilters);
+  // }, [location.search, fetchVehicles]);
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const newFilters = {};
     for (const [key, value] of params.entries()) {
       newFilters[key] = value;
     }
-    setFilters((prev) => ({ ...prev, ...newFilters }));
-    fetchVehicles(newFilters);
+
+    // FIX: Overwrite existing state with DEFAULT_FILTERS + new parameters.
+    // This resets any filters not present in the new URL (e.g., an old model) back to "".
+    setFilters({
+      ...DEFAULT_FILTERS,
+      ...newFilters,
+    });
+
+    // Determine which filters to use for the API call: newFilters, or the default sort for base search.
+    const filtersForFetch =
+      Object.keys(newFilters).length > 0
+        ? newFilters
+        : { sort: DEFAULT_FILTERS.sort };
+
+    fetchVehicles(filtersForFetch);
   }, [location.search, fetchVehicles]);
 
   const handleInputChange = (e) => {
@@ -256,6 +281,8 @@ const SearchVehiclesPage = () => {
                   ].includes(key)
                 ) {
                   inputType = "number";
+                } else {
+                  return;
                 }
 
                 return (

@@ -80,7 +80,7 @@ const Footer = () => {
       </div>
 
       <div className="footer-bottom">
-        <p>© {new Date().getFullYear()} Auto Finds. All Rights Reserved.</p>
+        <p>© {new Date().getFullYear()} AutoFinds. All Rights Reserved.</p>
       </div>
     </footer>
   );
