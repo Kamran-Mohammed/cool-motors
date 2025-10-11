@@ -24,7 +24,7 @@ const generateFileName = (make, model, year) => {
 
   // Generate a shorter random string (8 bytes, which results in 16 hexadecimal characters).
   // This ensures uniqueness while keeping the random part concise.
-  const uniqueId = crypto.randomBytes(8).toString("hex"); // 8 bytes -> 16 hex chars
+  const uniqueId = crypto.randomBytes(16).toString("hex");
 
   // Combine the parts to form the new file name.
   // Example: honda-accord-2003-e1a2b3c4d5e6f7a8

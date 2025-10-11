@@ -26,7 +26,7 @@ exports.fuelTypes = ["petrol", "diesel", "electric", "hybrid", "CNG", "LPG"];
 
 exports.transmissions = ["manual", "automatic"];
 
-exports.carMakes = [
+exports.carMakes2 = [
   "Abarth",
   "Acura",
   "Alfa Romeo",
@@ -80,6 +80,7 @@ exports.carMakes = [
   "Mini",
   "Mitsubishi",
   "Morgan",
+  "Morris",
   "Nio",
   "Nissan",
   "Opel",
@@ -759,4 +760,185 @@ exports.locations = [
   "24 Parganas",
   "Purulia",
   "Uttar Dinajpur",
+];
+
+function processCarModels(input) {
+  // Split by newlines, trim extra spaces, and filter out empty lines
+  const lines = input
+    .split("\n")
+    .map((line) => line.trim())
+    .filter((line) => line !== "");
+
+  // Capitalize first letter of each word
+  // const capitalized = lines.map((line) =>
+  //   line
+  //     .split(" ")
+  //     .filter((word) => word) // remove double spaces
+  //     .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+  //     .join(" ")
+  // );
+
+  // Remove duplicates (case-insensitive) and sort alphabetically
+  const unique = [...new Set(lines)];
+  unique.sort((a, b) => a.localeCompare(b));
+
+  // Print in array form
+  // console.log(JSON.stringify(unique, null, 2));
+
+  return unique;
+}
+
+// Example:
+const input = `audi
+aston martin
+volkswagen 
+bugatti
+audi
+BUGATTI`;
+
+processCarModels(input);
+
+exports.carMakes = [
+  "Abarth",
+  "Acura",
+  "Alfa Romeo",
+  "Allstate",
+  "Alpina",
+  "Alpine",
+  "AMG",
+  "Apollo",
+  "Artega",
+  "Ascort",
+  "Aston Martin",
+  "Atlas",
+  "Audi",
+  "Austin",
+  "Austin-Healey",
+  "Autozam",
+  "Avanti",
+  "Bentley",
+  "Berkeley",
+  "Bizzarini",
+  "BMW",
+  "Bristol",
+  "Bugatti",
+  "Buick",
+  "Cadillac",
+  "Chevrolet",
+  "Chrysler",
+  "Citroen",
+  "Contender",
+  "Continental",
+  "Cupra",
+  "Daewoo",
+  "Daihatsu",
+  "Datsun",
+  "Delta",
+  "Diva",
+  "DKW",
+  "Dodge",
+  "Elva",
+  "Eucort",
+  "Evante",
+  "Felber",
+  "Ferrari",
+  "Fiat",
+  "Fisker",
+  "Flajole",
+  "Ford",
+  "Genesis",
+  "Ghia",
+  "GMC",
+  "Hennessey",
+  "Hillman",
+  "Hindustan",
+  "Honda",
+  "Hudson",
+  "Hummer",
+  "Hyundai",
+  "Imperia",
+  "Imperial",
+  "Infiniti",
+  "Isuzu",
+  "Itala",
+  "Jaguar",
+  "Jeep",
+  "Kia",
+  "Koenigsegg",
+  "KTM",
+  "Lambert",
+  "Lamborghini",
+  "Lancia",
+  "Land-Rover",
+  "Lexus",
+  "Leyland",
+  "Lincoln",
+  "Lloyd",
+  "Lotus",
+  "Lucid",
+  "Lynx",
+  "Magenta",
+  "Maruti",
+  "Maserati",
+  "Mastretta",
+  "Maybach",
+  "Mazda",
+  "McLaren",
+  "Mercedes-Benz",
+  "MG",
+  "Mini",
+  "Mitsubishi",
+  "Miura",
+  "Monte Carlo",
+  "Nissan",
+  "Nobel",
+  "Noble",
+  "Nova",
+  "Opel",
+  "Packard",
+  "Pagani",
+  "Panhard",
+  "Peugeot",
+  "Pininfarina",
+  "Plymouth",
+  "Polestar",
+  "Polski Fiat",
+  "Pontiac",
+  "Porsche",
+  "Premier",
+  "Proton",
+  "Ram",
+  "Ranger",
+  "Renault",
+  "Rimac",
+  "Rivian",
+  "Rolls-Royce",
+  "Ruf",
+  "Saab",
+  "Saleen",
+  "Scion",
+  "Seat",
+  "Shelby",
+  "Singer",
+  "Skoda",
+  "Smart",
+  "Ssangyong",
+  "Standard",
+  "Sterling",
+  "Subaru",
+  "Suzuki",
+  "Tata",
+  "Tesla",
+  "Toyota",
+  "Triumph",
+  "Tucker",
+  "Vauxhall",
+  "Venturi",
+  "Volkswagen",
+  "Volvo",
+  "Willam",
+  "Willys",
+  "Yak",
+  "Zagato",
+  "Zimmer",
 ];
