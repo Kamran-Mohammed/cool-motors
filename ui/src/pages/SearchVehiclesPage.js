@@ -54,7 +54,8 @@ const SearchVehiclesPage = () => {
     page: 1,
     totalPages: 1,
   });
-  const [showFilters, setShowFilters] = useState(true);
+  // const [showFilters, setShowFilters] = useState(true);
+  const [showFilters, setShowFilters] = useState(() => window.innerWidth > 600);
 
   const fetchVehicles = useCallback(
     async (activeFilters) => {
