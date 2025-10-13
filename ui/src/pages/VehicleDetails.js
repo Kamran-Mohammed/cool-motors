@@ -319,7 +319,10 @@ function VehicleDetails() {
             <FaShareAlt style={{ width: "30px", height: "30px" }} />{" "}
             {/* Icon size matching heart */}
           </button>
-          <button onClick={handleLikeToggle} className="like-button">
+          <button
+            onClick={handleLikeToggle}
+            className="like-button-vehicle-details"
+          >
             <img
               src={liked ? fullHeart : heart}
               alt="Like"

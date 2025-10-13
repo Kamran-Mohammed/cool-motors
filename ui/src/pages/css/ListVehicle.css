@@ -46,12 +46,16 @@ select:focus {
 
 .submit-button {
   padding: 10px;
-  background-color: #007bff; /* Default button color */
+  background-color: var(--color-primary); /* Default button color */
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s, transform 0.1s ease-in-out;
+}
+
+.submit-button:hover {
+  background-color: var(--color-primary-hover);
 }
 
 .submit-button:active {

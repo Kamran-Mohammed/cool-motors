@@ -36,7 +36,7 @@
   display: block;
   width: 100%;
   padding: 10px;
-  background-color: #4caf50;
+  background-color: var(--color-primary);
   color: white;
   font-size: 16px;
   font-weight: bold;
@@ -46,7 +46,7 @@
 }
 
 .submit-btn:hover {
-  background-color: #45a049;
+  background-color: var(--color-primary-hover);
 }
 
 .message {

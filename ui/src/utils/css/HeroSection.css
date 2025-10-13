@@ -9,7 +9,7 @@
   position: absolute;
   top: 10px;
   left: 10px;
-  background: #99bc85;
+  background: var(--color-primary);
   color: #fff;
   font-size: 12px;
   font-weight: bold;
@@ -28,7 +28,7 @@
 }
 
 .hero-slide:hover {
-  filter: brightness(0.8);
+  filter: brightness(0.9);
 }
 
 .hero-images {
