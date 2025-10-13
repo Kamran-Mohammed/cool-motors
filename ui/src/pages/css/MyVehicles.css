@@ -2,12 +2,6 @@
   padding: 20px;
 }
 
-/* .vehicle-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
-} */
-
 .vehicle-card-wrapper {
   display: flex;
   flex-direction: column;
@@ -18,34 +12,4 @@
   margin-top: 10px;
   display: flex;
   gap: 10px;
-}
-
-.btn-delete {
-  background-color: red;
-  color: white;
-  padding: 5px 10px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.btn-delete:hover {
-  background-color: darkred;
-}
-
-.btn-edit {
-  background-color: #007bff;
-  color: white;
-  padding: 5px 10px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.btn-edit:hover {
-  background-color: #0056b3;
-}
-
-.likes-image {
-  height: 20px;
 }

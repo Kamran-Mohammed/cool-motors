@@ -2,7 +2,7 @@
   /* width: 100%; */
   padding: 10px;
   font-size: 1rem;
-  background-color: #007bff;
+  background-color: var(--color-primary);
   color: white;
   border: none;
   border-radius: 5px;
@@ -46,11 +46,9 @@
   gap: 15px;
   width: 100%;
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  /* position: sticky; */
+  /* box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); */
   top: 0;
-  background-color: #f9f9f9;
-  /* z-index: 100; */
+  /* background-color: #f9f9f9; */
 }
 
 /* Style adjustments for filters */
@@ -106,7 +104,7 @@
 }
 
 .apply-filter-btn:hover {
-  background-color: #0056b3;
+  background-color: var(--color-primary-hover);
 }
 
 /* Results Section */
@@ -153,7 +151,7 @@
 }
 
 .pagination-btn {
-  background-color: #007bff;
+  background-color: var(--color-primary);
   color: white;
   border: none;
   padding: 8px 16px;
@@ -168,7 +166,7 @@
 }
 
 .pagination-btn:hover:not(:disabled) {
-  background-color: #0056b3;
+  background-color: var(--color-primary-hover);
 }
 
 .pagination-info {
