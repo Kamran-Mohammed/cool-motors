@@ -1,0 +1,18 @@
+:root {
+  --color-primary: #2973b2;
+  --color-primary-hover: #2c5e8a;
+  --color-secondary: #dddddd;
+  --color-secondary-hover: #cacaca;
+  /* --color-bg: #f2efe7; */
+  --color-bg: #f8f8f8;
+  --color-admin: #9acbd0;
+  --color-text: #212529;
+  --color-accent: #ff9800;
+}
+
+/* Example for dark mode */
+[data-theme="dark"] {
+  --color-bg: #121212;
+  --color-text: #f1f1f1;
+  --color-primary: #1e88e5;
+}

@@ -64,7 +64,7 @@
   transform: scale(1.02);
 }
 
-.like-button {
+.like-button-vehicle-details {
   padding: 7px 10px;
   position: absolute;
   bottom: 10px;
@@ -83,7 +83,7 @@
   height: 30px;
 }
 
-.like-button:hover {
+.like-button-vehicle-details:hover {
   background: #f4f7f4;
 }
 

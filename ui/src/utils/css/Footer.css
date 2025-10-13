@@ -1,5 +1,5 @@
 .footer {
-  background-color: #99bc85;
+  background-color: var(--color-secondary);
   /* color: #fff; */
   color: #2e3d27;
   padding: 10px 0;
@@ -34,11 +34,14 @@
 }
 
 .footer-link:hover {
-  color: #fff;
+  /* color: #fff; */
+  text-decoration: underline;
 }
 
 .footer-bottom {
-  border-top: 1px solid #faf1e6;
+  /* border-top: 1px solid #faf1e6; */
+  /* border-top: 1px solid #99bc85; */
+  border-top: 1px solid black;
   margin-top: 10px;
   padding-top: 10px;
 }

@@ -7,10 +7,12 @@ import heart from "./images/heart.png";
 import fullHeart from "./images/full-heart.png";
 import moreIcon from "./images/more.png";
 import "./css/VehicleCard.css";
+import { FaGasPump } from "react-icons/fa";
+import { MdLocationOn } from "react-icons/md";
+import { GiGearStickPattern, GiSpeedometer } from "react-icons/gi";
 
 function VehicleCard({ vehicle, showOptions, onEdit, onDelete, onMarkAsSold }) {
   const [menuOpen, setMenuOpen] = useState(false);
-  // const [isHovered, setIsHovered] = useState(false);
   const [liked, setLiked] = useState(false);
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -92,22 +94,7 @@ function VehicleCard({ vehicle, showOptions, onEdit, onDelete, onMarkAsSold }) {
       // rel="noopener noreferrer"
       style={{ textDecoration: "none", color: "inherit" }}
     >
-      <div
-        className="vehicle-card"
-        key={vehicle._id}
-        // style={{
-        //   border: "1px solid #ccc",
-        //   cursor: "pointer",
-        //   // textAlign: "center",
-        //   borderRadius: "10px",
-        //   overflow: "hidden",
-        //   transition: "background-color 0.3s ease",
-        //   // backgroundColor: isHovered ? "rgba(0, 0, 0, 0.1)" : "white",
-        //   // marginBottom: "20px",
-        // }}
-        // onMouseEnter={() => setIsHovered(true)}
-        // onMouseLeave={() => setIsHovered(false)}
-      >
+      <div className="vehicle-card" key={vehicle._id}>
         <div className="vehicle-card-image">
           <img
             src={
@@ -116,30 +103,16 @@ function VehicleCard({ vehicle, showOptions, onEdit, onDelete, onMarkAsSold }) {
                 : "placeholder.jpg"
             }
             alt={`${vehicle.make} ${vehicle.model}`}
-            style={{
-              transition: "opacity 0.3s ease",
-              // opacity: isHovered ? 0.7 : 1,
-            }}
           />
           <img
             src={liked ? fullHeart : heart}
             alt="Like"
-            className="like-button"
+            className="like-button-vehicle-card"
             onClick={handleLikeToggle}
-            style={{ width: "20px", height: "20px" }}
           />
           {showOptions && (
             <div
               className="vehicle-card-options"
-              style={{
-                position: "absolute",
-                top: "5px",
-                right: "5px",
-                background: "rgba(255, 255, 255, 0.8)",
-                borderRadius: "5px",
-                padding: "5px",
-                cursor: "pointer",
-              }}
               onClick={(e) => {
                 e.stopPropagation();
                 e.preventDefault();
@@ -152,58 +125,17 @@ function VehicleCard({ vehicle, showOptions, onEdit, onDelete, onMarkAsSold }) {
                 style={{ width: "20px", height: "20px" }}
               />
               {menuOpen && (
-                <div
-                  style={{
-                    position: "absolute",
-                    top: "25px",
-                    right: "0",
-                    background: "white",
-                    boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-                    borderRadius: "5px",
-                    overflow: "hidden",
-                    minWidth: "95px",
-                    zIndex: 10,
-                    width: "auto",
-                  }}
-                >
-                  <button
-                    onClick={onEdit}
-                    style={{
-                      display: "block",
-                      padding: "8px 12px",
-                      width: "100%",
-                      border: "none",
-                      background: "transparent",
-                      cursor: "pointer",
-                      textAlign: "left",
-                    }}
-                  >
+                <div className="option-menu">
+                  <button className="menu-single-option" onClick={onEdit}>
                     Edit
                   </button>
-                  <button
-                    onClick={onMarkAsSold}
-                    style={{
-                      display: "block",
-                      padding: "8px 12px",
-                      width: "100%",
-                      border: "none",
-                      background: "transparent",
-                      cursor: "pointer",
-                      textAlign: "left",
-                    }}
-                  >
+                  <button className="menu-single-option" onClick={onMarkAsSold}>
                     Mark As Sold
                   </button>
                   <button
+                    className="menu-single-option"
                     onClick={onDelete}
                     style={{
-                      display: "block",
-                      padding: "8px 12px",
-                      width: "100%",
-                      border: "none",
-                      background: "transparent",
-                      cursor: "pointer",
-                      textAlign: "left",
                       color: "red",
                     }}
                   >
@@ -215,66 +147,43 @@ function VehicleCard({ vehicle, showOptions, onEdit, onDelete, onMarkAsSold }) {
           )}
         </div>
 
-        <div style={{ padding: "10px", position: "relative" }}>
-          {/* Car Title */}
-          <h2
-            style={{
-              margin: "10px 0 0 0",
-              fontSize: "16px",
-              fontWeight: "bold",
-              textAlign: "left",
-            }}
-          >
+        <div className="vehicle-details-wrapper">
+          <h2 className="vehicle-title">
             {vehicle.year} {vehicle.make} {vehicle.model}
           </h2>
 
-          {/* Price (Bigger than name) */}
-          <h1
-            style={{
-              margin: "5px 0",
-              fontSize: "20px",
-              color: "#333",
-              textAlign: "left",
-            }}
-          >
+          <h1 className="vehicle-price">
             ₹{vehicle.price.toLocaleString("en-IN")}
           </h1>
 
-          {/* Odometer Reading (Small Font) */}
-          <p
-            style={{
-              margin: "2px 0",
-              fontSize: "12px",
-              color: "#666",
-              textAlign: "left",
-            }}
-          >
+          {/* <p className="vehicle-odometer">
             {vehicle.odometer.toLocaleString("en-IN")} km
           </p>
 
-          {/* Location & State (Grayish) */}
-          <p
-            style={{
-              margin: "2px 0 10px",
-              fontSize: "12px",
-              color: "#777",
-              textAlign: "left",
-            }}
-          >
+          <p className="vehicle-location">
             {vehicle.location}, {vehicle.state}
-          </p>
+          </p> */}
+          <div className="vehicle-info-row">
+            <div className="vehicle-info-left">
+              <span>
+                <MdLocationOn /> {vehicle.location}, {vehicle.state}
+              </span>
+              <span>
+                <GiSpeedometer /> {vehicle.odometer.toLocaleString("en-IN")} km
+              </span>
+            </div>
+            <div className="vehicle-info-right">
+              <span>
+                <FaGasPump /> {vehicle.fuelType}
+              </span>
+              <span>
+                <GiGearStickPattern /> {vehicle.transmission}
+              </span>
+            </div>
+          </div>
 
           {showOptions && (
-            <div
-              style={{
-                position: "absolute",
-                bottom: "10px",
-                right: "10px",
-                display: "flex",
-                alignItems: "center",
-                gap: "4px",
-              }}
-            >
+            <div className="vehicle-likes">
               <img
                 src={fullHeart}
                 alt="Likes"

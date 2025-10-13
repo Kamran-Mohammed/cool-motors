@@ -47,7 +47,7 @@ label {
 
 .update-button {
   padding: 10px 20px;
-  background-color: #007bff;
+  background-color: var(--color-primary);
   color: #fff;
   border: none;
   border-radius: 5px;
@@ -57,7 +57,7 @@ label {
 }
 
 .update-button:hover {
-  background-color: #0056b3;
+  background-color: var(--color-primary-hover);
 }
 
 .success-message {

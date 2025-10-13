@@ -6,8 +6,9 @@ import { useAuth } from "../AuthContext";
 import userIcon from "./images/user.png";
 // import plusIcon from "./images/plus.png";
 // import AFSmall from "./images/af_small_logo.png";
-import AFLogoSBS from "./images/af_logo_sbs.png";
+import AFLogoSBS from "./images/af_logo_sbs_blue.png";
 import { FiSearch, FiPlus } from "react-icons/fi";
+import { FaCaretDown } from "react-icons/fa";
 import { parseSearchQuery } from "../utils/searchUtils";
 
 const Navbar = () => {
@@ -128,6 +129,7 @@ const Navbar = () => {
               <div className="user-menu-title" onClick={toggleDropdown}>
                 <img src={userIcon} alt="User Icon" className="user-icon" />
                 {user.name || "User Menu"}
+                <FaCaretDown />
               </div>
               {isDropdownOpen && (
                 <div className="dropdown-menu">

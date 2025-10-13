@@ -1,6 +1,6 @@
-.body {
-  background-color: #218838;
-}
+/* .body {
+  background-color: var(--color-admin);
+} */
 
 .vehicle-details {
   max-width: 800px;
@@ -9,6 +9,7 @@
   text-align: left;
   transition: opacity 0.3s ease-in-out;
   border-radius: 10px;
+  /* background: var(--color-admin); */
 }
 
 .action-buttons {
@@ -28,12 +29,12 @@
 }
 
 .approve-btn {
-  background: #28a745;
+  background: var(--color-primary);
   color: white;
 }
 
 .approve-btn:hover {
-  background: #218838;
+  background: var(--color-primary-hover);
 }
 
 .disapprove-btn {
