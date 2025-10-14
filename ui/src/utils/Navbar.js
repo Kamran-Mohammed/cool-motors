@@ -8,7 +8,7 @@ import userIcon from "./images/user.png";
 // import AFSmall from "./images/af_small_logo.png";
 import AFLogoSBS from "./images/af_logo_sbs_blue.png";
 import { FiSearch, FiPlus } from "react-icons/fi";
-import { FaCaretDown } from "react-icons/fa";
+import { FaCaretDown, FaCaretUp } from "react-icons/fa";
 import { parseSearchQuery } from "../utils/searchUtils";
 
 const Navbar = () => {
@@ -20,6 +20,7 @@ const Navbar = () => {
   const dropdownRef = useRef(null);
   const hamburgerRef = useRef(null);
   const navigate = useNavigate();
+  const inputRef = useRef(null);
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -83,6 +84,11 @@ const Navbar = () => {
     setIsDropdownOpen(false);
   };
 
+  const handleClear = () => {
+    setSearchQuery("");
+    inputRef.current?.focus(); // 👈 re-focus the input
+  };
+
   return (
     <>
       <header className="header">
@@ -96,15 +102,26 @@ const Navbar = () => {
         <div className="nav-search-wrapper">
           <form onSubmit={handleSearch} className="search-form-container">
             <input
+              ref={inputRef}
               type="text"
               className="search-input"
               placeholder="Search Vehicles..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
+              autoFocus
             />
+            {searchQuery && (
+              <button
+                type="button"
+                className="clear-btn"
+                // onClick={() => setSearchQuery("")}
+                onClick={handleClear}
+              >
+                ×
+              </button>
+            )}
             <button type="submit" className="search-submit-btn">
               <FiSearch className="search-icon" />
-              {/* <span className="search-text-btn">Search</span> */}
             </button>
           </form>
         </div>
@@ -200,23 +217,32 @@ const Navbar = () => {
             className="mobile-search-form"
           >
             <input
+              ref={inputRef}
               type="text"
               placeholder="Search vehicles..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               autoFocus
             />
+            <button
+              type="button"
+              className="clear-btn"
+              // onClick={() => setSearchQuery("")}
+              onClick={handleClear}
+            >
+              ×
+            </button>
             <button type="submit" className="mobile-search-btn">
               <FiSearch />
             </button>
-            <button
-              type="button"
-              className="mobile-search-close"
-              onClick={() => setIsMobileSearchOpen(false)}
-            >
-              ✕
-            </button>
           </form>
+          <button
+            type="button"
+            className="mobile-search-close"
+            onClick={() => setIsMobileSearchOpen(false)}
+          >
+            <FaCaretUp />
+          </button>
         </div>
       )}
     </>
