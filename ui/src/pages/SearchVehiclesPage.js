@@ -9,6 +9,7 @@ import {
   locations,
   states,
   carMakes,
+  carModels,
   fuelTypes,
   transmissions,
   engineTypes,
@@ -110,16 +111,6 @@ const SearchVehiclesPage = () => {
     [pagination.page, location.search]
   );
 
-  // Parse query parameters from the URL on page load
-  // useEffect(() => {
-  //   const params = new URLSearchParams(location.search);
-  //   const newFilters = {};
-  //   for (const [key, value] of params.entries()) {
-  //     newFilters[key] = value;
-  //   }
-  //   setFilters((prev) => ({ ...prev, ...newFilters }));
-  //   fetchVehicles(newFilters);
-  // }, [location.search, fetchVehicles]);
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const newFilters = {};
@@ -207,7 +198,13 @@ const SearchVehiclesPage = () => {
       {showFilters && (
         <div className="filters-wrapper">
           {/* Filters Section */}
-          <div className="filters">
+          <form
+            onSubmit={(e) => {
+              e.preventDefault(); // prevent page reload
+              handleApplyFilters(); // trigger search
+            }}
+            className="filters"
+          >
             {Object.entries(filters).map(([key, value]) => {
               if (
                 [
@@ -271,6 +268,9 @@ const SearchVehiclesPage = () => {
                 } else if (key === "location") {
                   placeholderText = "Location";
                   datalistId = "locations";
+                } else if (key === "model") {
+                  placeholderText = "Model";
+                  datalistId = "carModels";
                 } else if (
                   [
                     "minYear",
@@ -283,7 +283,7 @@ const SearchVehiclesPage = () => {
                 ) {
                   inputType = "number";
                 } else {
-                  return;
+                  return null;
                 }
 
                 return (
@@ -311,6 +311,13 @@ const SearchVehiclesPage = () => {
                         ))}
                       </datalist>
                     )}
+                    {datalistId === "carModels" && (
+                      <datalist id="carModels">
+                        {carModels.map((model) => (
+                          <option key={model} value={model} />
+                        ))}
+                      </datalist>
+                    )}
                   </React.Fragment>
                 );
               }
@@ -329,7 +336,7 @@ const SearchVehiclesPage = () => {
             >
               Clear Filters
             </button>
-          </div>
+          </form>
         </div>
       )}
 
