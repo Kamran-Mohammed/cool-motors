@@ -1,5 +1,6 @@
 import {
   carMakes,
+  carModels,
   fuelTypes,
   transmissions,
   engineTypes,
@@ -34,16 +35,16 @@ const findFuzzyMatch = (tokens, targetList) => {
       }
 
       // 2. Lenient match
-      const lenientMatch = lowerTargetList.find(
-        (item) =>
-          item.normalized.startsWith(normalizedPhrase) ||
-          normalizedPhrase.includes(item.normalized) ||
-          item.normalized === normalizedPhrase
-      );
+      // const lenientMatch = lowerTargetList.find(
+      //   (item) =>
+      //     item.normalized.startsWith(normalizedPhrase) ||
+      //     normalizedPhrase.includes(item.normalized) ||
+      //     item.normalized === normalizedPhrase
+      // );
 
-      if (lenientMatch) {
-        return { matched: lenientMatch.original, usedPhrase: phrase };
-      }
+      // if (lenientMatch) {
+      //   return { matched: lenientMatch.original, usedPhrase: phrase };
+      // }
     }
   }
 
@@ -66,6 +67,7 @@ export const parseSearchQuery = (query) => {
   // We don't need the Sets anymore, as we're using the centralized findFuzzyMatch helper.
   const allFilters = [
     { key: "make", list: carMakes },
+    { key: "model", list: carModels },
     { key: "fuelType", list: fuelTypes },
     { key: "transmission", list: transmissions },
     { key: "state", list: states },
@@ -82,7 +84,12 @@ export const parseSearchQuery = (query) => {
   for (const { key, list } of allFilters) {
     if (parsedFilters[key]) continue; // Skip if this filter key is already filled
 
-    const result = findFuzzyMatch(tokens, list);
+    // Only pass tokens that are not used yet
+    const unusedTokens = tokens.filter((t) => !usedTokens.has(t));
+
+    if (unusedTokens.length === 0) continue;
+
+    const result = findFuzzyMatch(unusedTokens, list);
 
     if (result) {
       parsedFilters[key] = result.matched;
@@ -112,4 +119,4 @@ export const parseSearchQuery = (query) => {
   return parsedFilters;
 };
 
-parseSearchQuery("a");
+console.log(parseSearchQuery("Gonda"));
