@@ -405,11 +405,9 @@ input.search-input:focus-visible {
   width: 100%;
   color: black;
   background: var(--color-bg);
-  /* border: 1px solid #333; */
   border-radius: 10px;
   overflow: hidden;
   list-style: none;
-  /* margin: 0; */
   margin-top: 5px;
   padding: 0;
   max-height: 240px;
@@ -430,13 +428,6 @@ input.search-input:focus-visible {
   background-color: var(--color-secondary);
 }
 
-/* Optional scrollbar style */
 .search-suggestions::-webkit-scrollbar {
   display: none;
-  /* width: 2px; */
-}
-
-.search-suggestions::-webkit-scrollbar-thumb {
-  background: #aaa;
-  border-radius: 4px;
 }
