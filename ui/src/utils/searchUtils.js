@@ -119,4 +119,4 @@ export const parseSearchQuery = (query) => {
   return parsedFilters;
 };
 
-console.log(parseSearchQuery("Gonda"));
+// console.log(parseSearchQuery("Gonda"));

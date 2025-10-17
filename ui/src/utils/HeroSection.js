@@ -38,7 +38,7 @@ const HeroSection = () => {
           navigation
           // pagination={{ clickable: true }}
           autoplay={{
-            delay: 4000,
+            delay: 5000,
             disableOnInteraction: false,
             pauseOnMouseEnter: true,
           }}

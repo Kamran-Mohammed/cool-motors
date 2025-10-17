@@ -8,6 +8,7 @@ import {
   states,
   engineTypes,
   carMakes,
+  carModels,
   fuelTypes,
   transmissions,
   years,
@@ -520,11 +521,18 @@ function ListVehicle() {
           <input
             type="text"
             name="model"
+            list="carModels"
             value={formData.model}
             onChange={handleChange}
             required
             placeholder="e.g., Octavia"
           />
+          <datalist id="carModels">
+            {carModels.map((model) => {
+              // console.log(model);
+              return <option key={model} value={model} />;
+            })}
+          </datalist>
         </div>
 
         <div className="form-group">
@@ -537,7 +545,7 @@ function ListVehicle() {
             value={formData.variant}
             onChange={handleChange}
             // required
-            placeholder="e.g., RS 245"
+            placeholder="e.g., VRS 245"
           />
         </div>
 
