@@ -119,6 +119,7 @@ const Navbar = () => {
     setIsHamburgerOpen(false);
     setIsDropdownOpen(false);
     setIsSuggestionsVisible(false);
+    inputRef.current?.blur();
   };
 
   const handleClear = () => {
