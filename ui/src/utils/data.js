@@ -1121,6 +1121,7 @@ exports.carModels = [
   "Karoq",
   "Kicks",
   "Kiger",
+  "Kingsway",
   "Kizashi",
   "Kodiaq",
   "Koleos",
