@@ -90,7 +90,8 @@ const SearchVehiclesPage = () => {
           setPagination({
             page: response.data.currentPage,
             totalPages: response.data.totalPages,
-            totalResults: response.data.totalResults || response.data.data.vehicles.length,
+            totalResults:
+              response.data.totalResults || response.data.data.vehicles.length,
           });
         } catch (error) {
           console.error("Error fetching vehicles on initial load:", error);
@@ -115,7 +116,8 @@ const SearchVehiclesPage = () => {
         setPagination({
           page: response.data.currentPage,
           totalPages: response.data.totalPages,
-          totalResults: response.data.totalResults || response.data.data.vehicles.length,
+          totalResults:
+            response.data.totalResults || response.data.data.vehicles.length,
         });
       } catch (error) {
         console.error("Error fetching vehicles:", error);
@@ -403,7 +405,8 @@ const SearchVehiclesPage = () => {
               {/* Price Range Slider */}
               <div className="slider-group">
                 <label className="slider-label">
-                  Price: {formatPrice(priceRange[0])} - {formatPrice(priceRange[1])}
+                  Price: {formatPrice(priceRange[0])} -{" "}
+                  {formatPrice(priceRange[1])}
                 </label>
                 <Slider
                   range
@@ -412,10 +415,16 @@ const SearchVehiclesPage = () => {
                   step={PRICE_STEP}
                   value={priceRange}
                   onChange={handlePriceChange}
-                  trackStyle={[{ backgroundColor: 'var(--color-primary)' }]}
+                  trackStyle={[{ backgroundColor: "var(--color-primary)" }]}
                   handleStyle={[
-                    { borderColor: 'var(--color-primary)', backgroundColor: 'var(--color-primary)' },
-                    { borderColor: 'var(--color-primary)', backgroundColor: 'var(--color-primary)' }
+                    {
+                      borderColor: "var(--color-primary)",
+                      backgroundColor: "var(--color-primary)",
+                    },
+                    {
+                      borderColor: "var(--color-primary)",
+                      backgroundColor: "var(--color-primary)",
+                    },
                   ]}
                 />
               </div>
@@ -423,7 +432,8 @@ const SearchVehiclesPage = () => {
               {/* Odometer Range Slider */}
               <div className="slider-group">
                 <label className="slider-label">
-                  Odometer: {formatOdometer(odoRange[0])} - {formatOdometer(odoRange[1])}
+                  Odometer: {formatOdometer(odoRange[0])} -{" "}
+                  {formatOdometer(odoRange[1])}
                 </label>
                 <Slider
                   range
@@ -432,10 +442,16 @@ const SearchVehiclesPage = () => {
                   step={ODO_STEP}
                   value={odoRange}
                   onChange={handleOdoChange}
-                  trackStyle={[{ backgroundColor: 'var(--color-primary)' }]}
+                  trackStyle={[{ backgroundColor: "var(--color-primary)" }]}
                   handleStyle={[
-                    { borderColor: 'var(--color-primary)', backgroundColor: 'var(--color-primary)' },
-                    { borderColor: 'var(--color-primary)', backgroundColor: 'var(--color-primary)' }
+                    {
+                      borderColor: "var(--color-primary)",
+                      backgroundColor: "var(--color-primary)",
+                    },
+                    {
+                      borderColor: "var(--color-primary)",
+                      backgroundColor: "var(--color-primary)",
+                    },
                   ]}
                 />
               </div>
@@ -470,7 +486,8 @@ const SearchVehiclesPage = () => {
             <h2>Search Results</h2>
             {!loading && pagination.totalResults > 0 && (
               <span className="results-count">
-                {pagination.totalResults} {pagination.totalResults === 1 ? 'vehicle' : 'vehicles'} found
+                {pagination.totalResults}{" "}
+                {pagination.totalResults === 1 ? "vehicle" : "vehicles"} found
               </span>
             )}
           </div>
