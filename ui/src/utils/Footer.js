@@ -14,15 +14,10 @@ const Footer = () => {
           <p>
             Email: <strong>kamran@autofinds.in</strong>
           </p>
-          <p>
+          {/* <p>
             Phone: <strong>+91 97035 88400</strong>
-          </p>
+          </p> */}
           <a
-            // href={
-            //   isMobile()
-            //     ? `whatsapp://send?phone=+919703588400&text=I%20have%20some%20feedback/suggestions`
-            //     : `https://wa.me/+919703588400?text=I%20have%20some%20feedback/suggestions`
-            // }
             href={
               isMobile()
                 ? `whatsapp://send?phone=+919703588400`
