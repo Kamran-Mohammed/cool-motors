@@ -12,11 +12,15 @@
 
 .search-vehicles-container {
   padding: 20px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .filters-wrapper {
   max-width: 1200px;
   margin: 0 auto 30px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .results-wrapper {
@@ -43,6 +47,7 @@
   background: var(--color-bg);
   padding: 15px;
   border-radius: 8px;
+  box-sizing: border-box;
 }
 
 .filter-row {
@@ -50,6 +55,8 @@
   flex-wrap: wrap;
   gap: 10px;
   align-items: center;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .slider-row {
@@ -67,6 +74,7 @@
   background-color: #fff;
   color: var(--color-text);
   transition: border-color 0.2s ease;
+  box-sizing: border-box;
 }
 
 .filter-input:focus,
@@ -283,9 +291,19 @@
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
+  .search-vehicles-container {
+    padding: 15px;
+  }
+
+  .filters-wrapper {
+    padding: 0;
+    margin: 0 auto 20px;
+  }
+
   .filters {
-    padding: 12px;
+    padding: 10px;
     gap: 10px;
+    border-radius: 6px;
   }
 
   .filter-row {
@@ -299,13 +317,16 @@
 
   .filter-input,
   .filter-select {
-    min-width: 100%;
+    flex: 1 1 calc(50% - 4px);
+    min-width: calc(50% - 4px);
+    max-width: calc(50% - 4px);
     font-size: 0.85rem;
     padding: 7px 10px;
   }
 
   .slider-group {
-    min-width: 100%;
+    width: 100%;
+    min-width: 0;
   }
 
   .slider-label {
