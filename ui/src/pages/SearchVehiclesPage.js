@@ -4,7 +4,8 @@ import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import VehicleCard from "../utils/VehicleCard";
 import Alert from "../utils/Alert";
-// import { parseSearchQuery } from "../utils/searchUtils";
+import Slider from "rc-slider";
+import "rc-slider/assets/index.css";
 import {
   locations,
   states,
@@ -24,6 +25,16 @@ const sortOptions = [
   { value: "DateNto", label: "Date Listed: Newest First" },
   { value: "dateOtn", label: "Date Listed: Oldest First" },
 ];
+
+// Price range: 90k to 1.5 crores with 30k increments
+const PRICE_MIN = 90000;
+const PRICE_MAX = 15000000;
+const PRICE_STEP = 30000;
+
+// Odometer range: 0 to 200000+ with 5k increments
+const ODO_MIN = 0;
+const ODO_MAX = 200000;
+const ODO_STEP = 5000;
 
 const DEFAULT_FILTERS = {
   make: "",
@@ -47,6 +58,8 @@ const SearchVehiclesPage = () => {
   const location = useLocation();
 
   const [filters, setFilters] = useState(DEFAULT_FILTERS);
+  const [priceRange, setPriceRange] = useState([PRICE_MIN, PRICE_MAX]);
+  const [odoRange, setOdoRange] = useState([ODO_MIN, ODO_MAX]);
 
   const [vehicles, setVehicles] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -54,6 +67,7 @@ const SearchVehiclesPage = () => {
   const [pagination, setPagination] = useState({
     page: 1,
     totalPages: 1,
+    totalResults: 0,
   });
   // const [showFilters, setShowFilters] = useState(true);
   const [showFilters, setShowFilters] = useState(() => window.innerWidth > 600);
@@ -76,6 +90,7 @@ const SearchVehiclesPage = () => {
           setPagination({
             page: response.data.currentPage,
             totalPages: response.data.totalPages,
+            totalResults: response.data.totalResults || response.data.data.vehicles.length,
           });
         } catch (error) {
           console.error("Error fetching vehicles on initial load:", error);
@@ -100,6 +115,7 @@ const SearchVehiclesPage = () => {
         setPagination({
           page: response.data.currentPage,
           totalPages: response.data.totalPages,
+          totalResults: response.data.totalResults || response.data.data.vehicles.length,
         });
       } catch (error) {
         console.error("Error fetching vehicles:", error);
@@ -137,6 +153,36 @@ const SearchVehiclesPage = () => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFilters({ ...filters, [name]: value });
+  };
+
+  const formatPrice = (value) => {
+    if (value >= PRICE_MAX) return `₹${(value / 10000000).toFixed(2)}Cr+`;
+    if (value >= 10000000) return `₹${(value / 10000000).toFixed(2)}Cr`;
+    if (value >= 100000) return `₹${(value / 100000).toFixed(2)}L`;
+    return `₹${(value / 1000).toFixed(0)}K`;
+  };
+
+  const formatOdometer = (value) => {
+    if (value >= ODO_MAX) return `${(value / 1000).toFixed(0)}K+`;
+    return `${(value / 1000).toFixed(0)}K km`;
+  };
+
+  const handlePriceChange = (values) => {
+    setPriceRange(values);
+    setFilters({
+      ...filters,
+      minPrice: values[0],
+      maxPrice: values[1] >= PRICE_MAX ? "" : values[1],
+    });
+  };
+
+  const handleOdoChange = (values) => {
+    setOdoRange(values);
+    setFilters({
+      ...filters,
+      minOdometer: values[0],
+      maxOdometer: values[1] >= ODO_MAX ? "" : values[1],
+    });
   };
 
   const handleApplyFilters = () => {
@@ -204,142 +250,215 @@ const SearchVehiclesPage = () => {
           {/* Filters Section */}
           <form
             onSubmit={(e) => {
-              e.preventDefault(); // prevent page reload
-              handleApplyFilters(); // trigger search
+              e.preventDefault();
+              handleApplyFilters();
             }}
             className="filters"
           >
-            {Object.entries(filters).map(([key, value]) => {
-              if (
-                [
-                  "fuelType",
-                  "transmission",
-                  "engineType",
-                  "state",
-                  "sort",
-                ].includes(key)
-              ) {
-                let optionsArray = [];
-                let placeholderText = "";
+            {/* Main Search Filters */}
+            <div className="filter-row">
+              <input
+                type="text"
+                name="make"
+                value={filters.make}
+                placeholder="Brand"
+                onChange={handleInputChange}
+                list="carMakes"
+                className="filter-input"
+              />
+              <datalist id="carMakes">
+                {carMakes.map((make) => (
+                  <option key={make} value={make} />
+                ))}
+              </datalist>
 
-                if (key === "fuelType") {
-                  optionsArray = fuelTypes;
-                  placeholderText = "Fuel Type";
-                } else if (key === "transmission") {
-                  optionsArray = transmissions;
-                  placeholderText = "Transmission";
-                } else if (key === "state") {
-                  optionsArray = states;
-                  placeholderText = "State";
-                } else if (key === "sort") {
-                  // MODIFIED: Use sortOptions with labels
-                  optionsArray = sortOptions;
-                  placeholderText = "Sort By";
-                } else if (key === "engineType") {
-                  optionsArray = engineTypes;
-                  placeholderText = "Engine Type";
-                }
+              <input
+                type="text"
+                name="model"
+                value={filters.model}
+                placeholder="Model"
+                onChange={handleInputChange}
+                list="carModels"
+                className="filter-input"
+              />
+              <datalist id="carModels">
+                {carModels.map((model) => (
+                  <option key={model} value={model} />
+                ))}
+              </datalist>
 
-                return (
-                  <select
-                    key={key}
-                    name={key}
-                    value={value}
-                    onChange={handleInputChange}
-                    className="filter-select"
-                  >
-                    <option value="">{placeholderText}</option>
-                    {optionsArray.map((option) => (
-                      <option
-                        key={option.value || option}
-                        value={option.value || option}
-                      >
-                        {option.label ||
-                          option.charAt(0).toUpperCase() + option.slice(1)}
-                      </option>
-                    ))}
-                  </select>
-                );
-              } else {
-                let inputType = "text";
-                let placeholderText =
-                  key.charAt(0).toUpperCase() + key.slice(1);
-                let datalistId = "";
+              <select
+                name="fuelType"
+                value={filters.fuelType}
+                onChange={handleInputChange}
+                className="filter-select"
+              >
+                <option value="">Fuel Type</option>
+                {fuelTypes.map((option) => (
+                  <option key={option} value={option}>
+                    {option.charAt(0).toUpperCase() + option.slice(1)}
+                  </option>
+                ))}
+              </select>
 
-                if (key === "make") {
-                  placeholderText = "Brand";
-                  datalistId = "carMakes";
-                } else if (key === "location") {
-                  placeholderText = "Location";
-                  datalistId = "locations";
-                } else if (key === "model") {
-                  placeholderText = "Model";
-                  datalistId = "carModels";
-                } else if (
-                  [
-                    "minYear",
-                    "maxYear",
-                    "minPrice",
-                    "maxPrice",
-                    "minOdometer",
-                    "maxOdometer",
-                  ].includes(key)
-                ) {
-                  inputType = "number";
-                } else {
-                  return null;
-                }
+              <select
+                name="transmission"
+                value={filters.transmission}
+                onChange={handleInputChange}
+                className="filter-select"
+              >
+                <option value="">Transmission</option>
+                {transmissions.map((option) => (
+                  <option key={option} value={option}>
+                    {option.charAt(0).toUpperCase() + option.slice(1)}
+                  </option>
+                ))}
+              </select>
 
-                return (
-                  <React.Fragment key={key}>
-                    <input
-                      type={inputType}
-                      name={key}
-                      value={value}
-                      placeholder={placeholderText}
-                      onChange={handleInputChange}
-                      list={datalistId}
-                      className="filter-input"
-                    />
-                    {datalistId === "carMakes" && (
-                      <datalist id="carMakes">
-                        {carMakes.map((make) => (
-                          <option key={make} value={make} />
-                        ))}
-                      </datalist>
-                    )}
-                    {datalistId === "locations" && (
-                      <datalist id="locations">
-                        {locations.map((loc) => (
-                          <option key={loc} value={loc} />
-                        ))}
-                      </datalist>
-                    )}
-                    {datalistId === "carModels" && (
-                      <datalist id="carModels">
-                        {carModels.map((model) => (
-                          <option key={model} value={model} />
-                        ))}
-                      </datalist>
-                    )}
-                  </React.Fragment>
-                );
-              }
-            })}
-            <button
-              className="apply-filter-btn"
-              onClick={handleApplyFilters}
-              disabled={loading}
-            >
-              {loading ? "Loading..." : "Apply Filters"}
-            </button>
-            <button
-              className="clear-filter-btn"
-              onClick={handleClearFilters}
-              disabled={loading}
-            >
-              Clear Filters
-            </button>
+              <select
+                name="engineType"
+                value={filters.engineType}
+                onChange={handleInputChange}
+                className="filter-select"
+              >
+                <option value="">Engine Type</option>
+                {engineTypes.map((option) => (
+                  <option key={option} value={option}>
+                    {option.charAt(0).toUpperCase() + option.slice(1)}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Location, Year and Sort */}
+            <div className="filter-row">
+              <input
+                type="text"
+                name="location"
+                value={filters.location}
+                placeholder="Location"
+                onChange={handleInputChange}
+                list="locations"
+                className="filter-input"
+              />
+              <datalist id="locations">
+                {locations.map((loc) => (
+                  <option key={loc} value={loc} />
+                ))}
+              </datalist>
+
+              <select
+                name="state"
+                value={filters.state}
+                onChange={handleInputChange}
+                className="filter-select"
+              >
+                <option value="">State</option>
+                {states.map((option) => (
+                  <option key={option} value={option}>
+                    {option.charAt(0).toUpperCase() + option.slice(1)}
+                  </option>
+                ))}
+              </select>
+
+              <input
+                type="number"
+                name="minYear"
+                value={filters.minYear}
+                placeholder="Min Year"
+                onChange={handleInputChange}
+                className="filter-input"
+                min={1900}
+                max={new Date().getFullYear()}
+              />
+
+              <input
+                type="number"
+                name="maxYear"
+                value={filters.maxYear}
+                placeholder="Max Year"
+                onChange={handleInputChange}
+                className="filter-input"
+                min={1900}
+                max={new Date().getFullYear()}
+              />
+
+              <select
+                name="sort"
+                value={filters.sort}
+                onChange={handleInputChange}
+                className="filter-select"
+              >
+                <option value="">Sort By</option>
+                {sortOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Row 3: Price and Odometer Sliders */}
+            <div className="filter-row slider-row">
+              {/* Price Range Slider */}
+              <div className="slider-group">
+                <label className="slider-label">
+                  Price: {formatPrice(priceRange[0])} - {formatPrice(priceRange[1])}
+                </label>
+                <Slider
+                  range
+                  min={PRICE_MIN}
+                  max={PRICE_MAX}
+                  step={PRICE_STEP}
+                  value={priceRange}
+                  onChange={handlePriceChange}
+                  trackStyle={[{ backgroundColor: 'var(--color-primary)' }]}
+                  handleStyle={[
+                    { borderColor: 'var(--color-primary)', backgroundColor: 'var(--color-primary)' },
+                    { borderColor: 'var(--color-primary)', backgroundColor: 'var(--color-primary)' }
+                  ]}
+                />
+              </div>
+
+              {/* Odometer Range Slider */}
+              <div className="slider-group">
+                <label className="slider-label">
+                  Odometer: {formatOdometer(odoRange[0])} - {formatOdometer(odoRange[1])}
+                </label>
+                <Slider
+                  range
+                  min={ODO_MIN}
+                  max={ODO_MAX}
+                  step={ODO_STEP}
+                  value={odoRange}
+                  onChange={handleOdoChange}
+                  trackStyle={[{ backgroundColor: 'var(--color-primary)' }]}
+                  handleStyle={[
+                    { borderColor: 'var(--color-primary)', backgroundColor: 'var(--color-primary)' },
+                    { borderColor: 'var(--color-primary)', backgroundColor: 'var(--color-primary)' }
+                  ]}
+                />
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="filter-actions">
+              <button
+                className="apply-filter-btn"
+                type="submit"
+                disabled={loading}
+              >
+                {loading ? "Loading..." : "Apply Filters"}
+              </button>
+              <button
+                className="clear-filter-btn"
+                type="button"
+                onClick={handleClearFilters}
+                disabled={loading}
+              >
+                Clear Filters
+              </button>
+            </div>
           </form>
         </div>
       )}
@@ -347,7 +466,14 @@ const SearchVehiclesPage = () => {
       {/* Results Section */}
       <div className="results-wrapper">
         <div className="results">
-          <h2>Search Results</h2>
+          <div className="results-header">
+            <h2>Search Results</h2>
+            {!loading && pagination.totalResults > 0 && (
+              <span className="results-count">
+                {pagination.totalResults} {pagination.totalResults === 1 ? 'vehicle' : 'vehicles'} found
+              </span>
+            )}
+          </div>
           {loading && <p>Loading vehicles...</p>}
           {!loading && vehicles.length === 0 && (
             <p className="no-results-message">
