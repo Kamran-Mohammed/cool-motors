@@ -18,12 +18,12 @@ import {
 
 // MODIFIED: Use objects for sort options with labels
 const sortOptions = [
-  { value: "priceAsc", label: "Price: Low to High" },
-  { value: "priceDesc", label: "Price: High to Low" },
-  { value: "odometerAsc", label: "Odometer: Low to High" },
-  { value: "odometerDesc", label: "Odometer: High to Low" },
-  { value: "DateNto", label: "Date Listed: Newest First" },
-  { value: "dateOtn", label: "Date Listed: Oldest First" },
+  { value: "priceAsc", label: "Sort: Price Low to High" },
+  { value: "priceDesc", label: "Sort: Price High to Low" },
+  { value: "odometerAsc", label: "Sort: Odometer Low to High" },
+  { value: "odometerDesc", label: "Sort: Odometer High to Low" },
+  { value: "DateNto", label: "Sort: Newest First" },
+  { value: "dateOtn", label: "Sort: Oldest First" },
 ];
 
 // Price range: 90k to 1.5 crores with 30k increments
@@ -330,9 +330,23 @@ const SearchVehiclesPage = () => {
                   </option>
                 ))}
               </select>
+
+              <select
+                name="sort"
+                value={filters.sort}
+                onChange={handleInputChange}
+                className="filter-select"
+              >
+                <option value="">Sort By</option>
+                {sortOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
             </div>
 
-            {/* Location, Year and Sort */}
+            {/* Location, Year */}
             <div className="filter-row">
               <input
                 type="text"
@@ -384,20 +398,6 @@ const SearchVehiclesPage = () => {
                 min={1900}
                 max={new Date().getFullYear()}
               />
-
-              <select
-                name="sort"
-                value={filters.sort}
-                onChange={handleInputChange}
-                className="filter-select"
-              >
-                <option value="">Sort By</option>
-                {sortOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
             </div>
 
             {/* Row 3: Price and Odometer Sliders */}
