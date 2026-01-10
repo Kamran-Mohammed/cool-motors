@@ -26,6 +26,21 @@
 
 .nav-center {
   justify-content: center;
+  gap: 20px;
+}
+
+.about-link {
+  color: var(--color-text);
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 500;
+  transition: color 0.3s;
+  display: flex;
+  align-items: center;
+}
+
+.about-link:hover {
+  color: var(--color-primary);
 }
 
 .nav-right {
