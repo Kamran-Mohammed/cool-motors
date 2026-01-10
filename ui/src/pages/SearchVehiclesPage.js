@@ -186,6 +186,10 @@ const SearchVehiclesPage = () => {
     navigate(
       `/search?${new URLSearchParams({ ...filters, page: newPage }).toString()}`
     );
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   };
 
   return (
