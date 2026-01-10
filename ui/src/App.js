@@ -28,6 +28,7 @@ import Footer from "./utils/Footer";
 import PendingVehiclesList from "./pages/PendingVehiclesList";
 import PendingVehicle from "./pages/PendingVehicle";
 import NoMorePendingVehicles from "./pages/NoMorePendingVehicles";
+import AboutUs from "./pages/AboutUs";
 
 function App() {
   return (
@@ -79,6 +80,7 @@ function App() {
             <Route path="/update-me" element={<UpdateMe />} />
             {/* <Route path="/restricted" element={<Restricted />} /> */}
             <Route path="/sold-vehicle/:id" element={<SoldVehicleDetails />} />
+            <Route path="/about" element={<AboutUs />} />
           </Routes>
         </div>
         <Footer />

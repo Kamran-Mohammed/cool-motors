@@ -15,10 +15,10 @@ const { Upload } = require("@aws-sdk/lib-storage");
 const generateFileName = (make, model, year) => {
   // Sanitize the inputs to be URL-friendly: lowercase and replace spaces with hyphens.
   const sanitizedMake = make
-    ? String(make).toLowerCase().replace(/\s+/g, "-")
+    ? String(make).trim().toLowerCase().replace(/\s+/g, "-")
     : "unknown-make";
   const sanitizedModel = model
-    ? String(model).toLowerCase().replace(/\s+/g, "-")
+    ? String(model).trim().toLowerCase().replace(/\s+/g, "-")
     : "unknown-model";
   const sanitizedYear = year ? String(year) : "unknown-year"; // Year is typically numeric, stringify it.
 

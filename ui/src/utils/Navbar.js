@@ -260,6 +260,9 @@ const Navbar = () => {
             <FiPlus className="plus-icon" />
             <span>Sell</span>
           </button>
+          <Link to="/about" className="about-link">
+            About Us
+          </Link>
         </div>
 
         <div className="nav-right">
@@ -328,6 +331,9 @@ const Navbar = () => {
                     Login
                   </Link>
                 )}
+                <Link to="/about" className="dropdown-link">
+                  About Us
+                </Link>
                 <div className="dropdown-link" onClick={handleSellClick}>
                   Sell
                 </div>

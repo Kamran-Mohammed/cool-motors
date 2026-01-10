@@ -848,9 +848,7 @@ function ListVehicle() {
       {error && <p className="error-message">{error}</p>}
       {showAlert && (
         <Alert
-          message={
-            "Details submitted successfully. Please wait for update (email)."
-          }
+          message={"Details submitted successfully. Please wait for update."}
           onClose={() => navigate("/")}
         />
       )}

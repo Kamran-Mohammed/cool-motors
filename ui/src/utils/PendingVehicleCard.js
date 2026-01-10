@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 // import { useNavigate, useLocation } from "react-router-dom";
 // import { useAuth } from "../AuthContext";
 // import axios from "axios";
+import { FaGasPump } from "react-icons/fa";
+import { MdLocationOn } from "react-icons/md";
+import { GiGearStickPattern, GiSpeedometer } from "react-icons/gi";
 
 function PendingVehicleCard({ vehicle, showOptions, onDelete }) {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -15,7 +18,6 @@ function PendingVehicleCard({ vehicle, showOptions, onDelete }) {
         setMenuOpen(false);
       }
     };
-
     document.addEventListener("click", handleClickOutside);
     return () => {
       document.removeEventListener("click", handleClickOutside);
@@ -29,28 +31,8 @@ function PendingVehicleCard({ vehicle, showOptions, onDelete }) {
       // rel="noopener noreferrer"
       style={{ textDecoration: "none", color: "inherit" }}
     >
-      <div
-        key={vehicle._id}
-        style={{
-          border: "1px solid #ccc",
-          cursor: "pointer",
-          // textAlign: "center",
-          borderRadius: "10px",
-          overflow: "hidden",
-          transition: "background-color 0.3s ease",
-          backgroundColor: "white",
-          //   opacity: "0.6",
-          //   filter: "grayscale(50%)",
-        }}
-      >
-        <div
-          style={{
-            width: "100%",
-            height: "200px",
-            overflow: "hidden",
-            position: "relative",
-          }}
-        >
+      <div className="vehicle-card" key={vehicle._id}>
+        <div className="vehicle-card-image">
           <img
             src={
               vehicle.images && vehicle.images.length > 0
@@ -58,64 +40,43 @@ function PendingVehicleCard({ vehicle, showOptions, onDelete }) {
                 : "placeholder.jpg"
             }
             alt={`${vehicle.make} ${vehicle.model}`}
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-              transition: "opacity 0.3s ease",
-              // opacity: isHovered ? 0.7 : 1,
-            }}
           />
         </div>
 
-        <div style={{ padding: "10px", position: "relative" }}>
-          {/* Car Title */}
-          <h2
-            style={{
-              margin: "10px 0 0 0",
-              fontSize: "16px",
-              fontWeight: "bold",
-              textAlign: "left",
-            }}
-          >
+        <div className="vehicle-details-wrapper">
+          <h2 className="vehicle-title">
             {vehicle.year} {vehicle.make} {vehicle.model}
           </h2>
 
-          {/* Price (Bigger than name) */}
-          <h1
-            style={{
-              margin: "5px 0",
-              fontSize: "20px",
-              color: "#333",
-              textAlign: "left",
-            }}
-          >
+          <h1 className="vehicle-price">
             ₹{vehicle.price.toLocaleString("en-IN")}
           </h1>
 
-          {/* Odometer Reading (Small Font) */}
-          <p
-            style={{
-              margin: "2px 0",
-              fontSize: "12px",
-              color: "#666",
-              textAlign: "left",
-            }}
-          >
-            {vehicle.odometer.toLocaleString("en-IN")} km
-          </p>
-
-          {/* Location & State (Grayish) */}
-          <p
-            style={{
-              margin: "2px 0 10px",
-              fontSize: "12px",
-              color: "#777",
-              textAlign: "left",
-            }}
-          >
-            {vehicle.location}, {vehicle.state}
-          </p>
+          {/* <p className="vehicle-odometer">
+                      {vehicle.odometer.toLocaleString("en-IN")} km
+                    </p>
+          
+                    <p className="vehicle-location">
+                      {vehicle.location}, {vehicle.state}
+                    </p> */}
+          <div className="vehicle-info-row">
+            <div className="vehicle-info-left">
+              <span>
+                <MdLocationOn /> {vehicle.location}, {vehicle.state}
+              </span>
+              <span>
+                <GiSpeedometer /> {vehicle.odometer.toLocaleString("en-IN")} km
+              </span>
+            </div>
+            <div className="vehicle-info-right">
+              <span>
+                <FaGasPump /> {vehicle.fuelType}
+              </span>
+              <span>
+                <GiGearStickPattern /> {vehicle.transmission}
+              </span>
+            </div>
+          </div>
         </div>
       </div>
     </a>
