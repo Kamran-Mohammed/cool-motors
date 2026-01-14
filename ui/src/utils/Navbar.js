@@ -311,6 +311,9 @@ const Navbar = () => {
             </div>
             {isHamburgerOpen && (
               <div className="dropdown-menu">
+                <Link to="/about" className="dropdown-link">
+                  About Us
+                </Link>
                 {user && (
                   <Link to="/my-vehicles" className="dropdown-link">
                     My Vehicles
@@ -331,9 +334,6 @@ const Navbar = () => {
                     Login
                   </Link>
                 )}
-                <Link to="/about" className="dropdown-link">
-                  About Us
-                </Link>
                 <div className="dropdown-link" onClick={handleSellClick}>
                   Sell
                 </div>
