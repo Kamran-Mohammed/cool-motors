@@ -77,6 +77,22 @@
   box-sizing: border-box;
 }
 
+/* Style for input placeholder text */
+.filter-input::placeholder {
+  color: #999;
+  opacity: 1;
+}
+
+/* Style for select elements when no option is selected (placeholder state) */
+.filter-select.placeholder {
+  color: #999;
+}
+
+/* Style for option elements to ensure they're always dark */
+.filter-select option {
+  color: var(--color-text);
+}
+
 .filter-input:focus,
 .filter-select:focus {
   outline: none;
