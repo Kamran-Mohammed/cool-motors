@@ -293,9 +293,11 @@ const SearchVehiclesPage = () => {
                 name="fuelType"
                 value={filters.fuelType}
                 onChange={handleInputChange}
-                className={`filter-select ${!filters.fuelType ? 'placeholder' : ''}`}
+                className={`filter-select ${
+                  !filters.fuelType ? "placeholder" : ""
+                }`}
               >
-                <option value="" >Fuel Type</option>
+                <option value="">Fuel Type</option>
                 {fuelTypes.map((option) => (
                   <option key={option} value={option}>
                     {option.charAt(0).toUpperCase() + option.slice(1)}
@@ -307,7 +309,9 @@ const SearchVehiclesPage = () => {
                 name="transmission"
                 value={filters.transmission}
                 onChange={handleInputChange}
-                className={`filter-select ${!filters.transmission ? 'placeholder' : ''}`}
+                className={`filter-select ${
+                  !filters.transmission ? "placeholder" : ""
+                }`}
               >
                 <option value="">Transmission</option>
                 {transmissions.map((option) => (
@@ -321,7 +325,9 @@ const SearchVehiclesPage = () => {
                 name="engineType"
                 value={filters.engineType}
                 onChange={handleInputChange}
-                className={`filter-select ${!filters.engineType ? 'placeholder' : ''}`}
+                className={`filter-select ${
+                  !filters.engineType ? "placeholder" : ""
+                }`}
               >
                 <option value="">Engine Type</option>
                 {engineTypes.map((option) => (
@@ -367,7 +373,9 @@ const SearchVehiclesPage = () => {
                 name="state"
                 value={filters.state}
                 onChange={handleInputChange}
-                className={`filter-select ${!filters.state ? 'placeholder' : ''}`}
+                className={`filter-select ${
+                  !filters.state ? "placeholder" : ""
+                }`}
               >
                 <option value="">State</option>
                 {states.map((option) => (
