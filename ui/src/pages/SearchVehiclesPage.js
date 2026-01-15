@@ -423,6 +423,7 @@ const SearchVehiclesPage = () => {
                   step={PRICE_STEP}
                   value={priceRange}
                   onChange={handlePriceChange}
+                  draggableTrack={false}
                   trackStyle={[{ backgroundColor: "var(--color-primary)" }]}
                   handleStyle={[
                     {
@@ -450,6 +451,7 @@ const SearchVehiclesPage = () => {
                   step={ODO_STEP}
                   value={odoRange}
                   onChange={handleOdoChange}
+                  draggableTrack={false}
                   trackStyle={[{ backgroundColor: "var(--color-primary)" }]}
                   handleStyle={[
                     {
