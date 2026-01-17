@@ -7,6 +7,7 @@ import { useAuth } from "../AuthContext";
 import eye from "../utils/images/eye.svg";
 import eyeOff from "../utils/images/eye-off.svg";
 import Alert from "../utils/Alert";
+import { countryCodes } from "../utils/data";
 
 function Signup() {
   const [formData, setFormData] = useState({
@@ -22,6 +23,7 @@ function Signup() {
   const [showPassword, setShowPassword] = useState(false);
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
+  const [countryCode, setCountryCode] = useState("+91");
   const [success, setSuccess] = useState("");
   const { user, loading: authLoading } = useAuth();
   const [showAlert, setShowAlert] = useState(false);
@@ -133,7 +135,17 @@ function Signup() {
           className="signup-input"
         />
         <div className="signup-phone-wrapper">
-          <span className="signup-phone-code">+91</span>
+          <select
+            className="signup-country-code-select"
+            value={countryCode}
+            onChange={(e) => setCountryCode(e.target.value)}
+          >
+            {countryCodes.map((cc) => (
+              <option key={cc.code} value={cc.code}>
+                {cc.code} {cc.country}
+              </option>
+            ))}
+          </select>
           <input
             type="text"
             name="phoneNumber"
@@ -141,7 +153,11 @@ function Signup() {
             onChange={handleChange}
             placeholder="Phone Number"
             required
-            maxLength="10"
+            // maxLength={
+            //   countryCodes.find((cc) => cc.code === countryCode)?.maxLength ||
+            //   15
+            // }
+            maxLength="15"
             className="signup-phone-input"
             style={{ marginBottom: "0px" }}
           />
