@@ -16,6 +16,7 @@ import {
   fuelTypes,
   transmissions,
   engineTypes,
+  carMakeModels,
 } from "./data.js";
 
 const Navbar = () => {
@@ -78,32 +79,59 @@ const Navbar = () => {
 
       let parsedFilters = {};
       if (query) {
-        const filterLists = [
-          { key: "make", list: carMakes },
-          { key: "model", list: carModels },
-          { key: "fuelType", list: fuelTypes },
-          { key: "transmission", list: transmissions },
-          { key: "engineType", list: engineTypes },
-          { key: "location", list: locations },
-          { key: "state", list: states },
-        ];
+        // First, try to match "Brand Model" pattern
+        let brandModelMatched = false;
+        const words = query.trim().split(/\s+/);
 
-        // Try to match query exactly in any of the filter lists
-        let matched = false;
-        for (const { key, list } of filterLists) {
-          const exactMatch = list.find(
-            (item) => item.toLowerCase() === query.toLowerCase()
+        // Try to find a matching brand from the beginning of the input
+        for (let i = words.length - 1; i >= 1; i--) {
+          const potentialMake = words.slice(0, i).join(" ");
+          const potentialModel = words.slice(i).join(" ");
+          const matchingMake = carMakes.find(
+            (make) => make.toLowerCase() === potentialMake.toLowerCase()
           );
-          if (exactMatch) {
-            parsedFilters[key] = exactMatch;
-            matched = true;
-            break; // stop at first match
+          if (matchingMake) {
+            // Check if the remaining part matches a model
+            const matchingModel = carModels.find(
+              (model) => model.toLowerCase() === potentialModel.toLowerCase()
+            );
+            if (matchingModel) {
+              parsedFilters.make = matchingMake;
+              parsedFilters.model = matchingModel;
+              brandModelMatched = true;
+              break;
+            }
           }
         }
 
-        // fallback to normal parsing if no exact match found
-        if (!matched) {
-          parsedFilters = parseSearchQuery(rawInput);
+        if (!brandModelMatched) {
+          const filterLists = [
+            { key: "make", list: carMakes },
+            { key: "model", list: carModels },
+            { key: "fuelType", list: fuelTypes },
+            { key: "transmission", list: transmissions },
+            { key: "engineType", list: engineTypes },
+            { key: "location", list: locations },
+            { key: "state", list: states },
+          ];
+
+          // Try to match query exactly in any of the filter lists
+          let matched = false;
+          for (const { key, list } of filterLists) {
+            const exactMatch = list.find(
+              (item) => item.toLowerCase() === query.toLowerCase()
+            );
+            if (exactMatch) {
+              parsedFilters[key] = exactMatch;
+              matched = true;
+              break; // stop at first match
+            }
+          }
+
+          // fallback to normal parsing if no exact match found
+          if (!matched) {
+            parsedFilters = parseSearchQuery(rawInput);
+          }
         }
       } else {
         parsedFilters = parseSearchQuery(rawInput);
@@ -140,22 +168,92 @@ const Navbar = () => {
     }
 
     const lowerValue = value.toLowerCase();
+    const matched = [];
 
-    const allItems = [
-      ...carMakes,
-      ...carModels,
-      ...locations,
-      ...states,
-      ...fuelTypes,
-      ...transmissions,
-      ...engineTypes,
-    ];
+    // Check if input matches a brand - if so, suggest "Brand Model" combinations
+    const matchedMake = carMakes.find(
+      (make) => make.toLowerCase() === lowerValue
+    );
 
-    const matched = allItems
-      .filter((item) => item.toLowerCase().includes(lowerValue))
-      .slice(0, 10); // limit to 10 suggestions
+    if (matchedMake && carMakeModels[matchedMake]) {
+      // User typed exact brand name, show brand + model suggestions
+      carMakeModels[matchedMake].forEach((model) => {
+        matched.push(`${matchedMake} ${model}`);
+      });
+    } else {
+      // Check if input starts with a brand name (e.g., "lamborghini h")
+      const words = value.trim().split(/\s+/);
+      let foundMakeForPartial = null;
+      let remainingQuery = "";
 
-    setSuggestions(matched);
+      // Try to find a matching brand from the beginning of the input
+      for (let i = words.length; i >= 1; i--) {
+        const potentialMake = words.slice(0, i).join(" ");
+        const matchingMake = carMakes.find(
+          (make) => make.toLowerCase() === potentialMake.toLowerCase()
+        );
+        if (matchingMake && carMakeModels[matchingMake]) {
+          foundMakeForPartial = matchingMake;
+          remainingQuery = words.slice(i).join(" ").toLowerCase();
+          break;
+        }
+      }
+
+      if (foundMakeForPartial) {
+        // User typed "Brand ..." - filter models for that brand
+        const models = carMakeModels[foundMakeForPartial] || [];
+        models.forEach((model) => {
+          if (!remainingQuery || model.toLowerCase().includes(remainingQuery)) {
+            matched.push(`${foundMakeForPartial} ${model}`);
+          }
+        });
+      }
+
+      // Also add matching brands
+      carMakes.forEach((make) => {
+        if (make.toLowerCase().includes(lowerValue) && matched.length < 15) {
+          // Check if we should add brand + model suggestions for partial brand matches
+          if (
+            carMakeModels[make] &&
+            make.toLowerCase().startsWith(lowerValue)
+          ) {
+            // Add the brand itself first
+            if (!matched.includes(make)) {
+              matched.push(make);
+            }
+            // Add top models for this brand
+            carMakeModels[make].slice(0, 3).forEach((model) => {
+              const combo = `${make} ${model}`;
+              if (!matched.includes(combo)) {
+                matched.push(combo);
+              }
+            });
+          } else if (!matched.includes(make)) {
+            matched.push(make);
+          }
+        }
+      });
+
+      // Add other matching items (locations, fuel types, etc.)
+      const otherItems = [
+        ...locations,
+        ...states,
+        ...fuelTypes,
+        ...transmissions,
+        ...engineTypes,
+      ];
+
+      otherItems.forEach((item) => {
+        if (
+          item.toLowerCase().includes(lowerValue) &&
+          !matched.includes(item)
+        ) {
+          matched.push(item);
+        }
+      });
+    }
+
+    setSuggestions(matched.slice(0, 10)); // limit to 10 suggestions
     setIsSuggestionsVisible(true);
     setHighlightedIndex(-1);
   };
@@ -324,11 +422,6 @@ const Navbar = () => {
                     Liked Vehicles
                   </Link>
                 )}
-                {user && (
-                  <Link to="/settings" className="dropdown-link">
-                    Settings
-                  </Link>
-                )}
                 {!user && (
                   <Link to="/login" className="dropdown-link">
                     Login
@@ -337,6 +430,11 @@ const Navbar = () => {
                 <div className="dropdown-link" onClick={handleSellClick}>
                   Sell
                 </div>
+                {user && (
+                  <Link to="/settings" className="dropdown-link">
+                    Settings
+                  </Link>
+                )}
               </div>
             )}
           </div>
