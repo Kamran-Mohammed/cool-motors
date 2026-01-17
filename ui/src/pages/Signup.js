@@ -39,9 +39,17 @@ function Signup() {
     e.preventDefault();
     setLoading(true);
     try {
+      // Combine country code with phone number before submitting
+      const submissionData = {
+        ...formData,
+        phoneNumber: formData.phoneNumber
+          ? `${countryCode}${formData.phoneNumber}`
+          : "",
+      };
+
       await axios.post(
         `${process.env.REACT_APP_API_URL}/api/v1/users/signup`,
-        formData,
+        submissionData,
         {
           withCredentials: true,
         }
@@ -52,6 +60,7 @@ function Signup() {
         email: "",
         password: "",
         passwordConfirm: "",
+        phoneNumber: "",
       });
       setError("");
 

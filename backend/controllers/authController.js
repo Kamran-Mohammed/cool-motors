@@ -71,7 +71,7 @@ exports.signup = catchAsyncError(async (req, res, next) => {
     email: req.body.email,
     password: req.body.password,
     passwordConfirm: req.body.passwordConfirm,
-    phoneNumber: `+91${req.body.phoneNumber}`,
+    phoneNumber: req.body.phoneNumber,
     isVerified: true,
     // passwordChangedAt: req.body.passwordChangedAt,
     // role: req.body.role,
