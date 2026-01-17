@@ -537,7 +537,7 @@ function ListVehicle() {
 
         <div className="form-group">
           <label htmlFor="variant">
-            Variant <span className="optional-label">(optional)</span>
+            Variant <span className="label-hint">(optional)</span>
           </label>
           <input
             type="text"
@@ -624,7 +624,7 @@ function ListVehicle() {
         <div className="form-group">
           <label htmlFor="engineDisplacement">
             Engine Displacement (in liters){" "}
-            <span className="optional-label">(optional)</span>
+            <span className="label-hint">(optional)</span>
           </label>
           <input
             type="number"
@@ -638,7 +638,7 @@ function ListVehicle() {
 
         <div className="form-group">
           <label htmlFor="engineType">
-            Engine Type <span className="optional-label">(optional)</span>
+            Engine Type <span className="label-hint">(optional)</span>
           </label>
           <select
             name="engineType"
@@ -662,9 +662,10 @@ function ListVehicle() {
             type="text"
             name="odometer"
             value={formData.odometer}
+            maxLength={9}
             onChange={handleChange}
             required
-            placeholder="e.g., 32000"
+            placeholder="e.g., 32,000"
           />
         </div>
 
@@ -708,7 +709,8 @@ function ListVehicle() {
         </div>
         <div className="form-group">
           <label htmlFor="state">
-            State <span style={{ color: "red" }}>*</span>
+            State <span className="label-hint">(Car's Current Location)</span>{" "}
+            <span style={{ color: "red" }}>*</span>
           </label>
           <select
             type="text"
@@ -729,7 +731,7 @@ function ListVehicle() {
 
         <div className="form-group">
           <label htmlFor="location">
-            Location <span style={{ color: "red" }}>*</span>
+            Location (City) <span style={{ color: "red" }}>*</span>
           </label>
           <input
             type="text"
@@ -848,7 +850,9 @@ function ListVehicle() {
       {error && <p className="error-message">{error}</p>}
       {showAlert && (
         <Alert
-          message={"Details submitted successfully. Please wait for update."}
+          message={
+            "Your car has been submitted for review. Approval usually takes less than 24 hours. You'll receive an update."
+          }
           onClose={() => navigate("/")}
         />
       )}

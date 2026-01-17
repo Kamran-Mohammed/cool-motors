@@ -37,6 +37,7 @@
   transition: color 0.3s;
   display: flex;
   align-items: center;
+  white-space: nowrap;
 }
 
 .about-link:hover {
@@ -94,13 +95,12 @@
   text-decoration: none;
   font-size: 15px;
   font-weight: 600;
-  transition: background 0.3s, transform 0.2s, box-shadow 0.2s;
+  transition: color 0.3s;
   margin-left: 10px;
 }
 
 .login-link:hover {
-  background: #ffffff;
-  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);
+  color: var(--color-primary);
 }
 
 .list-vehicle-btn {

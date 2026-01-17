@@ -82,7 +82,7 @@ select:focus {
   position: relative;
 }
 
-.optional-label {
+.label-hint {
   color: gray;
   font-style: italic;
   font-size: 0.9em;

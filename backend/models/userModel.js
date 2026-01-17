@@ -36,16 +36,16 @@ const userSchema = mongoose.Schema({
   phoneNumber: {
     type: String,
     required: [true, "Please provide your phone number"],
-    validate: {
-      validator: function (value) {
-        // Ensure phone number has exactly 10 digits
-        value = value.substring(3);
-        console.log(value);
+    // validate: {
+    //   validator: function (value) {
+    //     // Ensure phone number has exactly 10 digits
+    //     value = value.substring(3);
+    //     console.log(value);
 
-        return /^\d{10}$/.test(value);
-      },
-      message: "Please provide a valid 10-digit phone number",
-    },
+    //     return /^\d{10}$/.test(value);
+    //   },
+    //   message: "Please provide a valid 10-digit phone number",
+    // },
   },
   role: {
     type: String,
