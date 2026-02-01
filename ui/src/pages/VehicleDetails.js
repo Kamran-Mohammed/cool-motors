@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback, useRef } from "react";
 import { useParams, Link, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
-// import slugify from "slugify";
+import { Helmet } from "react-helmet-async";
 import "./css/VehicleDetails.css"; // Import the CSS for the modal and blur effect
 import { useAuth } from "../AuthContext";
 import left from "../utils/images/left.png";
@@ -18,21 +18,17 @@ function VehicleDetails() {
   const [seller, setSeller] = useState(null);
   const [liked, setLiked] = useState(false); // State for like status
   const [loading, setLoading] = useState(true);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0); // State for the current image index
-  const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
   const { user } = useAuth();
   const location = useLocation();
   const [isMobileScreen, setIsMobileScreen] = useState(window.innerWidth < 768);
   const [touchStartX, setTouchStartX] = useState(0);
   const [touchEndX, setTouchEndX] = useState(0);
-  // NEW: State to track the number of active touches at the start of a touch event
   const [touchCountStart, setTouchCountStart] = useState(0);
-  // NEW: State to track if all images are preloaded
   const [allImagesPreloaded, setAllImagesPreloaded] = useState(false);
-  // NEW: Ref to store preloaded Image objects (not directly used in JSX, but holds the data)
   const preloadedImagesRef = useRef([]);
-  // NEW: State to control arrow visibility on hover (desktop only)
   const [showNavButtons, setShowNavButtons] = useState(false);
 
   const handleTouchStart = (e) => {
@@ -75,23 +71,10 @@ function VehicleDetails() {
           `${process.env.REACT_APP_API_URL}/api/v1/vehicles/${id}`,
           {
             withCredentials: true,
-          }
+          },
         );
         const fetchedVehicle = vehicleResponse.data.data.vehicle;
         setVehicle(fetchedVehicle);
-
-        // const correctSlug = slugify(
-        //   `${vehicle.year} ${vehicle.make} ${vehicle.model}`,
-        //   {
-        //     lower: true, // convert to lowercase
-        //     strict: true, // strip special chars except hyphens
-        //   }
-        // );
-
-        // if (slug !== correctSlug) {
-        //   navigate(`/vehicle/${id}/${correctSlug}`, { replace: true });
-        //   return; // stop here to avoid double state updates
-        // }
 
         // Fetch seller details if available
         if (fetchedVehicle.listedBy) {
@@ -99,7 +82,7 @@ function VehicleDetails() {
             `${process.env.REACT_APP_API_URL}/api/v1/users/${fetchedVehicle.listedBy}`,
             {
               withCredentials: true,
-            }
+            },
           );
           setSeller(sellerResponse.data.data.user);
         }
@@ -150,7 +133,7 @@ function VehicleDetails() {
           `${process.env.REACT_APP_API_URL}/api/v1/vehicles/${vehicle._id}/likes/is-liked`,
           {
             withCredentials: true,
-          }
+          },
         );
         setLiked(response.data.data.isLiked);
       } catch (error) {
@@ -175,7 +158,7 @@ function VehicleDetails() {
           `${process.env.REACT_APP_API_URL}/api/v1/vehicles/${id}/likes`,
           {
             withCredentials: true,
-          }
+          },
         );
       } else {
         await axios.post(
@@ -183,7 +166,7 @@ function VehicleDetails() {
           {},
           {
             withCredentials: true,
-          }
+          },
         );
       }
       setLiked(!liked);
@@ -195,13 +178,13 @@ function VehicleDetails() {
 
   const nextImage = useCallback(() => {
     setCurrentImageIndex((prevIndex) =>
-      prevIndex === vehicle.images.length - 1 ? 0 : prevIndex + 1
+      prevIndex === vehicle.images.length - 1 ? 0 : prevIndex + 1,
     );
   }, [vehicle]);
 
   const prevImage = useCallback(() => {
     setCurrentImageIndex((prevIndex) =>
-      prevIndex === 0 ? vehicle.images.length - 1 : prevIndex - 1
+      prevIndex === 0 ? vehicle.images.length - 1 : prevIndex - 1,
     );
   }, [vehicle]);
 
@@ -272,6 +255,58 @@ function VehicleDetails() {
 
   return (
     <div>
+      {vehicle && (
+        <Helmet>
+          <title>
+            {`
+            ${vehicle.make} ${vehicle.model}${" "}
+            ${vehicle.variant ? `(${vehicle.variant})` : ""} for Sale in India (${vehicle.year}) |
+            Autofinds`}
+          </title>
+
+          <meta
+            name="description"
+            content={`Buy ${vehicle.make} ${vehicle.model} ${vehicle.variant ? `(${vehicle.variant})` : ""} ${vehicle.year} in ${vehicle.location}, ${vehicle.state}. Price ₹${vehicle.price.toLocaleString(
+              "en-IN",
+            )}. View photos, details & contact seller directly on Autofinds.`}
+          />
+
+          <link
+            rel="canonical"
+            href={`https://www.autofinds.in/vehicle/${vehicle._id}/${slug}`}
+          />
+
+          <meta property="og:type" content="website" />
+          <meta property="og:site_name" content="Autofinds" />
+          <meta
+            property="og:title"
+            content={`${vehicle.year} ${vehicle.make} ${vehicle.model}${
+              vehicle.variant ? ` ${vehicle.variant}` : ""
+            } for Sale`}
+          />
+          <meta
+            property="og:description"
+            content={`₹${vehicle.price.toLocaleString(
+              "en-IN",
+            )} · ${vehicle.location}, ${vehicle.state} · Contact seller directly`}
+          />
+          <meta
+            property="og:url"
+            content={`https://www.autofinds.in/vehicle/${vehicle._id}/${slug}`}
+          />
+          <meta
+            property="og:image"
+            content={
+              vehicle.images?.[0] ||
+              "https://www.autofinds.in/default-preview.jpg"
+            }
+          />
+          <meta property="og:image:width" content="1200" />
+          <meta property="og:image:height" content="630" />
+
+          <meta name="twitter:card" content="summary_large_image" />
+        </Helmet>
+      )}
       <div
         className={`vehicle-details ${isModalOpen ? "blur-background" : ""}`}
       >
@@ -302,19 +337,6 @@ function VehicleDetails() {
             }}
             onClick={openImageModal}
           />
-          {/* <img
-            src={
-              vehicle.images && vehicle.images.length > 0
-                ? vehicle.images[currentImageIndex]
-                : "placeholder.jpg"
-            }
-            alt={`${vehicle.make} ${vehicle.model}`}
-            className="vehicle-image"
-            style={{
-              objectFit: "contain",
-            }}
-            onClick={openImageModal}
-          /> */}
           <button onClick={handleShare} className="share-button">
             <FaShareAlt style={{ width: "30px", height: "30px" }} />{" "}
             {/* Icon size matching heart */}
@@ -457,7 +479,7 @@ function VehicleDetails() {
                             day: "numeric",
                             month: "long",
                             year: "numeric",
-                          }
+                          },
                         )
                       : "--"}
                   </td>
@@ -472,23 +494,6 @@ function VehicleDetails() {
                     ) : (
                       "Loading seller details..."
                     )}
-                    {/* {seller && seller.phoneNumber && (
-                      <a
-                        href={
-                          isMobile()
-                            ? `whatsapp://send?phone=${seller.phoneNumber}&text=I'm%20interested%20in%20your%20car%20for%20sale%20(${vehicle.make}%20${vehicle.model})`
-                            : `https://wa.me/${seller.phoneNumber}?text=I'm%20interested%20in%20your%20car%20for%20sale%20(${vehicle.make}%20${vehicle.model})`
-                        }
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <img
-                          src={whatsApp}
-                          alt="WhatsApp Chat"
-                          className="whatsapp-icon"
-                        />
-                      </a>
-                    )} */}
                     {seller && seller.phoneNumber && (
                       <a
                         href={
@@ -581,7 +586,7 @@ function VehicleDetails() {
                             day: "numeric",
                             month: "long",
                             year: "numeric",
-                          }
+                          },
                         )
                       : "--"}
                   </td>
@@ -659,12 +664,6 @@ function VehicleDetails() {
               className="img-nav-button left modal-img-nav-button"
             />
           )}
-          {/* <img
-            className="modal-content"
-            src={vehicle.images[currentImageIndex]}
-            alt={`${vehicle.make} ${vehicle.model}`}
-          /> */}
-          {/* NEW: Conditional rendering for modal image loading */}
           {!allImagesPreloaded && (
             <div className="modal-image-loading-overlay">
               <div className="spinner"></div>
