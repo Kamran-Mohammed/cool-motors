@@ -101,7 +101,7 @@ exports.updateVehicle = catchAsyncError(async (req, res, next) => {
   // Check if the logged-in user is the one who listed the vehicle
   if (vehicle.listedBy.toString() !== req.user._id.toString()) {
     return next(
-      new AppError("You are not authorized to update this vehicle", 401)
+      new AppError("You are not authorized to update this vehicle", 401),
     );
   }
 
@@ -131,7 +131,7 @@ exports.updateVehicle = catchAsyncError(async (req, res, next) => {
     {
       new: true,
       runValidators: true,
-    }
+    },
   );
 
   res.status(200).json({
@@ -250,7 +250,7 @@ exports.searchVehicles = catchAsyncError(async (req, res) => {
   if (filters.transmission)
     searchCriteria.transmission = {
       $in: filters.transmission.map(
-        (transmission) => new RegExp(transmission, "i")
+        (transmission) => new RegExp(transmission, "i"),
       ),
     };
   if (filters.minPrice || filters.maxPrice) {
@@ -347,7 +347,7 @@ exports.deleteVehicle = catchAsyncError(async (req, res, next) => {
 
   if (String(req.user._id) !== String(vehicle.listedBy)) {
     return next(
-      new AppError("You don't have permission to delete this vehicle", 403)
+      new AppError("You don't have permission to delete this vehicle", 403),
     );
   }
 
@@ -451,7 +451,7 @@ exports.markVehicleAsSold = catchAsyncError(async (req, res, next) => {
 
   if (String(req.user._id) !== String(vehicle.listedBy)) {
     return next(
-      new AppError("You don't have permission mark this vehicle as sold.", 403)
+      new AppError("You don't have permission mark this vehicle as sold.", 403),
     );
   }
 
