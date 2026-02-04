@@ -427,9 +427,21 @@ exports.deleteVehicle = catchAsyncError(async (req, res, next) => {
 // });
 
 exports.getRandomVehicles = catchAsyncError(async (req, res, next) => {
-  const limit = req.query.limit ? parseInt(req.query.limit, 10) : 10; // Number of random vehicles to return, default to 10
+  const limit = req.query.limit ? parseInt(req.query.limit, 10) : 10;
+  const exclude = req.body.exclude || [];
 
-  const vehicles = await Vehicle.aggregate([{ $sample: { size: limit } }]);
+  const mongoose = require("mongoose");
+  const excludeIds = exclude.map((id) => new mongoose.Types.ObjectId(id));
+
+  const matchStage =
+    excludeIds.length > 0
+      ? { $match: { _id: { $nin: excludeIds } } }
+      : { $match: {} };
+
+  const vehicles = await Vehicle.aggregate([
+    matchStage,
+    { $sample: { size: limit } },
+  ]);
 
   res.status(200).json({
     status: "success",
