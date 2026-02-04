@@ -29,7 +29,7 @@ router.patch(
 
 router.get("/search", vehicleController.searchVehicles);
 
-router.get("/random", vehicleController.getRandomVehicles);
+router.post("/random", vehicleController.getRandomVehicles);
 
 router.get("/featured", vehicleController.getFeaturedVehicles);
 
