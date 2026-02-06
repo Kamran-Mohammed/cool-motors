@@ -17,7 +17,7 @@ exports.engineTypes = [
 
 exports.years = Array.from(
   { length: new Date().getFullYear() - 1900 + 1 },
-  (_, i) => 1900 + i
+  (_, i) => 1900 + i,
 );
 
 exports.ownerships = Array.from({ length: 10 }, (_, i) => i + 1);
@@ -940,7 +940,6 @@ exports.carMakes = [
   "Maruti",
   "Maserati",
   "Mastretta",
-  "Maybach",
   "Mazda",
   "McLaren",
   "Mercedes-Benz",
@@ -1742,7 +1741,6 @@ exports.carMakeModels = {
     "Zen Steel",
   ],
   Maserati: ["Ghibli", "GranTurismo", "Levante", "MC20", "Quattroporte"],
-  Maybach: [],
   Mazda: ["MX-5", "CX-5", "CX-9", "RX-7", "RX-8", "MR2", "FTO"],
   McLaren: ["720S", "765LT", "P1", "Senna"],
   "Mercedes-Benz": [
