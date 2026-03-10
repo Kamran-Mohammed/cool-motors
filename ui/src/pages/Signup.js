@@ -52,7 +52,7 @@ function Signup() {
         submissionData,
         {
           withCredentials: true,
-        }
+        },
       );
       setSuccess("Signup successful!");
       setFormData({
@@ -103,7 +103,7 @@ function Signup() {
           name="name"
           value={formData.name}
           onChange={handleChange}
-          placeholder="Full Name"
+          placeholder="Name"
           required
           className="signup-input"
         />

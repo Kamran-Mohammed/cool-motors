@@ -412,52 +412,54 @@ function VehicleDetails() {
         <h1 style={{ fontSize: "36px", color: "#333", margin: "10px 0" }}>
           ₹{vehicle.price.toLocaleString("en-IN")}
         </h1>
-        <table className="vehicle-details-table">
+        <table className="vehicle-details-table" style={{ width: "100%", tableLayout: "fixed" }}>
           <tbody>
             {isMobileScreen ? (
               // Mobile View: 2 Columns (Property | Value)
               <>
                 <tr>
-                  <td>
+                  <td style={{ wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "pre-wrap" }}>
                     <strong>Fuel Type:</strong>
                   </td>
-                  <td>{vehicle.fuelType}</td>
+                  <td style={{ wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "pre-wrap" }}>{vehicle.fuelType}</td>
                 </tr>
                 <tr>
-                  <td>
+                  <td style={{ wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "pre-wrap" }}>
                     <strong>Transmission:</strong>
                   </td>
                   <td>{vehicle.transmission}</td>
                 </tr>
                 <tr>
-                  <td>
+                  <td style={{ wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "pre-wrap" }}>
                     <strong>Odometer:</strong>
                   </td>
                   <td>{vehicle.odometer.toLocaleString("en-IN")} km</td>
                 </tr>
                 <tr>
-                  <td>
+                  <td style={{ wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "pre-wrap" }}>
                     <strong>No. of Owners:</strong>
                   </td>
-                  <td>{vehicle.ownership}</td>
+                  <td style={{ wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "pre-wrap" }}>
+                    {vehicle.ownership}
+                  </td>
                 </tr>
                 <tr>
-                  <td>
+                  <td style={{ wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "pre-wrap" }} >
                     <strong>State:</strong>
                   </td>
                   <td>{vehicle.state ? vehicle.state : "--"}</td>
                 </tr>
                 <tr>
-                  <td>
+                  <td style={{ wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "pre-wrap" }}>
                     <strong>Location:</strong>
                   </td>
-                  <td>{vehicle.location}</td>
+                  <td style={{ wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "pre-wrap" }}>{vehicle.location}</td>
                 </tr>
                 <tr>
-                  <td>
+                  <td style={{ wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "pre-wrap" }}>
                     <strong>Engine:</strong>
                   </td>
-                  <td>
+                  <td style={{ wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "pre-wrap" }}>
                     {!vehicle.engineDisplacement && !vehicle.engineType
                       ? "--"
                       : ""}
@@ -468,10 +470,10 @@ function VehicleDetails() {
                   </td>
                 </tr>
                 <tr>
-                  <td>
+                  <td style={{ wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "pre-wrap" }}>
                     <strong>Date Listed:</strong>
                   </td>
-                  <td>
+                  <td style={{ wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "pre-wrap" }}>
                     {vehicle.createdAt
                       ? new Date(vehicle.createdAt).toLocaleDateString(
                           "en-GB",
@@ -485,10 +487,10 @@ function VehicleDetails() {
                   </td>
                 </tr>
                 <tr>
-                  <td>
+                  <td style={{ wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "pre-wrap" }}> 
                     <strong>Seller:</strong>
                   </td>
-                  <td>
+                  <td style={{ wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "pre-wrap" }}>
                     {seller ? (
                       <Link to={`/user/${seller._id}`}>{seller.name}</Link>
                     ) : (
@@ -517,7 +519,7 @@ function VehicleDetails() {
                   <td>
                     <strong>Description:</strong>
                   </td>
-                  <td>
+                  <td style={{ wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "pre-wrap" }}>
                     {vehicle.description
                       ? vehicle.description.split("\n").map((line, index) => (
                           <span key={index}>
@@ -533,40 +535,40 @@ function VehicleDetails() {
               // Desktop View: 4 Columns (Property | Value | Property | Value)
               <>
                 <tr>
-                  <td>
+                  <td style={{ wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "pre-wrap" }}>
                     <strong>Fuel Type:</strong>
                   </td>
-                  <td>{vehicle.fuelType}</td>
-                  <td>
+                  <td style={{ wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "pre-wrap" }}>{vehicle.fuelType}</td>
+                  <td style={{ wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "pre-wrap" }}>
                     <strong>Transmission:</strong>
                   </td>
-                  <td>{vehicle.transmission}</td>
+                  <td style={{ wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "pre-wrap" }}>{vehicle.transmission}</td>
                 </tr>
                 <tr>
-                  <td>
+                  <td style={{ wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "pre-wrap" }}>
                     <strong>Odometer:</strong>
                   </td>
-                  <td>{vehicle.odometer.toLocaleString("en-IN")} km</td>
-                  <td>
+                  <td style={{ wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "pre-wrap" }}>{vehicle.odometer.toLocaleString("en-IN")} km</td>
+                  <td style={{ wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "pre-wrap" }}>
                     <strong>No. of Owners:</strong>
                   </td>
-                  <td>{vehicle.ownership}</td>
+                  <td style={{ wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "pre-wrap" }}>{vehicle.ownership}</td>
                 </tr>
                 <tr>
-                  <td>
+                  <td style={{ wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "pre-wrap" }} >
                     <strong>State:</strong>
                   </td>
-                  <td>{vehicle.state ? vehicle.state : "--"}</td>
-                  <td>
+                  <td style={{ wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "pre-wrap" }}>{vehicle.state ? vehicle.state : "--"}</td>
+                  <td style={{ wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "pre-wrap" }}>
                     <strong>Location:</strong>
                   </td>
-                  <td>{vehicle.location}</td>
+                  <td style={{ wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "pre-wrap" }} >{vehicle.location}</td>
                 </tr>
                 <tr>
-                  <td>
+                  <td style={{ wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "pre-wrap" }}>
                     <strong>Engine:</strong>
                   </td>
-                  <td>
+                  <td style={{ wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "pre-wrap" }}>
                     {!vehicle.engineDisplacement && !vehicle.engineType
                       ? "--"
                       : ""}
@@ -575,10 +577,10 @@ function VehicleDetails() {
                       : ""}{" "}
                     {vehicle.engineType ? vehicle.engineType : ""}
                   </td>
-                  <td>
+                  <td style={{ wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "pre-wrap" }}>
                     <strong>Date Listed:</strong>
                   </td>
-                  <td>
+                  <td style={{ wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "pre-wrap" }}>
                     {vehicle.createdAt
                       ? new Date(vehicle.createdAt).toLocaleDateString(
                           "en-GB",
@@ -592,10 +594,10 @@ function VehicleDetails() {
                   </td>
                 </tr>
                 <tr>
-                  <td>
+                  <td style={{ wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "pre-wrap" }}>
                     <strong>Seller:</strong>
                   </td>
-                  <td colSpan="3">
+                  <td colSpan="3" style={{ wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "pre-wrap" }}>
                     {seller ? (
                       <Link to={`/user/${seller._id}`}>{seller.name}</Link>
                     ) : (
@@ -624,7 +626,7 @@ function VehicleDetails() {
                   <td style={{ verticalAlign: "top" }}>
                     <strong>Description:</strong>
                   </td>
-                  <td colSpan="3">
+                  <td colSpan="3" style={{ wordBreak: "break-word", overflowWrap: "break-word", whiteSpace: "pre-wrap" }}>
                     {vehicle.description
                       ? vehicle.description.split("\n").map((line, index) => (
                           <span key={index}>
