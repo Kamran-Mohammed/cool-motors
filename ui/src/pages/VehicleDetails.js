@@ -10,7 +10,8 @@ import whatsApp from "../utils/images/WhatsAppButton.png";
 import heart from "../utils/images/heart.png";
 import fullHeart from "../utils/images/full-heart.png";
 import { isMobile } from "../utils/tools";
-import { FaShareAlt } from "react-icons/fa";
+import { FaShareAlt, FaWhatsapp } from "react-icons/fa";
+import DescriptionSection from "../DescriptioSection";
 
 function VehicleDetails() {
   const { id, slug } = useParams(); // Vehicle ID from URL
@@ -215,6 +216,24 @@ function VehicleDetails() {
     }
   };
 
+  function WhatsAppButton({ href }) {
+    return (
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{
+          color: "#25D366",
+          display: "inline-flex",
+          alignItems: "center",
+          flexShrink: 0,
+        }}
+      >
+        <img src={whatsApp} alt="WhatsApp" className="whatsapp-icon" />
+        <FaWhatsapp size={28} className="whatsapp-icon-fallback" />
+      </a>
+    );
+  }
   // Close modal when the 'Esc' key is pressed
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -397,7 +416,12 @@ function VehicleDetails() {
           )}
         </div>
         <h2
-          style={{ fontSize: "28px", marginTop: "20px", marginBottom: "10px" }}
+          style={{
+            fontSize: "28px",
+            marginTop: "20px",
+            marginBottom: "10px",
+            textAlign: "center",
+          }}
         >
           {vehicle.year} {vehicle.make} {vehicle.model}
           {vehicle.variant && (
@@ -409,55 +433,69 @@ function VehicleDetails() {
           )}
         </h2>
         {/* <p>{vehicle.variant ? vehicle.variant : ""}</p> */}
-        <h1 style={{ fontSize: "36px", color: "#333", margin: "10px 0" }}>
+        <h1
+          style={{
+            fontSize: "36px",
+            color: "#333",
+            margin: "10px 0",
+            textAlign: "center",
+          }}
+        >
           ₹{vehicle.price.toLocaleString("en-IN")}
         </h1>
-        <table className="vehicle-details-table">
+        <table
+          className="vehicle-details-table"
+          style={{ width: "100%", tableLayout: "fixed" }}
+        >
           <tbody>
             {isMobileScreen ? (
               // Mobile View: 2 Columns (Property | Value)
               <>
                 <tr>
-                  <td>
+                  <td className="td-wrap">
                     <strong>Fuel Type:</strong>
                   </td>
-                  <td>{vehicle.fuelType}</td>
+                  <td className="td-wrap">{vehicle.fuelType}</td>
                 </tr>
                 <tr>
-                  <td>
+                  <td className="td-wrap">
                     <strong>Transmission:</strong>
                   </td>
-                  <td>{vehicle.transmission}</td>
+                  <td className="td-wrap">{vehicle.transmission}</td>
                 </tr>
                 <tr>
-                  <td>
+                  <td className="td-wrap">
                     <strong>Odometer:</strong>
                   </td>
-                  <td>{vehicle.odometer.toLocaleString("en-IN")} km</td>
+                  <td className="td-wrap">
+                    {vehicle.odometer.toLocaleString("en-IN")} km
+                  </td>
                 </tr>
                 <tr>
-                  <td>
+                  <td className="td-wrap">
                     <strong>No. of Owners:</strong>
                   </td>
-                  <td>{vehicle.ownership}</td>
+                  <td className="td-wrap">{vehicle.ownership}</td>
                 </tr>
                 <tr>
-                  <td>
+                  <td className="td-wrap">
                     <strong>State:</strong>
                   </td>
-                  <td>{vehicle.state ? vehicle.state : "--"}</td>
+                  <td className="td-wrap">
+                    {vehicle.state ? vehicle.state : "--"}
+                  </td>
                 </tr>
                 <tr>
-                  <td>
+                  <td className="td-wrap">
                     <strong>Location:</strong>
                   </td>
-                  <td>{vehicle.location}</td>
+                  <td className="td-wrap">{vehicle.location}</td>
                 </tr>
                 <tr>
-                  <td>
+                  <td className="td-wrap">
                     <strong>Engine:</strong>
                   </td>
-                  <td>
+                  <td className="td-wrap">
                     {!vehicle.engineDisplacement && !vehicle.engineType
                       ? "--"
                       : ""}
@@ -468,10 +506,10 @@ function VehicleDetails() {
                   </td>
                 </tr>
                 <tr>
-                  <td>
+                  <td className="td-wrap">
                     <strong>Date Listed:</strong>
                   </td>
-                  <td>
+                  <td className="td-wrap">
                     {vehicle.createdAt
                       ? new Date(vehicle.createdAt).toLocaleDateString(
                           "en-GB",
@@ -485,47 +523,33 @@ function VehicleDetails() {
                   </td>
                 </tr>
                 <tr>
-                  <td>
+                  <td className="td-wrap">
                     <strong>Seller:</strong>
                   </td>
-                  <td>
-                    {seller ? (
-                      <Link to={`/user/${seller._id}`}>{seller.name}</Link>
-                    ) : (
-                      "Loading seller details..."
-                    )}
-                    {seller && seller.phoneNumber && (
-                      <a
-                        href={
-                          isMobile()
-                            ? `whatsapp://send?phone=${seller.phoneNumber}&text=I'm%20interested%20in%20your%20car%20for%20sale%20(${vehicle.make}%20${vehicle.model})%0A${window.location.origin}/vehicle/${vehicle._id}/${slug}`
-                            : `https://wa.me/${seller.phoneNumber}?text=I'm%20interested%20in%20your%20car%20for%20sale%20(${vehicle.make}%20${vehicle.model})%0A${window.location.origin}/vehicle/${vehicle._id}/${slug}`
-                        }
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <img
-                          src={whatsApp}
-                          alt="WhatsApp Chat"
-                          className="whatsapp-icon"
+                  <td className="td-wrap">
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "8px",
+                        flexWrap: "wrap",
+                      }}
+                    >
+                      {seller ? (
+                        <Link to={`/user/${seller._id}`}>{seller.name}</Link>
+                      ) : (
+                        "Loading seller details..."
+                      )}
+                      {seller && seller.phoneNumber && (
+                        <WhatsAppButton
+                          href={
+                            isMobile()
+                              ? `whatsapp://send?phone=${seller.phoneNumber}&text=I'm%20interested%20in%20your%20car%20for%20sale%20(${vehicle.make}%20${vehicle.model})%0A${window.location.origin}/vehicle/${vehicle._id}/${slug}`
+                              : `https://wa.me/${seller.phoneNumber}?text=I'm%20interested%20in%20your%20car%20for%20sale%20(${vehicle.make}%20${vehicle.model})%0A${window.location.origin}/vehicle/${vehicle._id}/${slug}`
+                          }
                         />
-                      </a>
-                    )}
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <strong>Description:</strong>
-                  </td>
-                  <td>
-                    {vehicle.description
-                      ? vehicle.description.split("\n").map((line, index) => (
-                          <span key={index}>
-                            {line}
-                            <br />
-                          </span>
-                        ))
-                      : "--"}
+                      )}
+                    </div>
                   </td>
                 </tr>
               </>
@@ -533,40 +557,44 @@ function VehicleDetails() {
               // Desktop View: 4 Columns (Property | Value | Property | Value)
               <>
                 <tr>
-                  <td>
+                  <td className="td-wrap">
                     <strong>Fuel Type:</strong>
                   </td>
-                  <td>{vehicle.fuelType}</td>
-                  <td>
+                  <td className="td-wrap">{vehicle.fuelType}</td>
+                  <td className="td-wrap">
                     <strong>Transmission:</strong>
                   </td>
-                  <td>{vehicle.transmission}</td>
+                  <td className="td-wrap">{vehicle.transmission}</td>
                 </tr>
                 <tr>
-                  <td>
+                  <td className="td-wrap">
                     <strong>Odometer:</strong>
                   </td>
-                  <td>{vehicle.odometer.toLocaleString("en-IN")} km</td>
-                  <td>
+                  <td className="td-wrap">
+                    {vehicle.odometer.toLocaleString("en-IN")} km
+                  </td>
+                  <td className="td-wrap">
                     <strong>No. of Owners:</strong>
                   </td>
-                  <td>{vehicle.ownership}</td>
+                  <td className="td-wrap">{vehicle.ownership}</td>
                 </tr>
                 <tr>
-                  <td>
+                  <td className="td-wrap">
                     <strong>State:</strong>
                   </td>
-                  <td>{vehicle.state ? vehicle.state : "--"}</td>
-                  <td>
+                  <td className="td-wrap">
+                    {vehicle.state ? vehicle.state : "--"}
+                  </td>
+                  <td className="td-wrap">
                     <strong>Location:</strong>
                   </td>
-                  <td>{vehicle.location}</td>
+                  <td className="td-wrap">{vehicle.location}</td>
                 </tr>
                 <tr>
-                  <td>
+                  <td className="td-wrap">
                     <strong>Engine:</strong>
                   </td>
-                  <td>
+                  <td className="td-wrap">
                     {!vehicle.engineDisplacement && !vehicle.engineType
                       ? "--"
                       : ""}
@@ -575,10 +603,10 @@ function VehicleDetails() {
                       : ""}{" "}
                     {vehicle.engineType ? vehicle.engineType : ""}
                   </td>
-                  <td>
+                  <td className="td-wrap">
                     <strong>Date Listed:</strong>
                   </td>
-                  <td>
+                  <td className="td-wrap">
                     {vehicle.createdAt
                       ? new Date(vehicle.createdAt).toLocaleDateString(
                           "en-GB",
@@ -592,12 +620,12 @@ function VehicleDetails() {
                   </td>
                 </tr>
                 <tr>
-                  <td>
+                  <td className="td-wrap">
                     <strong>Seller:</strong>
                   </td>
-                  <td colSpan="3">
+                  <td colSpan="3" className="td-wrap">
                     {seller ? (
-                      <Link to={`/user/${seller._id}`}>{seller.name}</Link>
+                      <Link to={`/user/${seller._id}`}>{seller.name} </Link>
                     ) : (
                       "Loading seller details..."
                     )}
@@ -620,25 +648,16 @@ function VehicleDetails() {
                     )}
                   </td>
                 </tr>
-                <tr>
-                  <td style={{ verticalAlign: "top" }}>
-                    <strong>Description:</strong>
-                  </td>
-                  <td colSpan="3">
-                    {vehicle.description
-                      ? vehicle.description.split("\n").map((line, index) => (
-                          <span key={index}>
-                            {line}
-                            <br />
-                          </span>
-                        ))
-                      : "--"}
-                  </td>
-                </tr>
               </>
             )}
           </tbody>
         </table>
+        {vehicle.description && (
+          <DescriptionSection
+            description={vehicle.description}
+            isMobileScreen={isMobileScreen}
+          />
+        )}
       </div>
       {/* Modal */}
       {isModalOpen && (
