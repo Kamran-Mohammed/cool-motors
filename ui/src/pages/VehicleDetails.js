@@ -217,18 +217,23 @@ function VehicleDetails() {
   };
 
   function WhatsAppButton({ href }) {
-  return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      style={{ color: "#25D366", display: "inline-flex", alignItems: "center", flexShrink: 0 }}
-    >
-      <img src={whatsApp} alt="WhatsApp" className="whatsapp-icon" />
-      <FaWhatsapp size={28} className="whatsapp-icon-fallback" />
-    </a>
-  );
-}
+    return (
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{
+          color: "#25D366",
+          display: "inline-flex",
+          alignItems: "center",
+          flexShrink: 0,
+        }}
+      >
+        <img src={whatsApp} alt="WhatsApp" className="whatsapp-icon" />
+        <FaWhatsapp size={28} className="whatsapp-icon-fallback" />
+      </a>
+    );
+  }
   // Close modal when the 'Esc' key is pressed
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -294,8 +299,9 @@ function VehicleDetails() {
           <meta property="og:site_name" content="Autofinds" />
           <meta
             property="og:title"
-            content={`${vehicle.year} ${vehicle.make} ${vehicle.model}${vehicle.variant ? ` ${vehicle.variant}` : ""
-              } for Sale`}
+            content={`${vehicle.year} ${vehicle.make} ${vehicle.model}${
+              vehicle.variant ? ` ${vehicle.variant}` : ""
+            } for Sale`}
           />
           <meta
             property="og:description"
@@ -341,8 +347,9 @@ function VehicleDetails() {
           <img
             src={currentImageSrc}
             alt={`${vehicle.make} ${vehicle.model}`}
-            className={`vehicle-image ${!allImagesPreloaded ? "loading-effect" : ""
-              }`} // Add loading effect class
+            className={`vehicle-image ${
+              !allImagesPreloaded ? "loading-effect" : ""
+            }`} // Add loading effect class
             style={{
               objectFit: "contain",
               // NEW: Make image invisible until preloaded if not showing overlay
@@ -375,8 +382,9 @@ function VehicleDetails() {
               src={left}
               alt="Previous"
               onClick={prevImage}
-              className={`img-nav-button left ${showNavButtons || isMobileScreen ? "visible" : ""
-                }`}
+              className={`img-nav-button left ${
+                showNavButtons || isMobileScreen ? "visible" : ""
+              }`}
             />
           )}
 
@@ -386,8 +394,9 @@ function VehicleDetails() {
               src={right}
               alt="Next"
               onClick={nextImage}
-              className={`img-nav-button right ${showNavButtons || isMobileScreen ? "visible" : ""
-                }`}
+              className={`img-nav-button right ${
+                showNavButtons || isMobileScreen ? "visible" : ""
+              }`}
             />
           )}
 
@@ -397,8 +406,9 @@ function VehicleDetails() {
               {vehicle.images.map((_, index) => (
                 <span
                   key={index}
-                  className={`image-dot ${index === currentImageIndex ? "active" : ""
-                    }`}
+                  className={`image-dot ${
+                    index === currentImageIndex ? "active" : ""
+                  }`}
                   onClick={() => setCurrentImageIndex(index)}
                 ></span>
               ))}
@@ -406,7 +416,12 @@ function VehicleDetails() {
           )}
         </div>
         <h2
-          style={{ fontSize: "28px", marginTop: "20px", marginBottom: "10px", textAlign: "center" }}
+          style={{
+            fontSize: "28px",
+            marginTop: "20px",
+            marginBottom: "10px",
+            textAlign: "center",
+          }}
         >
           {vehicle.year} {vehicle.make} {vehicle.model}
           {vehicle.variant && (
@@ -418,10 +433,20 @@ function VehicleDetails() {
           )}
         </h2>
         {/* <p>{vehicle.variant ? vehicle.variant : ""}</p> */}
-        <h1 style={{ fontSize: "36px", color: "#333", margin: "10px 0", textAlign: "center" }}>
+        <h1
+          style={{
+            fontSize: "36px",
+            color: "#333",
+            margin: "10px 0",
+            textAlign: "center",
+          }}
+        >
           ₹{vehicle.price.toLocaleString("en-IN")}
         </h1>
-        <table className="vehicle-details-table" style={{ width: "100%", tableLayout: "fixed" }}>
+        <table
+          className="vehicle-details-table"
+          style={{ width: "100%", tableLayout: "fixed" }}
+        >
           <tbody>
             {isMobileScreen ? (
               // Mobile View: 2 Columns (Property | Value)
@@ -442,21 +467,23 @@ function VehicleDetails() {
                   <td className="td-wrap">
                     <strong>Odometer:</strong>
                   </td>
-                  <td className="td-wrap">{vehicle.odometer.toLocaleString("en-IN")} km</td>
+                  <td className="td-wrap">
+                    {vehicle.odometer.toLocaleString("en-IN")} km
+                  </td>
                 </tr>
                 <tr>
                   <td className="td-wrap">
                     <strong>No. of Owners:</strong>
                   </td>
-                  <td className="td-wrap">
-                    {vehicle.ownership}
-                  </td>
+                  <td className="td-wrap">{vehicle.ownership}</td>
                 </tr>
                 <tr>
                   <td className="td-wrap">
                     <strong>State:</strong>
                   </td>
-                  <td className="td-wrap">{vehicle.state ? vehicle.state : "--"}</td>
+                  <td className="td-wrap">
+                    {vehicle.state ? vehicle.state : "--"}
+                  </td>
                 </tr>
                 <tr>
                   <td className="td-wrap">
@@ -485,13 +512,13 @@ function VehicleDetails() {
                   <td className="td-wrap">
                     {vehicle.createdAt
                       ? new Date(vehicle.createdAt).toLocaleDateString(
-                        "en-GB",
-                        {
-                          day: "numeric",
-                          month: "long",
-                          year: "numeric",
-                        },
-                      )
+                          "en-GB",
+                          {
+                            day: "numeric",
+                            month: "long",
+                            year: "numeric",
+                          },
+                        )
                       : "--"}
                   </td>
                 </tr>
@@ -500,19 +527,25 @@ function VehicleDetails() {
                     <strong>Seller:</strong>
                   </td>
                   <td className="td-wrap">
-                    <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "nowrap", minWidth: 0, overflow: "hidden" }}>
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "8px",
+                        flexWrap: "wrap",
+                      }}
+                    >
                       {seller ? (
-                        <Link to={`/user/${seller._id}`} style={{ flexShrink: 1, minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                          {seller.name}
-                        </Link>
+                        <Link to={`/user/${seller._id}`}>{seller.name}</Link>
                       ) : (
                         "Loading seller details..."
                       )}
                       {seller && seller.phoneNumber && (
                         <WhatsAppButton
-                          href={isMobile()
-                            ? `whatsapp://send?phone=${seller.phoneNumber}&text=I'm%20interested%20in%20your%20car%20for%20sale%20(${vehicle.make}%20${vehicle.model})%0A${window.location.origin}/vehicle/${vehicle._id}/${slug}`
-                            : `https://wa.me/${seller.phoneNumber}?text=I'm%20interested%20in%20your%20car%20for%20sale%20(${vehicle.make}%20${vehicle.model})%0A${window.location.origin}/vehicle/${vehicle._id}/${slug}`
+                          href={
+                            isMobile()
+                              ? `whatsapp://send?phone=${seller.phoneNumber}&text=I'm%20interested%20in%20your%20car%20for%20sale%20(${vehicle.make}%20${vehicle.model})%0A${window.location.origin}/vehicle/${vehicle._id}/${slug}`
+                              : `https://wa.me/${seller.phoneNumber}?text=I'm%20interested%20in%20your%20car%20for%20sale%20(${vehicle.make}%20${vehicle.model})%0A${window.location.origin}/vehicle/${vehicle._id}/${slug}`
                           }
                         />
                       )}
@@ -524,7 +557,7 @@ function VehicleDetails() {
               // Desktop View: 4 Columns (Property | Value | Property | Value)
               <>
                 <tr>
-                  <td className="td-wrap" >
+                  <td className="td-wrap">
                     <strong>Fuel Type:</strong>
                   </td>
                   <td className="td-wrap">{vehicle.fuelType}</td>
@@ -537,17 +570,21 @@ function VehicleDetails() {
                   <td className="td-wrap">
                     <strong>Odometer:</strong>
                   </td>
-                  <td className="td-wrap">{vehicle.odometer.toLocaleString("en-IN")} km</td>
+                  <td className="td-wrap">
+                    {vehicle.odometer.toLocaleString("en-IN")} km
+                  </td>
                   <td className="td-wrap">
                     <strong>No. of Owners:</strong>
                   </td>
                   <td className="td-wrap">{vehicle.ownership}</td>
                 </tr>
                 <tr>
-                  <td className="td-wrap" >
+                  <td className="td-wrap">
                     <strong>State:</strong>
                   </td>
-                  <td className="td-wrap">{vehicle.state ? vehicle.state : "--"}</td>
+                  <td className="td-wrap">
+                    {vehicle.state ? vehicle.state : "--"}
+                  </td>
                   <td className="td-wrap">
                     <strong>Location:</strong>
                   </td>
@@ -572,13 +609,13 @@ function VehicleDetails() {
                   <td className="td-wrap">
                     {vehicle.createdAt
                       ? new Date(vehicle.createdAt).toLocaleDateString(
-                        "en-GB",
-                        {
-                          day: "numeric",
-                          month: "long",
-                          year: "numeric",
-                        },
-                      )
+                          "en-GB",
+                          {
+                            day: "numeric",
+                            month: "long",
+                            year: "numeric",
+                          },
+                        )
                       : "--"}
                   </td>
                 </tr>
@@ -653,11 +690,12 @@ function VehicleDetails() {
             </div>
           )}
           <img
-            className={`modal-content ${!allImagesPreloaded ? "loading-effect" : ""
-              }`} // Add loading effect class
+            className={`modal-content ${
+              !allImagesPreloaded ? "loading-effect" : ""
+            }`} // Add loading effect class
             src={currentImageSrc} // Use currentImageSrc for consistent loading logic
             alt={`${vehicle.make} ${vehicle.model}`}
-          // style={{ opacity: allImagesPreloaded ? 1 : 0, transition: 'opacity 0.3s ease-in-out' }} // Optional fade-in
+            // style={{ opacity: allImagesPreloaded ? 1 : 0, transition: 'opacity 0.3s ease-in-out' }} // Optional fade-in
           />
           {/* Next Button */}
           {vehicle.images?.length > 1 && (
@@ -674,8 +712,9 @@ function VehicleDetails() {
               {vehicle.images.map((_, index) => (
                 <span
                   key={index}
-                  className={`image-dot ${index === currentImageIndex ? "active" : ""
-                    }`}
+                  className={`image-dot ${
+                    index === currentImageIndex ? "active" : ""
+                  }`}
                   onClick={() => setCurrentImageIndex(index)}
                 ></span>
               ))}
