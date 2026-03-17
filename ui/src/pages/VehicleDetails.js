@@ -30,7 +30,7 @@ function VehicleDetails() {
   const [touchCountStart, setTouchCountStart] = useState(0);
   const [allImagesPreloaded, setAllImagesPreloaded] = useState(false);
   const preloadedImagesRef = useRef([]);
-  const [showNavButtons, setShowNavButtons] = useState(false);
+  // const [showNavButtons, setShowNavButtons] = useState(false);
 
   const handleTouchStart = (e) => {
     setTouchStartX(e.touches[0].clientX);
