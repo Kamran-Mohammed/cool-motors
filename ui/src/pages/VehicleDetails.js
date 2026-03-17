@@ -333,9 +333,8 @@ function VehicleDetails() {
           className="image-container"
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
-          // NEW: Mouse events for desktop hover effect
-          onMouseEnter={() => !isMobileScreen && setShowNavButtons(true)}
-          onMouseLeave={() => !isMobileScreen && setShowNavButtons(false)}
+          // onMouseEnter={() => !isMobileScreen && setShowNavButtons(true)}
+          // onMouseLeave={() => !isMobileScreen && setShowNavButtons(false)}
         >
           {/* NEW: Conditional rendering for loading state or preloaded image */}
           {!allImagesPreloaded && (
@@ -382,9 +381,7 @@ function VehicleDetails() {
               src={left}
               alt="Previous"
               onClick={prevImage}
-              className={`img-nav-button left ${
-                showNavButtons || isMobileScreen ? "visible" : ""
-              }`}
+              className={`img-nav-button left`}
             />
           )}
 
@@ -394,9 +391,7 @@ function VehicleDetails() {
               src={right}
               alt="Next"
               onClick={nextImage}
-              className={`img-nav-button right ${
-                showNavButtons || isMobileScreen ? "visible" : ""
-              }`}
+              className={`img-nav-button right`}
             />
           )}
 
