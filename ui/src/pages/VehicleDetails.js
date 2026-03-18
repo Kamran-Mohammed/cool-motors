@@ -276,11 +276,7 @@ function VehicleDetails() {
       <div
         className={`vehicle-details ${isModalOpen ? "blur-background" : ""}`}
       >
-        <div
-          className="image-container"
-          // onTouchStart={handleTouchStart}
-          // onTouchEnd={handleTouchEnd}
-        >
+        <div className="image-container">
           {/* NEW: Conditional rendering for loading state or preloaded image */}
           {!allImagesPreloaded && (
             <div className="image-loading-overlay">
@@ -298,6 +294,8 @@ function VehicleDetails() {
               objectFit: "contain",
             }}
             onClick={openImageModal}
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
           />
           <button onClick={handleShare} className="share-button">
             <FaShareAlt style={{ width: "30px", height: "30px" }} />{" "}
@@ -600,11 +598,7 @@ function VehicleDetails() {
       </div>
       {/* Modal */}
       {isModalOpen && (
-        <div
-          className="modal"
-          onTouchStart={handleTouchStart}
-          onTouchEnd={handleTouchEnd}
-        >
+        <div className="modal">
           <span className="close" onClick={closeModal}>
             &times;
           </span>
@@ -620,6 +614,8 @@ function VehicleDetails() {
               alt="Previuos"
               onClick={prevImage}
               className="img-nav-button left modal-img-nav-button"
+              onTouchStart={handleTouchStart}
+              onTouchEnd={handleTouchEnd}
             />
           )}
           {!allImagesPreloaded && (

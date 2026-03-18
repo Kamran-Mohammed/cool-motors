@@ -282,11 +282,7 @@ function PendingVehicle() {
           backgroundColor: "#a9f2b9",
         }}
       >
-        <div
-          className="image-container"
-          onTouchStart={handleTouchStart}
-          onTouchEnd={handleTouchEnd}
-        >
+        <div className="image-container">
           {/* NEW: Conditional rendering for loading state or preloaded image */}
           {!allImagesPreloaded && (
             <div className="image-loading-overlay">
@@ -304,6 +300,8 @@ function PendingVehicle() {
               objectFit: "contain",
             }}
             onClick={openImageModal}
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
           />
           {
             <div className="image-counter">
@@ -564,11 +562,7 @@ function PendingVehicle() {
       </div>
       {/* Modal */}
       {isModalOpen && (
-        <div
-          className="modal"
-          onTouchStart={handleTouchStart}
-          onTouchEnd={handleTouchEnd}
-        >
+        <div className="modal">
           <span className="close" onClick={closeModal}>
             &times;
           </span>
@@ -584,6 +578,8 @@ function PendingVehicle() {
               alt="Previuos"
               onClick={prevImage}
               className="img-nav-button left"
+              onTouchStart={handleTouchStart}
+              onTouchEnd={handleTouchEnd}
             />
           )}
           {/* <img
