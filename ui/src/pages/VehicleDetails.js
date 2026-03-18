@@ -273,6 +273,58 @@ function VehicleDetails() {
 
   return (
     <div>
+      {vehicle && (
+        <Helmet>
+          <title>
+            {`
+            ${vehicle.make} ${vehicle.model}${" "}
+            ${vehicle.variant ? `(${vehicle.variant})` : ""} for Sale in India (${vehicle.year}) |
+            Autofinds`}
+          </title>
+
+          <meta
+            name="description"
+            content={`Buy ${vehicle.make} ${vehicle.model} ${vehicle.variant ? `(${vehicle.variant})` : ""} ${vehicle.year} in ${vehicle.location}, ${vehicle.state}. Price ₹${vehicle.price.toLocaleString(
+              "en-IN",
+            )}. View photos, details & contact seller directly on Autofinds.`}
+          />
+
+          <link
+            rel="canonical"
+            href={`https://www.autofinds.in/vehicle/${vehicle._id}/${slug}`}
+          />
+
+          <meta property="og:type" content="website" />
+          <meta property="og:site_name" content="Autofinds" />
+          <meta
+            property="og:title"
+            content={`${vehicle.year} ${vehicle.make} ${vehicle.model}${
+              vehicle.variant ? ` ${vehicle.variant}` : ""
+            } for Sale`}
+          />
+          <meta
+            property="og:description"
+            content={`₹${vehicle.price.toLocaleString(
+              "en-IN",
+            )} · ${vehicle.location}, ${vehicle.state} · Contact seller directly`}
+          />
+          <meta
+            property="og:url"
+            content={`https://www.autofinds.in/vehicle/${vehicle._id}/${slug}`}
+          />
+          <meta
+            property="og:image"
+            content={
+              vehicle.images?.[0] ||
+              "https://www.autofinds.in/default-preview.jpg"
+            }
+          />
+          <meta property="og:image:width" content="1200" />
+          <meta property="og:image:height" content="630" />
+
+          <meta name="twitter:card" content="summary_large_image" />
+        </Helmet>
+      )}
       <div
         className={`vehicle-details ${isModalOpen ? "blur-background" : ""}`}
       >
