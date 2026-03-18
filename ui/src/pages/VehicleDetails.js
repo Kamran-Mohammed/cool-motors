@@ -278,8 +278,8 @@ function VehicleDetails() {
       >
         <div
           className="image-container"
-          onTouchStart={handleTouchStart}
-          onTouchEnd={handleTouchEnd}
+          // onTouchStart={handleTouchStart}
+          // onTouchEnd={handleTouchEnd}
         >
           {/* NEW: Conditional rendering for loading state or preloaded image */}
           {!allImagesPreloaded && (

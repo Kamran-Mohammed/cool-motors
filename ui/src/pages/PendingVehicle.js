@@ -302,9 +302,6 @@ function PendingVehicle() {
             }`} // Add loading effect class
             style={{
               objectFit: "contain",
-              // NEW: Make image invisible until preloaded if not showing overlay
-              // opacity: allImagesPreloaded ? 1 : 0,
-              // transition: 'opacity 0.3s ease-in-out', // Smooth fade-in
             }}
             onClick={openImageModal}
           />
