@@ -30,7 +30,6 @@ function VehicleDetails() {
   const [touchCountStart, setTouchCountStart] = useState(0);
   const [allImagesPreloaded, setAllImagesPreloaded] = useState(false);
   const preloadedImagesRef = useRef([]);
-  // const [showNavButtons, setShowNavButtons] = useState(false);
 
   const handleTouchStart = (e) => {
     setTouchStartX(e.touches[0].clientX);
@@ -329,13 +328,7 @@ function VehicleDetails() {
       <div
         className={`vehicle-details ${isModalOpen ? "blur-background" : ""}`}
       >
-        <div
-          className="image-container"
-          onTouchStart={handleTouchStart}
-          onTouchEnd={handleTouchEnd}
-          // onMouseEnter={() => !isMobileScreen && setShowNavButtons(true)}
-          // onMouseLeave={() => !isMobileScreen && setShowNavButtons(false)}
-        >
+        <div className="image-container">
           {/* NEW: Conditional rendering for loading state or preloaded image */}
           {!allImagesPreloaded && (
             <div className="image-loading-overlay">
@@ -374,7 +367,7 @@ function VehicleDetails() {
               {currentImageIndex + 1}/{vehicle.images.length}
             </div>
           }
-          {/* Previous Button - MODIFIED: Conditional class for visibility */}
+          {/* Previous Button */}
           {vehicle.images?.length > 1 && (
             <img
               src={left}
@@ -384,7 +377,7 @@ function VehicleDetails() {
             />
           )}
 
-          {/* Next Button - MODIFIED: Conditional class for visibility */}
+          {/* Next Button */}
           {vehicle.images?.length > 1 && (
             <img
               src={right}
@@ -655,11 +648,7 @@ function VehicleDetails() {
       </div>
       {/* Modal */}
       {isModalOpen && (
-        <div
-          className="modal"
-          onTouchStart={handleTouchStart}
-          onTouchEnd={handleTouchEnd}
-        >
+        <div className="modal">
           <span className="close" onClick={closeModal}>
             &times;
           </span>
@@ -689,7 +678,8 @@ function VehicleDetails() {
             }`} // Add loading effect class
             src={currentImageSrc} // Use currentImageSrc for consistent loading logic
             alt={`${vehicle.make} ${vehicle.model}`}
-            // style={{ opacity: allImagesPreloaded ? 1 : 0, transition: 'opacity 0.3s ease-in-out' }} // Optional fade-in
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
           />
           {/* Next Button */}
           {vehicle.images?.length > 1 && (

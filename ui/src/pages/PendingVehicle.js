@@ -282,11 +282,7 @@ function PendingVehicle() {
           backgroundColor: "#a9f2b9",
         }}
       >
-        <div
-          className="image-container"
-          onTouchStart={handleTouchStart}
-          onTouchEnd={handleTouchEnd}
-        >
+        <div className="image-container">
           {/* NEW: Conditional rendering for loading state or preloaded image */}
           {!allImagesPreloaded && (
             <div className="image-loading-overlay">
@@ -302,9 +298,6 @@ function PendingVehicle() {
             }`} // Add loading effect class
             style={{
               objectFit: "contain",
-              // NEW: Make image invisible until preloaded if not showing overlay
-              // opacity: allImagesPreloaded ? 1 : 0,
-              // transition: 'opacity 0.3s ease-in-out', // Smooth fade-in
             }}
             onClick={openImageModal}
           />
@@ -567,11 +560,7 @@ function PendingVehicle() {
       </div>
       {/* Modal */}
       {isModalOpen && (
-        <div
-          className="modal"
-          onTouchStart={handleTouchStart}
-          onTouchEnd={handleTouchEnd}
-        >
+        <div className="modal">
           <span className="close" onClick={closeModal}>
             &times;
           </span>
@@ -608,6 +597,8 @@ function PendingVehicle() {
             src={currentImageSrc} // Use currentImageSrc for consistent loading logic
             alt={`${vehicle.make} ${vehicle.model}`}
             // style={{ opacity: allImagesPreloaded ? 1 : 0, transition: 'opacity 0.3s ease-in-out' }} // Optional fade-in
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
           />
           {/* Next Button */}
           {vehicle.images?.length > 1 && (
