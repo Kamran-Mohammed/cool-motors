@@ -24,6 +24,7 @@ function PendingVehicle() {
   const [isMobileScreen, setIsMobileScreen] = useState(window.innerWidth < 768);
   const [touchStartX, setTouchStartX] = useState(0);
   const [touchEndX, setTouchEndX] = useState(0);
+  const [touchCountStart, setTouchCountStart] = useState(0);
   // NEW: State to track if all images are preloaded
   const [allImagesPreloaded, setAllImagesPreloaded] = useState(false);
   // NEW: Ref to store preloaded Image objects (not directly used in JSX, but holds the data)
@@ -31,9 +32,14 @@ function PendingVehicle() {
 
   const handleTouchStart = (e) => {
     setTouchStartX(e.touches[0].clientX);
+    setTouchCountStart(e.touches.length);
   };
 
   const handleTouchEnd = (e) => {
+    if (touchCountStart !== 1 || e.changedTouches.length !== 1) {
+      setTouchCountStart(0);
+      return;
+    }
     setTouchEndX(e.changedTouches[0].clientX);
     const deltaX = e.changedTouches[0].clientX - touchStartX;
     const threshold = 50; // Minimum swipe distance
@@ -42,6 +48,7 @@ function PendingVehicle() {
     } else if (deltaX < -threshold) {
       nextImage(); // Swipe left → show next image
     }
+    setTouchCountStart(0);
   };
 
   useEffect(() => {
@@ -62,7 +69,7 @@ function PendingVehicle() {
           `${process.env.REACT_APP_API_URL}/api/v1/pending-vehicles/${id}`,
           {
             withCredentials: true,
-          }
+          },
         );
         if (!vehicleResponse.data.data.vehicle) {
           setError("No pending vehicles");
@@ -77,7 +84,7 @@ function PendingVehicle() {
             `${process.env.REACT_APP_API_URL}/api/v1/users/${fetchedVehicle.listedBy}`,
             {
               withCredentials: true,
-            }
+            },
           );
           setSeller(sellerResponse.data.data.user);
         }
@@ -131,7 +138,7 @@ function PendingVehicle() {
         `${process.env.REACT_APP_API_URL}/api/v1/pending-vehicles/${id}/next`,
         {
           withCredentials: true,
-        }
+        },
       );
       return response.data?.data?.nextVehicle?._id || null;
     } catch (err) {
@@ -153,7 +160,7 @@ function PendingVehicle() {
         {},
         {
           withCredentials: true,
-        }
+        },
       );
       //   fetchVehicle(); // Fetch next vehicle after approval
       if (nextVehicleId) {
@@ -180,7 +187,7 @@ function PendingVehicle() {
         `${process.env.REACT_APP_API_URL}/api/v1/pending-vehicles/${vehicle._id}/disapprove`,
         {
           withCredentials: true,
-        }
+        },
       );
       //   fetchVehicle(); // Fetch next vehicle after disapproval
       if (nextVehicleId) {
@@ -197,13 +204,13 @@ function PendingVehicle() {
 
   const nextImage = useCallback(() => {
     setCurrentImageIndex((prevIndex) =>
-      prevIndex === vehicle.images.length - 1 ? 0 : prevIndex + 1
+      prevIndex === vehicle.images.length - 1 ? 0 : prevIndex + 1,
     );
   }, [vehicle]);
 
   const prevImage = useCallback(() => {
     setCurrentImageIndex((prevIndex) =>
-      prevIndex === 0 ? vehicle.images.length - 1 : prevIndex - 1
+      prevIndex === 0 ? vehicle.images.length - 1 : prevIndex - 1,
     );
   }, [vehicle]);
 
@@ -409,7 +416,7 @@ function PendingVehicle() {
                             day: "numeric",
                             month: "long",
                             year: "numeric",
-                          }
+                          },
                         )
                       : "--"}
                   </td>
@@ -499,7 +506,7 @@ function PendingVehicle() {
                             day: "numeric",
                             month: "long",
                             year: "numeric",
-                          }
+                          },
                         )
                       : "--"}
                   </td>

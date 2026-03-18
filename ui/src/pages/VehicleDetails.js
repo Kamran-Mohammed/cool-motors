@@ -30,7 +30,7 @@ function VehicleDetails() {
   const [touchCountStart, setTouchCountStart] = useState(0);
   const [allImagesPreloaded, setAllImagesPreloaded] = useState(false);
   const preloadedImagesRef = useRef([]);
-  const [showNavButtons, setShowNavButtons] = useState(false);
+  // const [showNavButtons, setShowNavButtons] = useState(false);
 
   const handleTouchStart = (e) => {
     setTouchStartX(e.touches[0].clientX);
@@ -333,9 +333,8 @@ function VehicleDetails() {
           className="image-container"
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
-          // NEW: Mouse events for desktop hover effect
-          onMouseEnter={() => !isMobileScreen && setShowNavButtons(true)}
-          onMouseLeave={() => !isMobileScreen && setShowNavButtons(false)}
+          // onMouseEnter={() => !isMobileScreen && setShowNavButtons(true)}
+          // onMouseLeave={() => !isMobileScreen && setShowNavButtons(false)}
         >
           {/* NEW: Conditional rendering for loading state or preloaded image */}
           {!allImagesPreloaded && (
@@ -352,7 +351,6 @@ function VehicleDetails() {
             }`} // Add loading effect class
             style={{
               objectFit: "contain",
-              // NEW: Make image invisible until preloaded if not showing overlay
             }}
             onClick={openImageModal}
           />
@@ -382,9 +380,7 @@ function VehicleDetails() {
               src={left}
               alt="Previous"
               onClick={prevImage}
-              className={`img-nav-button left ${
-                showNavButtons || isMobileScreen ? "visible" : ""
-              }`}
+              className={`img-nav-button left`}
             />
           )}
 
@@ -394,9 +390,7 @@ function VehicleDetails() {
               src={right}
               alt="Next"
               onClick={nextImage}
-              className={`img-nav-button right ${
-                showNavButtons || isMobileScreen ? "visible" : ""
-              }`}
+              className={`img-nav-button right`}
             />
           )}
 
