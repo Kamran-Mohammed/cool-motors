@@ -351,7 +351,6 @@ function VehicleDetails() {
             }`} // Add loading effect class
             style={{
               objectFit: "contain",
-              // NEW: Make image invisible until preloaded if not showing overlay
             }}
             onClick={openImageModal}
           />
