@@ -346,8 +346,6 @@ function VehicleDetails() {
               objectFit: "contain",
             }}
             onClick={openImageModal}
-            onTouchStart={handleTouchStart}
-            onTouchEnd={handleTouchEnd}
           />
           <button onClick={handleShare} className="share-button">
             <FaShareAlt style={{ width: "30px", height: "30px" }} />{" "}
@@ -666,8 +664,6 @@ function VehicleDetails() {
               alt="Previuos"
               onClick={prevImage}
               className="img-nav-button left modal-img-nav-button"
-              onTouchStart={handleTouchStart}
-              onTouchEnd={handleTouchEnd}
             />
           )}
           {!allImagesPreloaded && (
@@ -682,7 +678,8 @@ function VehicleDetails() {
             }`} // Add loading effect class
             src={currentImageSrc} // Use currentImageSrc for consistent loading logic
             alt={`${vehicle.make} ${vehicle.model}`}
-            // style={{ opacity: allImagesPreloaded ? 1 : 0, transition: 'opacity 0.3s ease-in-out' }} // Optional fade-in
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
           />
           {/* Next Button */}
           {vehicle.images?.length > 1 && (

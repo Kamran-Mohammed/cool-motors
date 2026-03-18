@@ -300,8 +300,6 @@ function PendingVehicle() {
               objectFit: "contain",
             }}
             onClick={openImageModal}
-            onTouchStart={handleTouchStart}
-            onTouchEnd={handleTouchEnd}
           />
           {
             <div className="image-counter">
@@ -578,8 +576,6 @@ function PendingVehicle() {
               alt="Previuos"
               onClick={prevImage}
               className="img-nav-button left"
-              onTouchStart={handleTouchStart}
-              onTouchEnd={handleTouchEnd}
             />
           )}
           {/* <img
@@ -601,6 +597,8 @@ function PendingVehicle() {
             src={currentImageSrc} // Use currentImageSrc for consistent loading logic
             alt={`${vehicle.make} ${vehicle.model}`}
             // style={{ opacity: allImagesPreloaded ? 1 : 0, transition: 'opacity 0.3s ease-in-out' }} // Optional fade-in
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
           />
           {/* Next Button */}
           {vehicle.images?.length > 1 && (
