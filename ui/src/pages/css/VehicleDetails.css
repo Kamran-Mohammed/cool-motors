@@ -257,7 +257,9 @@
   /* You can make it slightly transparent or even hide it completely */
   opacity: 0.1; /* Example: make it very dim */
   /* filter: blur(5px); */ /* Example: add a blur effect */
-  transition: opacity 0.3s ease-in-out, filter 0.3s ease-in-out;
+  transition:
+    opacity 0.3s ease-in-out,
+    filter 0.3s ease-in-out;
 }
 
 /* When images are loaded, remove the loading effect */
@@ -310,7 +312,9 @@
   background-color: rgba(255, 255, 255, 0.5); /* Inactive dot color */
   border-radius: 50%; /* Make them circular */
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  transition:
+    background-color 0.3s ease,
+    transform 0.2s ease;
 }
 
 .image-dot.active {
