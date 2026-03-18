@@ -30,7 +30,7 @@ function VehicleDetails() {
   const [touchCountStart, setTouchCountStart] = useState(0);
   const [allImagesPreloaded, setAllImagesPreloaded] = useState(false);
   const preloadedImagesRef = useRef([]);
-  // const [showNavButtons, setShowNavButtons] = useState(false);
+  const [testCounter, setTestCounter] = useState(0);
 
   const handleTouchStart = (e) => {
     setTouchStartX(e.touches[0].clientX);
@@ -383,6 +383,7 @@ function VehicleDetails() {
         >
           ₹{vehicle.price.toLocaleString("en-IN")}
         </h1>
+        <h2 onClick={() => setTestCounter(testCounter + 1)}>{testCounter}</h2>
         <table
           className="vehicle-details-table"
           style={{ width: "100%", tableLayout: "fixed" }}
