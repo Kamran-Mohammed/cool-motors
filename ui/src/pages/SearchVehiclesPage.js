@@ -10,6 +10,7 @@ import {
   states,
   carMakes,
   carModels,
+  carMakeModels,
   fuelTypes,
   transmissions,
   engineTypes,
@@ -82,7 +83,7 @@ const SearchVehiclesPage = () => {
             {
               params: { page: pagination.page, sort: "DateNto" }, // 👈 added sort
               withCredentials: true,
-            }
+            },
           );
 
           setVehicles(response.data.data.vehicles);
@@ -108,7 +109,7 @@ const SearchVehiclesPage = () => {
           {
             params: { ...activeFilters, page: pagination.page }, // Include page parameter
             withCredentials: true,
-          }
+          },
         );
 
         setVehicles(response.data.data.vehicles);
@@ -125,7 +126,7 @@ const SearchVehiclesPage = () => {
         setLoading(false);
       }
     },
-    [pagination.page, location.search]
+    [pagination.page, location.search],
   );
 
   useEffect(() => {
@@ -151,9 +152,21 @@ const SearchVehiclesPage = () => {
     fetchVehicles(filtersForFetch);
   }, [location.search, fetchVehicles]);
 
+  const availableModels = (() => {
+    if (!filters.make) return carModels;
+    const matchedKey = Object.keys(carMakeModels).find(
+      (k) => k.toLowerCase() === filters.make.toLowerCase(),
+    );
+    return matchedKey ? carMakeModels[matchedKey] : carModels;
+  })();
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFilters({ ...filters, [name]: value });
+    setFilters({
+      ...filters,
+      [name]: value,
+      ...(name === "make" ? { model: "" } : {}),
+    });
   };
 
   const formatPrice = (value) => {
@@ -192,7 +205,7 @@ const SearchVehiclesPage = () => {
         if (value) acc[key] = value;
         return acc;
       },
-      {}
+      {},
     );
 
     setPagination((prev) => ({ ...prev, page: 1 }));
@@ -233,7 +246,7 @@ const SearchVehiclesPage = () => {
   const handlePageChange = (newPage) => {
     setPagination((prev) => ({ ...prev, page: newPage }));
     navigate(
-      `/search?${new URLSearchParams({ ...filters, page: newPage }).toString()}`
+      `/search?${new URLSearchParams({ ...filters, page: newPage }).toString()}`,
     );
     window.scrollTo({
       top: 0,
@@ -285,7 +298,7 @@ const SearchVehiclesPage = () => {
                 className="filter-input"
               />
               <datalist id="carModels">
-                {carModels.map((model) => (
+                {availableModels.map((model) => (
                   <option key={model} value={model} />
                 ))}
               </datalist>

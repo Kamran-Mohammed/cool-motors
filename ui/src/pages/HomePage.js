@@ -1,13 +1,47 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import VehicleCard from "../utils/VehicleCard";
 import "./css/HomePage.css";
 import HeroSection from "../utils/HeroSection";
+import { carMakes, carModels, carMakeModels, states } from "../utils/data";
 
 const HomePage = () => {
+  const navigate = useNavigate();
   const [vehicles, setVehicles] = useState([]);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
+  const [homeFilters, setHomeFilters] = useState({
+    make: "",
+    model: "",
+    state: "",
+  });
+
+  const availableModels = (() => {
+    if (!homeFilters.make) return carModels;
+    const matchedKey = Object.keys(carMakeModels).find(
+      (k) => k.toLowerCase() === homeFilters.make.toLowerCase(),
+    );
+    return matchedKey ? carMakeModels[matchedKey] : carModels;
+  })();
+
+  const handleHomeFilterChange = (e) => {
+    const { name, value } = e.target;
+    setHomeFilters((prev) => ({
+      ...prev,
+      [name]: value,
+      ...(name === "make" ? { model: "" } : {}),
+    }));
+  };
+
+  const handleHomeApplyFilters = (e) => {
+    e.preventDefault();
+    const params = new URLSearchParams();
+    if (homeFilters.make) params.append("make", homeFilters.make);
+    if (homeFilters.model) params.append("model", homeFilters.model);
+    if (homeFilters.state) params.append("state", homeFilters.state);
+    navigate(`/search?${params.toString()}`);
+  };
 
   const fetchVehicles = async () => {
     setLoading(true);
@@ -35,6 +69,57 @@ const HomePage = () => {
   return (
     <>
       <HeroSection />
+      <div className="home-filters">
+        <form className="filter-row" onSubmit={handleHomeApplyFilters}>
+          <input
+            type="text"
+            name="make"
+            value={homeFilters.make}
+            placeholder="Brand"
+            onChange={handleHomeFilterChange}
+            list="homeMakes"
+            className="filter-input"
+          />
+          <datalist id="homeMakes">
+            {carMakes.map((make) => (
+              <option key={make} value={make} />
+            ))}
+          </datalist>
+
+          <input
+            type="text"
+            name="model"
+            value={homeFilters.model}
+            placeholder="Model"
+            onChange={handleHomeFilterChange}
+            list="homeModels"
+            className="filter-input"
+          />
+          <datalist id="homeModels">
+            {availableModels.map((model) => (
+              <option key={model} value={model} />
+            ))}
+          </datalist>
+
+          <select
+            name="state"
+            value={homeFilters.state}
+            onChange={handleHomeFilterChange}
+            className={`filter-select ${!homeFilters.state ? "placeholder" : ""}`}
+          >
+            <option value="">State</option>
+            {states.map((s) => (
+              <option key={s} value={s}>
+                {s.charAt(0).toUpperCase() + s.slice(1)}
+              </option>
+            ))}
+          </select>
+
+          <button type="submit" className="apply-filter-btn">
+            Search
+          </button>
+        </form>
+      </div>
       <div className="home-container">
         {vehicles.length === 0 && !loading ? (
           <p>Loading vehicles...</p>
