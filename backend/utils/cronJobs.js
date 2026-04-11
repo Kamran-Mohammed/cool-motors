@@ -3,28 +3,28 @@ const User = require("../models/userModel");
 const Vehicle = require("../models/vehicleModel");
 
 function startCronJobs() {
-  //for deleting unverified users:
-  cron.schedule(
-    "0 0 * * *", //runnig everyday at midnight
-    // "* * * * * *", //running every second
-    async () => {
-      try {
-        console.log("Checking for expired and unverified users..");
+  // //for deleting unverified users:
+  // cron.schedule(
+  //   "0 0 * * *", //runnig everyday at midnight
+  //   // "* * * * * *", //running every second
+  //   async () => {
+  //     try {
+  //       console.log("Checking for expired and unverified users..");
 
-        const result = await User.deleteMany({
-          isVerified: false,
-          emailVerificationExpires: { $lte: Date.now() },
-        });
-        if (result.deletedCount > 0)
-          console.log(`Deleted ${result.deletedCount} unverified users.`);
-      } catch (error) {
-        console.error("Error deleting unverified users:", error);
-      }
-    },
-    {
-      timezone: "Asia/Kolkata", // Set to IST (Indian Standard Time)
-    }
-  );
+  //       const result = await User.deleteMany({
+  //         isVerified: false,
+  //         emailVerificationExpires: { $lte: Date.now() },
+  //       });
+  //       if (result.deletedCount > 0)
+  //         console.log(`Deleted ${result.deletedCount} unverified users.`);
+  //     } catch (error) {
+  //       console.error("Error deleting unverified users:", error);
+  //     }
+  //   },
+  //   {
+  //     timezone: "Asia/Kolkata", // Set to IST (Indian Standard Time)
+  //   }
+  // );
 
   // //for deleting expired vehicles:
   // cron.schedule(
