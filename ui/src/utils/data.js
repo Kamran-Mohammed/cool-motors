@@ -686,6 +686,7 @@ exports.locations = [
   "Perambalur",
   "Phek",
   "Pilibhit",
+  "Pimpri-Chinchwad",
   "Pithoragarh",
   "Pondicherry",
   "Poonch",
@@ -938,6 +939,7 @@ exports.carMakes = [
   "Magenta",
   "Mahindra",
   "Maruti",
+  "Maruti Suzuki",
   "Maserati",
   "Mastretta",
   "Mazda",
@@ -1437,7 +1439,7 @@ exports.carModels = [
 
 // Brand to Models mapping for search suggestions
 exports.carMakeModels = {
-  Abarth: ["500", "595 Competizione", "Abarth Punto"],
+  Abarth: ["500", "595 Competizione"],
   Audi: [
     "A3",
     "A4",
@@ -1544,6 +1546,7 @@ exports.carMakeModels = {
     "Siena",
     "Uno",
     "Avventura",
+    "Abarth Punto"
   ],
   Ford: [
     "Aspire",

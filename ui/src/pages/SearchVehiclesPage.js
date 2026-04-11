@@ -4,8 +4,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import VehicleCard from "../utils/VehicleCard";
 import Alert from "../utils/Alert";
-import Slider from "rc-slider";
-import "rc-slider/assets/index.css";
+import * as RadixSlider from "@radix-ui/react-slider";
 import {
   locations,
   states,
@@ -224,6 +223,8 @@ const SearchVehiclesPage = () => {
       sort: "",
     };
     setFilters(defaultFilters);
+    setPriceRange([PRICE_MIN, PRICE_MAX]);
+    setOdoRange([ODO_MIN, ODO_MAX]);
     setPagination({ page: 1, totalPages: 1 });
     navigate("/search"); // Navigate to base search URL
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -416,26 +417,20 @@ const SearchVehiclesPage = () => {
                   Price: {formatPrice(priceRange[0])} -{" "}
                   {formatPrice(priceRange[1])}
                 </label>
-                <Slider
-                  range
+                <RadixSlider.Root
+                  className="slider-root"
                   min={PRICE_MIN}
                   max={PRICE_MAX}
                   step={PRICE_STEP}
                   value={priceRange}
-                  onChange={handlePriceChange}
-                  draggableTrack={false}
-                  trackStyle={[{ backgroundColor: "var(--color-primary)" }]}
-                  handleStyle={[
-                    {
-                      borderColor: "var(--color-primary)",
-                      backgroundColor: "var(--color-primary)",
-                    },
-                    {
-                      borderColor: "var(--color-primary)",
-                      backgroundColor: "var(--color-primary)",
-                    },
-                  ]}
-                />
+                  onValueChange={handlePriceChange}
+                >
+                  <RadixSlider.Track className="slider-track">
+                    <RadixSlider.Range className="slider-range" />
+                  </RadixSlider.Track>
+                  <RadixSlider.Thumb className="slider-thumb" />
+                  <RadixSlider.Thumb className="slider-thumb" />
+                </RadixSlider.Root>
               </div>
 
               {/* Odometer Range Slider */}
@@ -444,26 +439,20 @@ const SearchVehiclesPage = () => {
                   Odometer: {formatOdometer(odoRange[0])} -{" "}
                   {formatOdometer(odoRange[1])}
                 </label>
-                <Slider
-                  range
+                <RadixSlider.Root
+                  className="slider-root"
                   min={ODO_MIN}
                   max={ODO_MAX}
                   step={ODO_STEP}
                   value={odoRange}
-                  onChange={handleOdoChange}
-                  draggableTrack={false}
-                  trackStyle={[{ backgroundColor: "var(--color-primary)" }]}
-                  handleStyle={[
-                    {
-                      borderColor: "var(--color-primary)",
-                      backgroundColor: "var(--color-primary)",
-                    },
-                    {
-                      borderColor: "var(--color-primary)",
-                      backgroundColor: "var(--color-primary)",
-                    },
-                  ]}
-                />
+                  onValueChange={handleOdoChange}
+                >
+                  <RadixSlider.Track className="slider-track">
+                    <RadixSlider.Range className="slider-range" />
+                  </RadixSlider.Track>
+                  <RadixSlider.Thumb className="slider-thumb" />
+                  <RadixSlider.Thumb className="slider-thumb" />
+                </RadixSlider.Root>
               </div>
             </div>
 
