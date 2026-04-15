@@ -18,10 +18,12 @@ const AboutUs = () => {
           </p>
           <p>AutoFinds was created to solve that problem.</p>
           <p>
-            Autofinds.in is a dedicated marketplace built only for car
-            enthusiasts: a single place where interesting, rare, modified,
-            exotic, vintage, and special cars can be discovered, listed, and
-            bought with ease.
+            <strong>
+              Autofinds.in is a dedicated marketplace built only for enthusiast
+              cars:
+            </strong>{" "}
+            a single place where interesting, rare, modified, exotic, vintage,
+            and special cars can be discovered, listed, and bought with ease.
           </p>
         </section>
 
