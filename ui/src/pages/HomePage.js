@@ -42,6 +42,7 @@ const HomePage = () => {
     if (homeFilters.make) params.append("make", homeFilters.make);
     if (homeFilters.model) params.append("model", homeFilters.model);
     if (homeFilters.state) params.append("state", homeFilters.state);
+    params.append("sort", "DateNto");
     navigate(`/search?${params.toString()}`);
   };
 

@@ -28,7 +28,7 @@ const findFuzzyMatch = (tokens, targetList) => {
 
       // 1. Exact phrase match
       const exactMatch = lowerTargetList.find(
-        (item) => item.original.toLowerCase() === phrase
+        (item) => item.original.toLowerCase() === phrase,
       );
       if (exactMatch) {
         return { matched: exactMatch.original, usedPhrase: phrase };
@@ -61,7 +61,7 @@ export const parseSearchQuery = (query) => {
     .replace(/\s+/g, " ");
   const tokens = normalizedQuery.split(/\s+/).filter((t) => t);
 
-  const parsedFilters = { unmatched: [] };
+  const parsedFilters = { unmatched: [], broadSearch: [] };
 
   // Combine all data sources into a single array of items for easier processing later
   // We don't need the Sets anymore, as we're using the centralized findFuzzyMatch helper.
@@ -92,7 +92,11 @@ export const parseSearchQuery = (query) => {
     const result = findFuzzyMatch(unusedTokens, list);
 
     if (result) {
-      parsedFilters[key] = result.matched;
+      if (key === "make" || key === "model") {
+        parsedFilters.broadSearch.push(result.usedPhrase);
+      } else {
+        parsedFilters[key] = result.matched;
+      }
       const matchTokens = result.usedPhrase.toLowerCase().split(" ");
       matchTokens.forEach((t) => usedTokens.add(t));
     }

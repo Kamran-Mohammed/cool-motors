@@ -276,23 +276,41 @@ exports.searchVehicles = catchAsyncError(async (req, res) => {
       $in: filters.location.map((location) => new RegExp(location, "i")),
     };
 
+  // ✅ Handle broadSearch (make/model tokens searched across all fields)
+  const broadSearchWords = req.query.broadSearch
+    ? req.query.broadSearch
+        .split(",")
+        .map((w) => w.trim())
+        .filter(Boolean)
+    : [];
+
   // ✅ Handle unmatched search terms
-  if (req.query.unmatched) {
-    const words = req.query.unmatched
-      .split(",")
-      .map((w) => w.trim())
-      .filter(Boolean);
-    if (words.length > 0) {
-      // Build an OR array — each word will search across multiple text fields
-      searchCriteria.$or = words.map((word) => ({
-        $or: [
-          { make: new RegExp(word, "i") },
-          { model: new RegExp(word, "i") },
-          { variant: new RegExp(word, "i") },
-          { description: new RegExp(word, "i") },
-        ],
-      }));
-    }
+  const unmatchedWords = req.query.unmatched
+    ? req.query.unmatched
+        .split(",")
+        .map((w) => w.trim())
+        .filter(Boolean)
+    : [];
+
+  const buildOrConditions = (words) =>
+    words.map((word) => ({
+      $or: [
+        { make: new RegExp(word, "i") },
+        { model: new RegExp(word, "i") },
+        { variant: new RegExp(word, "i") },
+        { description: new RegExp(word, "i") },
+      ],
+    }));
+
+  if (broadSearchWords.length > 0 && unmatchedWords.length > 0) {
+    searchCriteria.$and = [
+      ...buildOrConditions(broadSearchWords),
+      ...buildOrConditions(unmatchedWords),
+    ];
+  } else if (broadSearchWords.length > 0) {
+    searchCriteria.$or = buildOrConditions(broadSearchWords);
+  } else if (unmatchedWords.length > 0) {
+    searchCriteria.$or = buildOrConditions(unmatchedWords);
   }
 
   // Sorting logic
