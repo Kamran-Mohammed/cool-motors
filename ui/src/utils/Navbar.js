@@ -88,12 +88,12 @@ const Navbar = () => {
           const potentialMake = words.slice(0, i).join(" ");
           const potentialModel = words.slice(i).join(" ");
           const matchingMake = carMakes.find(
-            (make) => make.toLowerCase() === potentialMake.toLowerCase()
+            (make) => make.toLowerCase() === potentialMake.toLowerCase(),
           );
           if (matchingMake) {
             // Check if the remaining part matches a model
             const matchingModel = carModels.find(
-              (model) => model.toLowerCase() === potentialModel.toLowerCase()
+              (model) => model.toLowerCase() === potentialModel.toLowerCase(),
             );
             if (matchingModel) {
               parsedFilters.make = matchingMake;
@@ -106,8 +106,6 @@ const Navbar = () => {
 
         if (!brandModelMatched) {
           const filterLists = [
-            { key: "make", list: carMakes },
-            { key: "model", list: carModels },
             { key: "fuelType", list: fuelTypes },
             { key: "transmission", list: transmissions },
             { key: "engineType", list: engineTypes },
@@ -119,7 +117,7 @@ const Navbar = () => {
           let matched = false;
           for (const { key, list } of filterLists) {
             const exactMatch = list.find(
-              (item) => item.toLowerCase() === query.toLowerCase()
+              (item) => item.toLowerCase() === query.toLowerCase(),
             );
             if (exactMatch) {
               parsedFilters[key] = exactMatch;
@@ -172,7 +170,7 @@ const Navbar = () => {
 
     // Check if input matches a brand - if so, suggest "Brand Model" combinations
     const matchedMake = carMakes.find(
-      (make) => make.toLowerCase() === lowerValue
+      (make) => make.toLowerCase() === lowerValue,
     );
 
     if (matchedMake && carMakeModels[matchedMake]) {
@@ -190,7 +188,7 @@ const Navbar = () => {
       for (let i = words.length; i >= 1; i--) {
         const potentialMake = words.slice(0, i).join(" ");
         const matchingMake = carMakes.find(
-          (make) => make.toLowerCase() === potentialMake.toLowerCase()
+          (make) => make.toLowerCase() === potentialMake.toLowerCase(),
         );
         if (matchingMake && carMakeModels[matchingMake]) {
           foundMakeForPartial = matchingMake;
