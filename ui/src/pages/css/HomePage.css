@@ -5,8 +5,44 @@
 
 /* Quick Filter Strip */
 .home-filters {
+  display: flex;
+  align-items: center;
+  gap: 20px;
   padding: 0 20px 16px;
   box-sizing: border-box;
+}
+
+.home-filters-header {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.home-filters-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.home-filters-toggle {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  color: var(--color-text);
+  align-items: center;
+  justify-content: center;
+}
+
+.filter-icon {
+  width: 20px;
+  height: 20px;
+  transition: color 0.2s ease;
+}
+
+.filter-icon.active {
+  color: var(--color-primary);
 }
 
 .home-filters .filter-row {
@@ -20,7 +56,7 @@
 .home-filters .filter-input,
 .home-filters .filter-select {
   max-width: 700px;
-  min-width: 140px;
+  min-width: 100px !important;
   width: 100%;
   padding: 8px 12px;
   font-size: 0.9rem;
@@ -76,7 +112,22 @@
   }
 }
 
-@media (max-width: 300px) {
+@media (max-width: 600px) {
+  .home-filters {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .home-filters-header {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .home-filters-toggle {
+    display: flex;
+  }
+
   .home-filters .filter-row {
     width: 100%;
   }
@@ -85,10 +136,10 @@
   .home-filters .filter-select,
   .home-filters .apply-filter-btn {
     width: 100%;
+    max-width: 100%;
     box-sizing: border-box;
   }
 }
-
 
 .home-title {
   text-align: center;

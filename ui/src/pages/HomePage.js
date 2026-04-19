@@ -5,12 +5,14 @@ import VehicleCard from "../utils/VehicleCard";
 import "./css/HomePage.css";
 import HeroSection from "../utils/HeroSection";
 import { carMakes, carModels, carMakeModels, states } from "../utils/data";
+import { FiFilter } from "react-icons/fi";
 
 const HomePage = () => {
   const navigate = useNavigate();
   const [vehicles, setVehicles] = useState([]);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
+  const [showFilters, setShowFilters] = useState(() => window.innerWidth > 600);
   const [homeFilters, setHomeFilters] = useState({
     make: "",
     model: "",
@@ -70,55 +72,70 @@ const HomePage = () => {
     <>
       <HeroSection />
       <div className="home-filters">
-        <form className="filter-row" onSubmit={handleHomeApplyFilters}>
-          <input
-            type="text"
-            name="make"
-            value={homeFilters.make}
-            placeholder="Brand"
-            onChange={handleHomeFilterChange}
-            list="homeMakes"
-            className="filter-input"
-          />
-          <datalist id="homeMakes">
-            {carMakes.map((make) => (
-              <option key={make} value={make} />
-            ))}
-          </datalist>
-
-          <input
-            type="text"
-            name="model"
-            value={homeFilters.model}
-            placeholder="Model"
-            onChange={handleHomeFilterChange}
-            list="homeModels"
-            className="filter-input"
-          />
-          <datalist id="homeModels">
-            {availableModels.map((model) => (
-              <option key={model} value={model} />
-            ))}
-          </datalist>
-
-          <select
-            name="state"
-            value={homeFilters.state}
-            onChange={handleHomeFilterChange}
-            className={`filter-select ${!homeFilters.state ? "placeholder" : ""}`}
+        <div className="home-filters-header">
+          <span className="home-filters-title">Listings</span>
+          <button
+            type="button"
+            className="home-filters-toggle"
+            onClick={() => setShowFilters((prev) => !prev)}
+            aria-label="Toggle filters"
           >
-            <option value="">State</option>
-            {states.map((s) => (
-              <option key={s} value={s}>
-                {s.charAt(0).toUpperCase() + s.slice(1)}
-              </option>
-            ))}
-          </select>
-
-          <button type="submit" className="apply-filter-btn">
-            Search
+            <FiFilter
+              className={showFilters ? "filter-icon active" : "filter-icon"}
+            />
           </button>
-        </form>
+        </div>
+        {showFilters && (
+          <form className="filter-row" onSubmit={handleHomeApplyFilters}>
+            <input
+              type="text"
+              name="make"
+              value={homeFilters.make}
+              placeholder="Brand"
+              onChange={handleHomeFilterChange}
+              list="homeMakes"
+              className="filter-input"
+            />
+            <datalist id="homeMakes">
+              {carMakes.map((make) => (
+                <option key={make} value={make} />
+              ))}
+            </datalist>
+
+            <input
+              type="text"
+              name="model"
+              value={homeFilters.model}
+              placeholder="Model"
+              onChange={handleHomeFilterChange}
+              list="homeModels"
+              className="filter-input"
+            />
+            <datalist id="homeModels">
+              {availableModels.map((model) => (
+                <option key={model} value={model} />
+              ))}
+            </datalist>
+
+            <select
+              name="state"
+              value={homeFilters.state}
+              onChange={handleHomeFilterChange}
+              className={`filter-select ${!homeFilters.state ? "placeholder" : ""}`}
+            >
+              <option value="">State</option>
+              {states.map((s) => (
+                <option key={s} value={s}>
+                  {s.charAt(0).toUpperCase() + s.slice(1)}
+                </option>
+              ))}
+            </select>
+
+            <button type="submit" className="apply-filter-btn">
+              Search
+            </button>
+          </form>
+        )}
       </div>
       <div className="home-container">
         {vehicles.length === 0 && !loading ? (
